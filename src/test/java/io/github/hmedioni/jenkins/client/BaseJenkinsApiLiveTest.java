@@ -1,0 +1,95 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.hmedioni.jenkins.client;
+
+import com.fasterxml.jackson.databind.*;
+import io.github.hmedioni.jenkins.client.config.*;
+import io.github.hmedioni.jenkins.client.domain.job.*;
+import io.github.hmedioni.jenkins.client.domain.queue.*;
+import org.testng.annotations.*;
+
+import java.io.*;
+import java.nio.charset.*;
+import java.util.*;
+
+
+@Test(groups = "live")
+public class BaseJenkinsApiLiveTest {
+
+    protected final JenkinsAuthentication jenkinsAuthentication;
+
+    final protected ObjectMapper objectMapper = new ObjectMapper();
+
+    final protected String url = "http://127.0.0.1:8080";
+    final private String user = "admin";
+    final private String password = "admin";
+    protected JenkinsProperties jenkinsProperties = new JenkinsProperties(url, user, password);
+    protected JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
+    protected JenkinsApi api = jenkinsClient.api();
+
+    public BaseJenkinsApiLiveTest() {
+        this.jenkinsAuthentication = TestUtilities.inferTestAuthentication();
+    }
+
+    protected String randomString() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    public String payloadFromResource(final String resource) {
+        try {
+            return new String((getClass().getResourceAsStream(resource)).readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Return a queue item that is being built.
+     * If the queue item is canceled before the build is launched, null is returned.
+     * To prevent the test from hanging, this method times out after 10 attempts and the queue item is returned the way it is.
+     *
+     * @param queueId The queue id returned when asking Jenkins to run a build.
+     * @return Null if the queue item has been canceled before it has had a chance to run,
+     * otherwise the QueueItem element is returned, but this does not guarantee that the build runs.
+     * The caller has to check the value of queueItem.executable, and if it is null, the queue item is still pending.
+     */
+    protected QueueItem getRunningQueueItem(int queueId) throws InterruptedException {
+        int max = 10;
+        QueueItem queueItem = api.queueApi().queueItem(queueId);
+        while (max > 0) {
+            if (queueItem.isCancelled()) return null;
+            if (queueItem.getExecutable() != null) {
+                return queueItem;
+            }
+            Thread.sleep(2000);
+            queueItem = api.queueApi().queueItem(queueId);
+            max = max - 1;
+        }
+        return queueItem;
+    }
+
+    protected BuildInfo getCompletedBuild(String jobName, QueueItem queueItem) throws InterruptedException {
+        int max = 10;
+        BuildInfo buildInfo = api.jobsApi().buildInfo(null, jobName, queueItem.getExecutable().getNumber());
+        while (buildInfo.getResult() == null) {
+            Thread.sleep(2000);
+            buildInfo = api.jobsApi().buildInfo(null, jobName, queueItem.getExecutable().getNumber());
+        }
+        return buildInfo;
+    }
+
+}
