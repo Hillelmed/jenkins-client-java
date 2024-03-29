@@ -41,6 +41,10 @@ ext.javadocPath = compatibilityVersion.isJava8() ? '' : 'en/java/'
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
+test {
+    useTestNG()
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Jenkins REST client',

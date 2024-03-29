@@ -19,17 +19,16 @@ package io.github.hmedioni.jenkins.client.filters;
 
 import io.github.hmedioni.jenkins.client.*;
 import io.github.hmedioni.jenkins.client.auth.*;
+import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.*;
 
 
+@RequiredArgsConstructor
 public class JenkinsNoCrumbAuthenticationFilter implements ExchangeFilterFunction {
-    private final JenkinsAuthentication creds;
 
-    JenkinsNoCrumbAuthenticationFilter(final JenkinsAuthentication creds) {
-        this.creds = creds;
-    }
+    private final JenkinsAuthentication creds;
 
 
     @Override

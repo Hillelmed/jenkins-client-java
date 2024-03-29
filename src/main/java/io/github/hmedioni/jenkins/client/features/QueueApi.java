@@ -21,6 +21,7 @@ import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.queue.*;
 
 import io.github.hmedioni.jenkins.client.filters.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 
@@ -61,5 +62,5 @@ public interface QueueApi {
     // @Fallback(JenkinsFallbacks.JENKINS_21311.class)
     //@ResponseParser(RequestStatusParser.class)
     //@FormParam("id")
-    RequestStatus cancel(@RequestBody int id);
+    ResponseEntity<Void> cancel(@RequestBody int id);
 }

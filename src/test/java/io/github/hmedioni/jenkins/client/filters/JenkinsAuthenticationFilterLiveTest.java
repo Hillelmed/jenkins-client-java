@@ -21,6 +21,7 @@ import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.user.*;
 import io.github.hmedioni.jenkins.client.features.*;
+import org.springframework.http.*;
 import org.testng.annotations.*;
 
 import java.net.*;
@@ -36,13 +37,13 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
         try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.ANONYMOUS, null)) {
             // Do something that needs POST so the crumb logic is exercized
             String config = payloadFromResource("/freestyle-project-no-params.xml");
-            RequestStatus success = jenkinsApi.jobsApi().create(null, "DevTest", config);
-            assertTrue(success.getValue());
+            ResponseEntity<Void> success = jenkinsApi.jobsApi().create(null, "DevTest", config);
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
 
             // Delete the job
-            RequestStatus success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
+            ResponseEntity<Void> success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
             assertNotNull(success2);
-            assertTrue(success2.getValue());
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
             // Debugging note: Jenkins returns 302 after POSTing the delete, causing JClouds to follow the redirect and POST again
         }
     }
@@ -54,13 +55,13 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
         try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.USERNAME_PASSWORD, usernamePassword)) {
             // Do something that needs POST so the crumb logic is exercized
             String config = payloadFromResource("/freestyle-project-no-params.xml");
-            RequestStatus success = jenkinsApi.jobsApi().create(null, "DevTest", config);
-            assertTrue(success.getValue());
+            ResponseEntity<Void> success = jenkinsApi.jobsApi().create(null, "DevTest", config);
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
 
             // Delete the job
-            RequestStatus success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
+            ResponseEntity<Void> success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
             assertNotNull(success2);
-            assertTrue(success2.getValue());
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
             // Debugging note: Jenkins returns 302 after POSTing the delete, causing JClouds to follow the redirect and POST again
         }
     }
@@ -78,13 +79,13 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
         try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.USERNAME_API_TOKEN, usernameApiToken)) {
             // Do something that needs POST so the crumb logic is exercized
             String config = payloadFromResource("/freestyle-project-no-params.xml");
-            RequestStatus success = jenkinsApi.jobsApi().create(null, "DevTest", config);
-            assertTrue(success.getValue());
+            ResponseEntity<Void> success = jenkinsApi.jobsApi().create(null, "DevTest", config);
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
 
             // Delete the job
-            RequestStatus success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
+            ResponseEntity<Void> success2 = jenkinsApi.jobsApi().delete(null, "DevTest");
             assertNotNull(success2);
-            assertTrue(success2.getValue());
+            assertEquals(success.getStatusCode(),HttpStatus.OK);
             // Debugging note: Jenkins returns 302 after POSTing the delete, causing JClouds to follow the redirect and POST again
         } finally {
             revokeApiToken(usernameApiToken, apiToken);

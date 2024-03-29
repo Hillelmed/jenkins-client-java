@@ -19,6 +19,7 @@ package io.github.hmedioni.jenkins.client.features;
 import io.github.hmedioni.jenkins.client.*;
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.system.*;
+import org.springframework.http.*;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
@@ -28,37 +29,37 @@ public class SystemApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test
     public void testGetSystemInfo() {
-        final SystemInfo version = api().systemInfo();
+        final SystemInfo version = api().systemInfo().getBody();
         assertNotNull(version);
-        assertNotNull(version.getJenkinsVersion());
+        assertNotNull(version.getMode());
     }
 
     @Test
     public void testQuietDown() {
-        RequestStatus success = api().quietDown();
+        ResponseEntity<Void> success = api().quietDown();
         assertNotNull(success);
-        assertTrue(success.getValue());
+        assertEquals(success.getStatusCode(),HttpStatus.OK);
     }
 
     @Test(dependsOnMethods = "testQuietDown")
     public void testAlreadyQuietDown() {
-        RequestStatus success = api().quietDown();
+        ResponseEntity<Void> success = api().quietDown();
         assertNotNull(success);
-        assertTrue(success.getValue());
+        assertEquals(success.getStatusCode(),HttpStatus.OK);
     }
 
     @Test(dependsOnMethods = "testAlreadyQuietDown")
     public void testCancelQuietDown() {
-        RequestStatus success = api().cancelQuietDown();
+        ResponseEntity<Void> success = api().cancelQuietDown();
         assertNotNull(success);
-        assertTrue(success.getValue());
+        assertEquals(success.getStatusCode(),HttpStatus.OK);
     }
 
     @Test(dependsOnMethods = "testCancelQuietDown")
     public void testAlreadyCanceledQuietDown() {
-        RequestStatus success = api().cancelQuietDown();
+        ResponseEntity<Void> success = api().cancelQuietDown();
         assertNotNull(success);
-        assertTrue(success.getValue());
+        assertEquals(success.getStatusCode(),HttpStatus.OK);
     }
 
     private SystemApi api() {

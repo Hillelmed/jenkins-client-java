@@ -34,30 +34,28 @@ import static org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode
 
 public class JenkinsApiClientImpl implements JenkinsApi {
 
-    private final JenkinsProperties jenkinsProperties;
-    private final WebClient webClient;
     private final HttpServiceProxyFactory httpServiceProxyFactory;
     private final Map<Class<?>, Object> singletons;
 
     public JenkinsApiClientImpl(JenkinsProperties jenkinsProperties, WebClient webClient) {
-        this.jenkinsProperties = jenkinsProperties;
-        this.webClient = webClient;
         this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, TEMPLATE_AND_VALUES);
         this.singletons = Collections.synchronizedMap(new HashMap<>());
     }
 
     private static HttpServiceProxyFactory buildHttpServiceProxyFactory(JenkinsProperties jenkinsProperties, WebClient webClient,
                                                                         DefaultUriBuilderFactory.EncodingMode encodingMode) {
-        JenkinsAuthenticationFilter bitbucketAuthenticationFilter = new JenkinsAuthenticationFilter(jenkinsProperties.jenkinsAuthentication());
-        ScrubNullFolderParam scrubNullFromPathFilter = new ScrubNullFolderParam();
+        ExchangeFilterFunction jenkinsAuthenticationFilter = new JenkinsAuthenticationFilter(jenkinsProperties, jenkinsProperties.jenkinsAuthentication());
+        ExchangeFilterFunction scrubNullFromPathFilter = new ScrubNullFolderParam();
+        ExchangeFilterFunction jenkinsUserInjectionFilter = new JenkinsUserInjectionFilter(jenkinsProperties.jenkinsAuthentication());
         if (webClient == null) {
             DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(jenkinsProperties.getUrl());
             factory.setEncodingMode(encodingMode);
 
             webClient = WebClient.builder()
                 .uriBuilderFactory(factory)
-                .filter(bitbucketAuthenticationFilter)
+                .filter(jenkinsAuthenticationFilter)
                 .filter(scrubNullFromPathFilter)
+                .filter(jenkinsUserInjectionFilter)
                 .filter(JenkinsErrorHandler.handler())
                 .build();
         }

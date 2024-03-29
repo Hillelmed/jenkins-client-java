@@ -52,8 +52,33 @@ public class JenkinsErrorHandler {
     }
 
     private static List<JenkinsError> getErrors(String errorBody, HttpStatusCode statusCode) {
-        return null;
+        return parseMessage(errorBody);
     }
+
+    private static List<JenkinsError> parseMessage(String errorBody) {
+        try {
+            return List.of(mapper.readValue(errorBody, JenkinsError.class));
+        } catch (Exception e) {
+            JenkinsError error = new JenkinsError();
+            error.setMessage(errorBody);
+            return List.of(error);
+        }
+//        if (response.getPayload() != null) {
+//            try {
+//                return Strings2.toStringAndClose(response.getPayload().openStream());
+//            } catch (IOException e) {
+//                throw Throwables.propagate(e);
+//            }
+//        } else {
+//            final String errorMessage = response.getFirstHeaderOrNull("X-Error");
+//            return command.getCurrentRequest().getRequestLine() +
+//                " -> " +
+//                response.getStatusLine() +
+//                " -> " +
+//                (errorMessage != null ? errorMessage : "");
+//        }
+    }
+
 
 //    @Override
 //    public void handleError(final HttpCommand command, final HttpResponse response) {
@@ -115,20 +140,4 @@ public class JenkinsErrorHandler {
 //        }
 //    }
 
-//    private String parseMessage(final HttpCommand command, final HttpResponse response) {
-//        if (response.getPayload() != null) {
-//            try {
-//                return Strings2.toStringAndClose(response.getPayload().openStream());
-//            } catch (IOException e) {
-//                throw Throwables.propagate(e);
-//            }
-//        } else {
-//            final String errorMessage = response.getFirstHeaderOrNull("X-Error");
-//            return command.getCurrentRequest().getRequestLine() +
-//                " -> " +
-//                response.getStatusLine() +
-//                " -> " +
-//                (errorMessage != null ? errorMessage : "");
-//        }
-//    }
 }

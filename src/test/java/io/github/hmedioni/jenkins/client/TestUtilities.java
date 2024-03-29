@@ -43,7 +43,7 @@ public class TestUtilities extends JenkinsUtils {
 
         // 1.) Check for API Token as this requires no crumb hence is faster
         String authValue = JenkinsUtils
-            .retriveExternalValue(TEST_API_TOKEN_SYSTEM_PROPERTY,
+            .retrieveExternalValue(TEST_API_TOKEN_SYSTEM_PROPERTY,
                 TEST_API_TOKEN_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
             inferAuth.apiToken(authValue);
@@ -52,7 +52,7 @@ public class TestUtilities extends JenkinsUtils {
 
         // 2.) Check for UsernamePassword auth credentials.
         authValue = JenkinsUtils
-            .retriveExternalValue(TEST_CREDENTIALS_SYSTEM_PROPERTY,
+            .retrieveExternalValue(TEST_CREDENTIALS_SYSTEM_PROPERTY,
                 TEST_CREDENTIALS_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
             inferAuth.credentials(authValue);

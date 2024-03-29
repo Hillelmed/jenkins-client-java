@@ -19,61 +19,71 @@ package io.github.hmedioni.jenkins.client.filters;
 
 import io.github.hmedioni.jenkins.client.*;
 import io.github.hmedioni.jenkins.client.auth.*;
+import io.github.hmedioni.jenkins.client.config.*;
 import io.github.hmedioni.jenkins.client.domain.crumb.*;
 import io.github.hmedioni.jenkins.client.exception.*;
+import lombok.*;
+import lombok.extern.slf4j.*;
+import org.jetbrains.annotations.*;
 import org.springframework.http.*;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.*;
 import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.*;
 
 import java.net.http.*;
 import java.util.*;
 
+@RequiredArgsConstructor
 public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
 
-    private static final String CRUMB_HEADER = "Jenkins-Crumb";
-    private final JenkinsAuthentication creds;
-    private final JenkinsApi jenkinsApi;
+    private final JenkinsProperties jenkinsProperties;
+    private final JenkinsAuthentication jenkinsAuthentication;
+    private Crumb crumb;
+    private HttpCookie crumbCookie;
 
     // key = Crumb, value = true if exception is ResourceNotFoundException false otherwise
-    public JenkinsAuthenticationFilter(final JenkinsAuthentication creds, JenkinsApi jenkinsApi) {
-        this.creds = creds;
-    }
-
     @Override
-    public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
+    public @NotNull Mono<ClientResponse> filter(@NotNull ClientRequest request, @NotNull ExchangeFunction next) {
         ClientRequest.Builder builder = ClientRequest.from(request);
 
         // Password and API Token are both Basic authentication (there is no Bearer authentication in Jenkins)
-        if (creds.authType() == AuthenticationType.USERNAME_API_TOKEN || creds.authType() == AuthenticationType.USERNAME_PASSWORD) {
-            final String authHeader = creds.authType().getAuthScheme() + " " + creds.authValue();
+        if (jenkinsAuthentication.authType() == AuthenticationType.USERNAME_API_TOKEN || jenkinsAuthentication.authType() == AuthenticationType.USERNAME_PASSWORD) {
+            final String authHeader = jenkinsAuthentication.authType().getAuthScheme() + " " + jenkinsAuthentication.authValue();
             builder.header(org.springframework.http.HttpHeaders.AUTHORIZATION, authHeader);
         }
 
-        // Anon and Password need the crumb and the cookie when POSTing
-//        if (request.method().equals(HttpMethod.POST) && (creds.authType() == AuthenticationType.USERNAME_PASSWORD
-//            || creds.authType() == AuthenticationType.ANONYMOUS)) {
-//            final CrumbWrapper localCrumb = getCrumb();
-//            if (localCrumb.getCrumb() != null) {
-//                builder.header(CRUMB_HEADER, localCrumb.getCrumb().getValue());
-//                Optional.ofNullable(localCrumb.getCrumb().getSessionIdCookie())
-//                    .ifPresent(sessionId -> builder.header(org.springframework.http.HttpHeaders.COOKIE, sessionId));
-//            } else {
-//                if (Boolean.FALSE.equals(localCrumb.getABoolean())) {
-//                    throw new RuntimeException("Unexpected exception being thrown: error=");
-//                }
-//            }
-//        }
+        //Anon and Password need the crumb and the cookie when POSTing
+        //https://www.jenkins.io/doc/book/security/csrf-protection/#working-with-scripted-clients
+        if (request.method().equals(HttpMethod.POST) && (jenkinsAuthentication.authType() == AuthenticationType.USERNAME_PASSWORD
+            || jenkinsAuthentication.authType() == AuthenticationType.ANONYMOUS)) {
+            final Crumb localCrumb = getCrumb();
+            if (localCrumb != null && localCrumb.getValue() != null && localCrumb.getCrumbRequestField() != null) {
+                builder.header(localCrumb.getCrumbRequestField(), localCrumb.getValue());
+                builder.cookie(crumbCookie.getName(), crumbCookie.getValue());
+            } else {
+                throw new RuntimeException("Crumb is invalid");
+            }
+        }
         return next.exchange(builder.build());
     }
 
-//    private CrumbWrapper getCrumb() {
-//        try {
-//            final Crumb crumb = jenkinsApi.crumbIssuerApi().crumb(null).getBody();
-//            return new CrumbWrapper(crumb, true);
-//        } catch (JenkinsAppException e) {
-//            return new CrumbWrapper(null, false);
-//        }
-//    }
-//
+    private Crumb getCrumb() {
+        try {
+            if (crumb == null || crumbCookie == null) {
+                crumb = WebClient.builder()
+                    .build().get().uri(jenkinsProperties.getUrl() + "/crumbIssuer/api/json")
+                    .header(HttpHeaders.AUTHORIZATION,
+                        jenkinsAuthentication.authType().getAuthScheme() + " " + jenkinsAuthentication.authValue())
+                    .exchangeToMono(clientResponse -> {
+                        clientResponse.cookies().forEach((s, responseCookies) -> crumbCookie = new HttpCookie(s, responseCookies.get(0).getValue()));
+                        return clientResponse.bodyToMono(Crumb.class);
+                    }).block();
+            }
+            return crumb;
+        } catch (JenkinsAppException e) {
+            return new Crumb();
+        }
+    }
+
 }

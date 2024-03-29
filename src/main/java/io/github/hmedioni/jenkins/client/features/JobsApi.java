@@ -31,7 +31,7 @@ import java.util.*;
 
 //@RequestFilters(JenkinsAuthenticationFilter.class)
 //@Path("/")
-@HttpExchange(url = "/", accept = MediaType.APPLICATION_JSON_VALUE, contentType = MediaType.APPLICATION_JSON_VALUE)
+@HttpExchange(url = "/", accept = MediaType.TEXT_XML_VALUE, contentType = MediaType.TEXT_XML_VALUE)
 public interface JobsApi {
 
     //    // @Named("jobs:get-jobs")
@@ -73,7 +73,7 @@ public interface JobsApi {
 //    @Consumes(MediaType.WILDCARD)
     // @Payload("{configXML}")
     @PostExchange("{optionalFolderPath}createItem")
-    RequestStatus create(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> create(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                          @RequestParam("name") String jobName,
                          @RequestBody String configXML);
 
@@ -115,7 +115,7 @@ public interface JobsApi {
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     @PostExchange("{optionalFolderPath}job/{name}/doDelete")
-    RequestStatus delete(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> delete(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                          @PathVariable("name") String jobName);
 
     // @Named("jobs:enable")
@@ -145,7 +145,7 @@ public interface JobsApi {
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     // @Consumes(MediaType.APPLICATION_JSON)
-    RequestStatus stop(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> stop(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                        @PathVariable("name") String jobName,
                        @PathVariable("number") int buildNumber);
 
@@ -154,7 +154,7 @@ public interface JobsApi {
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     // @Consumes(MediaType.APPLICATION_JSON)
-    RequestStatus term(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> term(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                        @PathVariable("name") String jobName,
                        @PathVariable("number") int buildNumber);
 
@@ -163,7 +163,7 @@ public interface JobsApi {
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     // @Consumes(MediaType.APPLICATION_JSON)
-    RequestStatus kill(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> kill(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                        @PathVariable("name") String jobName,
                        @PathVariable("number") int buildNumber);
 

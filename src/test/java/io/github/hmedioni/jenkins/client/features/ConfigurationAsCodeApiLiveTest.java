@@ -18,6 +18,8 @@ package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.*;
 import io.github.hmedioni.jenkins.client.domain.common.*;
+import io.github.hmedioni.jenkins.client.exception.*;
+import org.springframework.http.*;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
@@ -25,32 +27,38 @@ import static org.testng.Assert.*;
 @Test(groups = "live", testName = "ConfigurationAsCodeApiLiveTest", singleThreaded = true)
 public class ConfigurationAsCodeApiLiveTest extends BaseJenkinsApiLiveTest {
 
-    @Test
+    @Test(testName = "testCascCheck")
     public void testCascCheck() {
         String config = payloadFromResource("/casc.yml");
-        RequestStatus success = api().check(config).getBody();
-        assertTrue(success.getValue());
+        ResponseEntity<Void> success = api().check(config);
+        assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
-    @Test
+    @Test(testName = "testCascApply")
     public void testCascApply() {
         String config = payloadFromResource("/casc.yml");
-        RequestStatus success = api().apply(config).getBody();
-        assertTrue(success.getValue());
+        ResponseEntity<Void> success = api().apply(config);
+        assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
-    @Test
+    @Test(testName = "testBadCascCheck")
     public void testBadCascCheck() {
         String config = payloadFromResource("/casc-bad.yml");
-        RequestStatus success = api().check(config).getBody();
-        assertFalse(success.getValue());
+        try {
+            api().check(config);
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @Test
+    @Test(testName = "testBadCascApply")
     public void testBadCascApply() {
         String config = payloadFromResource("/casc-bad.yml");
-        RequestStatus success = api().apply(config).getBody();
-        assertFalse(success.getValue());
+        try {
+            api().apply(config);
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private ConfigurationAsCodeApi api() {

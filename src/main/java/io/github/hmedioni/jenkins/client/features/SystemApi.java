@@ -19,32 +19,34 @@ package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.system.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 
 
 // @RequestFilters(JenkinsAuthenticationFilter.class)
 // @Consumes(MediaType.APPLICATION_JSON)
-@HttpExchange("/")
+@HttpExchange
 public interface SystemApi {
 
     // @Named("system:info")
     // @Fallback(JenkinsFallbacks.SystemInfoOnError.class)
     //@ResponseParser(SystemInfoFromJenkinsHeaders.class)
-    @HttpExchange(method = "HEAD")
-    SystemInfo systemInfo();
+    @GetExchange("/api/json/systemInfo")
+    ResponseEntity<SystemInfo> systemInfo();
 
     // @Named("system:quiet-down")
-    @PostExchange("quietDown")
+    @PostExchange("/quietDown")
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     // @Consumes(MediaType.TEXT_HTML)
-    RequestStatus quietDown();
+    ResponseEntity<Void> quietDown();
 
     // @Named("system:cancel-quiet-down")
-    @PostExchange("cancelQuietDown")
+    @PostExchange("/cancelQuietDown")
     // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
     //@ResponseParser(RequestStatusParser.class)
     // @Consumes(MediaType.TEXT_HTML)
-    RequestStatus cancelQuietDown();
+    ResponseEntity<Void> cancelQuietDown();
 
 }

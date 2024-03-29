@@ -34,7 +34,7 @@ public interface ConfigurationAsCodeApi {
 //    @Payload("{cascYml}")cascYml
 //    @PostExchange
     @PostExchange("/check")
-    ResponseEntity<RequestStatus> check(@RequestBody String cascYml);
+    ResponseEntity<Void> check(@RequestBody String cascYml);
 
     //    // @Named("casc:apply")
 //    @Path("/apply")
@@ -43,5 +43,5 @@ public interface ConfigurationAsCodeApi {
 //    @Payload("{cascYml}")
 //    @PostExchange
     @PostExchange("/apply")
-    ResponseEntity<RequestStatus> apply(@RequestBody String cascYml);
+    ResponseEntity<Void> apply(@RequestBody String cascYml);
 }

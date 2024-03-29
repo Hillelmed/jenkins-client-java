@@ -44,5 +44,5 @@ public interface PluginManagerApi {
     //@ResponseParser(RequestStatusParser.class)
     // @Produces(MediaType.APPLICATION_XML)
     // @Payload("<jenkins><install plugin=\"{pluginID}\"/></jenkins>")
-    RequestStatus installNecessaryPlugins(@RequestBody String pluginID);
+    ResponseEntity<Void> installNecessaryPlugins(@RequestBody String pluginID);
 }
