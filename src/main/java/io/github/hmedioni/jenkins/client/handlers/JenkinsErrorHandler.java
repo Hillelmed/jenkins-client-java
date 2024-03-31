@@ -23,8 +23,6 @@ import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.*;
 
-import java.io.*;
-import java.net.http.*;
 import java.util.*;
 
 
@@ -44,14 +42,14 @@ public class JenkinsErrorHandler {
             if (statusCode.is5xxServerError() || statusCode.is4xxClientError()) {
                 return clientResponse.bodyToMono(String.class)
                     .defaultIfEmpty("{}")
-                    .flatMap(errorBody -> Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody, statusCode), statusCode)));
+                    .flatMap(errorBody -> Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody), statusCode)));
             } else {
                 return Mono.just(clientResponse);
             }
         });
     }
 
-    private static List<JenkinsError> getErrors(String errorBody, HttpStatusCode statusCode) {
+    private static List<JenkinsError> getErrors(String errorBody) {
         return parseMessage(errorBody);
     }
 

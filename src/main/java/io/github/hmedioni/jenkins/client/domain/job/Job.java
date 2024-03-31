@@ -5,17 +5,19 @@ import lombok.*;
 import org.springframework.lang.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Job {
 
     @Nullable
-    public String clazz;
+    private String clazz;
 
-    public String name;
+    private String name;
 
-    public String url;
+    private String url;
 
     @Nullable
-    public String color;
+    private String color;
 
 
 //    @SerializedNames({"_class", "name", "url", "color"})

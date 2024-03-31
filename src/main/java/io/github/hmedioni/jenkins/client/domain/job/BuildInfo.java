@@ -26,48 +26,48 @@ import java.util.*;
 @NoArgsConstructor
 public class BuildInfo {
 
-    public List<Artifact> artifacts;
+    private List<Artifact> artifacts;
 
-    public List<Action> actions;
+    private List<Action> actions;
 
-    public boolean building;
-
-    @Nullable
-    public String description;
+    private boolean building;
 
     @Nullable
-    public String displayName;
-
-    public long duration;
-
-    public long estimatedDuration;
+    private String description;
 
     @Nullable
-    public String fullDisplayName;
+    private String displayName;
+
+    private long duration;
+
+    private long estimatedDuration;
 
     @Nullable
-    public String id;
-
-    public boolean keepLog;
-
-    public int number;
-
-    public int queueId;
+    private String fullDisplayName;
 
     @Nullable
-    public String result;
+    private String id;
 
-    public long timestamp;
+    private boolean keepLog;
+
+    private int number;
+
+    private int queueId;
 
     @Nullable
-    public String url;
+    private String result;
 
-    public List<ChangeSetList> changeSets;
+    private long timestamp;
 
     @Nullable
-    public String builtOn;
+    private String url;
 
-    public List<Culprit> culprits;
+    private List<ChangeSetList> changeSets;
+
+    @Nullable
+    private String builtOn;
+
+    private List<Culprit> culprits;
 
 //    @SerializedNames({"artifacts", "actions", "building", "description", "displayName", "duration", "estimatedDuration",
 //        "fullDisplayName", "id", "keepLog", "number", "queueId", "result", "timestamp", "url", "changeSets", "builtOn", "culprits"})

@@ -19,12 +19,10 @@ package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.config.*;
-import kotlin.text.*;
 
 import java.io.*;
 import java.net.*;
 import java.nio.charset.*;
-import java.util.*;
 
 /**
  * Base class for Jenkins mock tests and some Live tests.
@@ -72,8 +70,12 @@ public class BaseJenkinsTest {
      */
     public JenkinsApi api(final URL url, final AuthenticationType authType, final String authString) {
         final JenkinsAuthentication creds = creds(authType, authString);
-         JenkinsProperties jenkinsProperties = new JenkinsProperties(url.toString() ,creds);
-         JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
+        JenkinsProperties jenkinsProperties = new JenkinsProperties(url.toString(), creds);
+        if (authString != null) {
+            jenkinsProperties.setUser(authString.split(":")[0]);
+            jenkinsProperties.setPassword(authString.split(":")[1]);
+        }
+        JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
         return jenkinsClient.api();
     }
 

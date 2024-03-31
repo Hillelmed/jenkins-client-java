@@ -18,6 +18,7 @@
 package io.github.hmedioni.jenkins.client.domain.common;
 
 import lombok.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Integer response to be returned when an endpoint returns
@@ -28,8 +29,10 @@ import lombok.*;
  * null along with any potential `error` objects returned from Jenkins.
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class IntegerResponse {
 
+    @NotNull
     private Integer values;
 }

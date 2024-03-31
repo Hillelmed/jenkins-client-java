@@ -34,11 +34,11 @@ public class BindMapToForm {
 //         if (prop.getKey() != null) {
 //            String potentialKey = prop.getKey().trim();
 //            if (potentialKey.length() > 0) {
-//                if (prop.getValue() == null) {
-//                    prop.setValue(Lists.newArrayList(""));
+//                if (prop.getValues() == null) {
+//                    prop.setValue(List.of(""));
 //                }
 //
-//                builder.addFormParam(potentialKey, prop.getValue().toArray(new String[prop.getValue().size()]));
+//                builder.addFormParam(potentialKey, prop.getValues().toArray(new String[prop.getValues().size()]));
 //            }
 //         }
 //      }

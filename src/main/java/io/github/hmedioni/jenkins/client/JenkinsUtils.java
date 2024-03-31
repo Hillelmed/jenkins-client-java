@@ -1,6 +1,15 @@
 package io.github.hmedioni.jenkins.client;
 
+import io.github.hmedioni.jenkins.client.domain.common.*;
+import io.github.hmedioni.jenkins.client.exception.*;
+import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.*;
+
+import java.lang.*;
+import java.net.http.*;
+import java.util.*;
+import java.util.regex.*;
 
 import static io.github.hmedioni.jenkins.client.JenkinsConstants.*;
 
@@ -17,19 +26,41 @@ public class JenkinsUtils {
      * @return JsonElement or empty JsonElement if `input` is null.
      */
 
-    /**
-     * Convert passed Map into a JsonElement.
-     *
-     * @param input the Map to convert.
-     * @return JsonElement or empty JsonElement if `input` is null.
-     */
 
-    /**
-     * Convert passed String into a JsonElement.
-     *
-     * @param input the String to convert.
-     * @return JsonElement or empty JsonElement if `input` is null.
-     */
+    private static final Pattern pattern = Pattern.compile("^.*/queue/item/(\\d+)/$");
+
+//    public static Object buildFormDataFormMap(Map<String, List<String>> properties) {
+//        Map<String, List<String>> props = (Map<String, List<String>>) properties;
+//
+//        for (Map.Entry<String, List<String>> prop : props.entrySet()) {
+//            if (prop.getKey() != null) {
+//                String potentialKey = prop.getKey().trim();
+//                if (potentialKey.length() > 0) {
+//                    if (prop.getValue() == null) {
+//                        prop.setValue(Lists.newArrayList(""));
+//                    }
+//
+//                    builder.addFormParam(potentialKey, prop.getValue().toArray(new String[prop.getValue().size()]));
+//                }
+//            }
+//        }
+//
+//    }
+    public static IntegerResponse getQueueItemIntegerResponse(HttpHeaders httpHeaders) {
+        if (httpHeaders == null) {
+            throw new RuntimeException("Unexpected NULL HttpResponse object");
+        }
+
+        List<String> url = httpHeaders.get("Location");
+        if (url != null && !url.isEmpty()) {
+            Matcher matcher = pattern.matcher(url.get(0));
+            if (matcher.find() && matcher.groupCount() == 1) {
+                return new IntegerResponse(Integer.valueOf(matcher.group(1)));
+            }
+        }
+        return new IntegerResponse(-1);
+    }
+
 
     /**
      * If the passed systemProperty is non-null we will attempt to query

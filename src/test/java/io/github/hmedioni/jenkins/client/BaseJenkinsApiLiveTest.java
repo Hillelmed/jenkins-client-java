@@ -32,8 +32,6 @@ public class BaseJenkinsApiLiveTest {
 
     protected final JenkinsAuthentication jenkinsAuthentication;
 
-    final protected ObjectMapper objectMapper = new ObjectMapper();
-
     final protected String url = "http://127.0.0.1:8080";
     final private String user = "admin";
     final private String password = "admin";
@@ -65,7 +63,7 @@ public class BaseJenkinsApiLiveTest {
      * @param queueId The queue id returned when asking Jenkins to run a build.
      * @return Null if the queue item has been canceled before it has had a chance to run,
      * otherwise the QueueItem element is returned, but this does not guarantee that the build runs.
-     * The caller has to check the value of queueItem.executable, and if it is null, the queue item is still pending.
+     * The caller has to check the value of queueItem.executable, and if it is  the queue item is still pending.
      */
     protected QueueItem getRunningQueueItem(int queueId) throws InterruptedException {
         int max = 10;
@@ -84,10 +82,10 @@ public class BaseJenkinsApiLiveTest {
 
     protected BuildInfo getCompletedBuild(String jobName, QueueItem queueItem) throws InterruptedException {
         int max = 10;
-        BuildInfo buildInfo = api.jobsApi().buildInfo(null, jobName, queueItem.getExecutable().getNumber());
+        BuildInfo buildInfo = api.jobsApi().buildInfo(jobName, queueItem.getExecutable().getNumber()).getBody();
         while (buildInfo.getResult() == null) {
             Thread.sleep(2000);
-            buildInfo = api.jobsApi().buildInfo(null, jobName, queueItem.getExecutable().getNumber());
+            buildInfo = api.jobsApi().buildInfo(jobName, queueItem.getExecutable().getNumber()).getBody();
         }
         return buildInfo;
     }

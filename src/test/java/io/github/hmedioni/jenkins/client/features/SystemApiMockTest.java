@@ -80,9 +80,9 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
-//            RequestStatus success = api.quietDown();
+//            ResponseEntity<Void> success = api.quietDown();
 //            assertNotNull(success);
-//            assertTrue(success.getValue());
+//            assertTrue(success.getValues());
 //            assertSentAccept(server, "POST", "/quietDown", MediaType.TEXT_HTML);
 //        } finally {
 //            jenkinsApi.close();
@@ -97,8 +97,8 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
-//            RequestStatus status = api.quietDown();
-//            assertFalse(status.getValue());
+//            ResponseEntity<Void> status = api.quietDown();
+//            assertFalse(status.getValues());
 //            assertFalse(status.errors().isEmpty());
 //            assertTrue(status.errors().get(0).exceptionName().endsWith("AuthorizationException"));
 //            assertSentAccept(server, "POST", "/quietDown", MediaType.TEXT_HTML);
@@ -115,9 +115,9 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
-//            RequestStatus success = api.cancelQuietDown();
+//            ResponseEntity<Void> success = api.cancelQuietDown();
 //            assertNotNull(success);
-//            assertTrue(success.getValue());
+//            assertTrue(success.getValues());
 //            assertSentAccept(server, "POST", "/cancelQuietDown", MediaType.TEXT_HTML);
 //        } finally {
 //            jenkinsApi.close();
@@ -132,8 +132,8 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
-//            RequestStatus status = api.cancelQuietDown();
-//            assertFalse(status.getValue());
+//            ResponseEntity<Void> status = api.cancelQuietDown();
+//            assertFalse(status.getValues());
 //            assertFalse(status.errors().isEmpty());
 //            assertTrue(status.errors().get(0).exceptionName().endsWith("AuthorizationException"));
 //            assertSentAccept(server, "POST", "/cancelQuietDown", MediaType.TEXT_HTML);

@@ -23,50 +23,55 @@ import org.springframework.lang.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class QueueItem {
 
-    public boolean blocked;
+    private String _class;
+    private ArrayList<Action> actions;
+    private boolean blocked;
+    private boolean buildable;
+    private int id;
+    private long inQueueSince;
+    private String params;
+    private boolean stuck;
+    private Task task;
+    private String url;
+    private Object why;
+    private boolean cancelled;
+    private Executable executable;
 
-    public boolean buildable;
+    @Data
+    @NoArgsConstructor
+    public static class Action {
+        private String _class;
+        private List<Cause> causes;
+    }
 
-    public int id;
+    @Data
+    @NoArgsConstructor
+    public static class Cause {
+        private String _class;
+        private String shortDescription;
+        private String userId;
+        private String userName;
+    }
 
-    public long inQueueSince;
+    @Data
+    @NoArgsConstructor
+    public static class Executable {
+        private String _class;
+        private int number;
+        private String url;
+    }
 
-    public Map<String, String> params;
-
-    public boolean stuck;
-
-    public Task task;
-
-    public String url;
-
-    @Nullable
-    public String why;
-
-    // https://javadoc.jenkins.io/hudson/model/Queue.NotWaitingItem.html
-    /**
-     * When did this job exit the Queue.waitingList phase?
-     * For a Queue.NotWaitingItem
-     *
-     * @return The time expressed in milliseconds after January 1, 1970, 0:00:00 GMT.
-     */
-    public long buildableStartMilliseconds;
-
-    public boolean cancelled;
-
-    @Nullable
-    public Executable executable;
-
-    // https://javadoc.jenkins.io/hudson/model/Queue.WaitingItem.html
-    /**
-     * This item can be run after this time.
-     * For a Queue.WaitingItem
-     *
-     * @return The time expressed in milliseconds after January 1, 1970, 0:00:00 GMT.
-     */
-    @Nullable
-    public Long timestamp;
+    @Data
+    @NoArgsConstructor
+    public static class Task {
+        private String _class;
+        private String name;
+        private String url;
+        private String color;
+    }
 
 
 //    @SerializedNames({"blocked", "buildable", "id", "inQueueSince", "params", "stuck", "task", "url", "why",

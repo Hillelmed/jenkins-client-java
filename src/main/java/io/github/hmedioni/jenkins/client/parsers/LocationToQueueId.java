@@ -45,9 +45,9 @@
 //                return IntegerResponse.create(Integer.valueOf(matcher.group(1)), null);
 //            }
 //        }
-//        final Error error = Error.create(null,
+//        final Error error = Error.create(
 //            "No queue item Location header could be found despite getting a valid HTTP response.",
 //            NumberFormatException.class.getCanonicalName());
-//        return IntegerResponse.create(null, Lists.newArrayList(error));
+//        return IntegerResponse.create( List.of(error));
 //    }
 //}

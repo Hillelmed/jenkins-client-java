@@ -17,7 +17,6 @@
 
 package io.github.hmedioni.jenkins.client.features;
 
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
@@ -29,8 +28,8 @@ public interface ConfigurationAsCodeApi {
 
     //    // @Named("casc:check")
 //    @Path("/check")
-//    @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-//    @ResponseParser(RequestStatusParser.class)
+//    @Fallback(JenkinsFallbacks.ResponseEntity<Void>OnError.class)
+//    @ResponseParser(ResponseEntity<Void>Parser.class)
 //    @Payload("{cascYml}")cascYml
 //    @PostExchange
     @PostExchange("/check")
@@ -38,8 +37,8 @@ public interface ConfigurationAsCodeApi {
 
     //    // @Named("casc:apply")
 //    @Path("/apply")
-//    @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-//    @ResponseParser(RequestStatusParser.class)
+//    @Fallback(JenkinsFallbacks.ResponseEntity<Void>OnError.class)
+//    @ResponseParser(ResponseEntity<Void>Parser.class)
 //    @Payload("{cascYml}")
 //    @PostExchange
     @PostExchange("/apply")

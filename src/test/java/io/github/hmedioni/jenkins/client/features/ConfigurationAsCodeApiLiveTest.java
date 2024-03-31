@@ -17,31 +17,30 @@
 package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.*;
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.exception.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
 
-@Test(groups = "live", testName = "ConfigurationAsCodeApiLiveTest", singleThreaded = true)
+@Test(groups = "live", singleThreaded = true)
 public class ConfigurationAsCodeApiLiveTest extends BaseJenkinsApiLiveTest {
 
-    @Test(testName = "testCascCheck")
+    @Test
     public void testCascCheck() {
         String config = payloadFromResource("/casc.yml");
         ResponseEntity<Void> success = api().check(config);
         assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
-    @Test(testName = "testCascApply")
+    @Test
     public void testCascApply() {
         String config = payloadFromResource("/casc.yml");
         ResponseEntity<Void> success = api().apply(config);
         assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
-    @Test(testName = "testBadCascCheck")
+    @Test
     public void testBadCascCheck() {
         String config = payloadFromResource("/casc-bad.yml");
         try {
@@ -51,7 +50,7 @@ public class ConfigurationAsCodeApiLiveTest extends BaseJenkinsApiLiveTest {
         }
     }
 
-    @Test(testName = "testBadCascApply")
+    @Test
     public void testBadCascApply() {
         String config = payloadFromResource("/casc-bad.yml");
         try {

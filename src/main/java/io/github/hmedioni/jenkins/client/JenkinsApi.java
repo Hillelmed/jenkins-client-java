@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.features.*;
-import lombok.experimental.*;
 
 import java.io.*;
 

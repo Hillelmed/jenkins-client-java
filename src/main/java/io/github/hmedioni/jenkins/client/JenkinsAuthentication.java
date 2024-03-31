@@ -122,7 +122,7 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
                 decoded = credentialString;
             }
             if (!decoded.contains(":")) {
-                throw new UndetectableIdentityException("Unable to detect the identity being used in '" + credentialString + "'. Supported types are a user:password, or a user:apiToken, or their base64 encoded value.");
+                throw new RuntimeException("Unable to detect the identity being used in '" + credentialString + "'. Supported types are a user:password, or a user:apiToken, or their base64 encoded value.");
             }
             if (decoded.equals(":")) {
                 return "";

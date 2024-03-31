@@ -40,7 +40,7 @@
 //        try {
 //            final Crumb instance = api.crumb(null).getBody();
 //            assertNotNull(instance);
-//            assertEquals(instance.getValue(), value);
+//            assertEquals(instance.getValues(), value);
 //            assertSentAccept(server, "GET", "/crumbIssuer/api/xml?xpath=concat%28//crumbRequestField,%22%3A%22,//crumb%29", MediaType.TEXT_PLAIN);
 //        } finally {
 //            jenkinsApi.close();

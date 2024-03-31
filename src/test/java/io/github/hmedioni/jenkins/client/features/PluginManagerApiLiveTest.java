@@ -37,9 +37,9 @@
 //
 //    @Test
 //    public void testInstallNecessaryPlugins() {
-//        final RequestStatus status = api().installNecessaryPlugins("artifactory@2.2.1");
+//        final ResponseEntity<Void> status = api().installNecessaryPlugins("artifactory@2.2.1");
 //        assertNotNull(status);
-//        assertTrue(status.getValue());
+//        assertTrue(status.getValues());
 //        assertTrue(status.errors().isEmpty());
 //    }
 //

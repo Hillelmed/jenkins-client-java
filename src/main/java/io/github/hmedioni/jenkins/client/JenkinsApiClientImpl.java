@@ -21,7 +21,6 @@ import io.github.hmedioni.jenkins.client.config.*;
 import io.github.hmedioni.jenkins.client.features.*;
 import io.github.hmedioni.jenkins.client.filters.*;
 import io.github.hmedioni.jenkins.client.handlers.*;
-import lombok.experimental.*;
 import org.springframework.web.reactive.function.client.*;
 import org.springframework.web.reactive.function.client.support.*;
 import org.springframework.web.service.invoker.*;
@@ -30,7 +29,7 @@ import org.springframework.web.util.*;
 import java.io.*;
 import java.util.*;
 
-import static org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES;
+import static org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode.*;
 
 public class JenkinsApiClientImpl implements JenkinsApi {
 

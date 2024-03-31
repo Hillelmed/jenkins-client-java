@@ -23,16 +23,10 @@ import io.github.hmedioni.jenkins.client.config.*;
 import io.github.hmedioni.jenkins.client.domain.crumb.*;
 import io.github.hmedioni.jenkins.client.exception.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.jetbrains.annotations.*;
 import org.springframework.http.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.util.*;
 import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.*;
-
-import java.net.http.*;
-import java.util.*;
 
 @RequiredArgsConstructor
 public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
@@ -76,7 +70,9 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
                     .header(HttpHeaders.AUTHORIZATION,
                         jenkinsAuthentication.authType().getAuthScheme() + " " + jenkinsAuthentication.authValue())
                     .exchangeToMono(clientResponse -> {
-                        clientResponse.cookies().forEach((s, responseCookies) -> crumbCookie = new HttpCookie(s, responseCookies.get(0).getValue()));
+                        clientResponse.cookies()
+                            .forEach((s, responseCookies) -> crumbCookie =
+                                new HttpCookie(s, responseCookies.get(0).getValue()));
                         return clientResponse.bodyToMono(Crumb.class);
                     }).block();
             }

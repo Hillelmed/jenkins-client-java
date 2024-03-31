@@ -20,6 +20,7 @@ package io.github.hmedioni.jenkins.client.domain.user;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class ApiTokenData {
 
     public String tokenName;

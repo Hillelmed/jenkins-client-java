@@ -59,7 +59,7 @@
 //        try {
 //            assertFalse(queueItem.cancelled());
 //            assertEquals(queueItem.why(), "Build #9 is already in progress (ETA:15 sec)");
-//            assertNull(queueItem.executable());
+//            assertNull(queueItem.getExecutable());
 //            assertSent(server, "GET", "/queue/item/" + queueItemId + "/api/json");
 //        } finally {
 //            jenkinsApi.close();
@@ -77,7 +77,7 @@
 //        try {
 //            assertTrue(queueItem.cancelled());
 //            assertNull(queueItem.why());
-//            assertNull(queueItem.executable());
+//            assertNull(queueItem.getExecutable());
 //            assertSent(server, "GET", "/queue/item/" + queueItemId + "/api/json");
 //        } finally {
 //            jenkinsApi.close();
@@ -99,9 +99,9 @@
 //            assertEquals(queueItem.params(), map);
 //            assertFalse(queueItem.cancelled());
 //            assertNull(queueItem.why());
-//            assertNotNull(queueItem.executable());
-//            assertEquals((int) queueItem.executable().number(), buildNumber);
-//            assertEquals(queueItem.executable().url(), "http://localhost:8082/job/test/" + buildNumber + "/");
+//            assertNotNull(queueItem.getExecutable());
+//            assertEquals((int) queueItem.getExecutable().getNumber(), buildNumber);
+//            assertEquals(queueItem.getExecutable().url(), "http://localhost:8082/job/test/" + buildNumber + "/");
 //            assertSent(server, "GET", "/queue/item/" + queueItemId + "/api/json");
 //        } finally {
 //            jenkinsApi.close();
@@ -152,10 +152,10 @@
 //        server.enqueue(new MockResponse().setResponseCode(404));
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        int queueItemId = 143;
-//        RequestStatus result = jenkinsApi.queueApi().cancel(queueItemId);
+//        ResponseEntity<Void> result = jenkinsApi.queueApi().cancel(queueItemId);
 //        try {
 //            assertNotNull(result);
-//            assertTrue(result.getValue());
+//            assertTrue(result.getValues());
 //            assertTrue(result.errors().isEmpty());
 //            assertSentWithFormData(server, "POST", "/queue/cancelItem", "id=" + queueItemId);
 //        } finally {
@@ -169,10 +169,10 @@
 //        server.enqueue(new MockResponse().setResponseCode(500));
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        int queueItemId = 143;
-//        RequestStatus result = jenkinsApi.queueApi().cancel(queueItemId);
+//        ResponseEntity<Void> result = jenkinsApi.queueApi().cancel(queueItemId);
 //        try {
 //            assertNotNull(result);
-//            assertFalse(result.getValue());
+//            assertFalse(result.getValues());
 //            assertFalse(result.errors().isEmpty());
 //            assertSentWithFormData(server, "POST", "/queue/cancelItem", "id=" + queueItemId);
 //        } finally {
@@ -191,7 +191,7 @@
 //        try {
 //            assertFalse(queueItem.cancelled());
 //            assertEquals(queueItem.why(), "Build #9 is already in progress (ETA:15 sec)");
-//            assertNull(queueItem.executable());
+//            assertNull(queueItem.getExecutable());
 //            assertSent(server, "GET", "/queue/item/" + queueItemId + "/api/json");
 //        } finally {
 //            jenkinsApi.close();
@@ -209,7 +209,7 @@
 //        try {
 //            assertFalse(queueItem.cancelled());
 //            assertEquals(queueItem.why(), "Just a random message here");
-//            assertNull(queueItem.executable());
+//            assertNull(queueItem.getExecutable());
 //            assertSent(server, "GET", "/queue/item/" + queueItemId + "/api/json");
 //        } finally {
 //            jenkinsApi.close();

@@ -35,10 +35,10 @@
 //            server.enqueue(new MockResponse().setResponseCode(200));
 //
 //            ConfigurationAsCodeApi api = jenkinsApi.configurationAsCodeApi();
-//            RequestStatus requestStatus = api.check("random");
+//            ResponseEntity<Void> requestStatus = api.check("random");
 //            System.out.println(requestStatus.errors());
 //            assertNotNull(requestStatus);
-//            assertTrue(requestStatus.getValue());
+//            assertTrue(requestStatus.getValues());
 //            assertEquals(requestStatus.errors().size(), 0);
 //        }
 //    }
@@ -49,9 +49,9 @@
 //            server.enqueue(new MockResponse().setResponseCode(200));
 //
 //            ConfigurationAsCodeApi api = jenkinsApi.configurationAsCodeApi();
-//            RequestStatus requestStatus = api.apply("random");
+//            ResponseEntity<Void> requestStatus = api.apply("random");
 //            assertNotNull(requestStatus);
-//            assertTrue(requestStatus.getValue());
+//            assertTrue(requestStatus.getValues());
 //            assertEquals(requestStatus.errors().size(), 0);
 //        }
 //    }
@@ -63,9 +63,9 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        ConfigurationAsCodeApi api = jenkinsApi.configurationAsCodeApi();
 //        try {
-//            RequestStatus requestStatus = api.check("random");
+//            ResponseEntity<Void> requestStatus = api.check("random");
 //            assertNotNull(requestStatus);
-//            assertFalse(requestStatus.getValue());
+//            assertFalse(requestStatus.getValues());
 //            assertEquals(requestStatus.errors().size(), 1);
 //        } finally {
 //            jenkinsApi.close();
@@ -80,9 +80,9 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        ConfigurationAsCodeApi api = jenkinsApi.configurationAsCodeApi();
 //        try {
-//            RequestStatus requestStatus = api.apply("random");
+//            ResponseEntity<Void> requestStatus = api.apply("random");
 //            assertNotNull(requestStatus);
-//            assertFalse(requestStatus.getValue());
+//            assertFalse(requestStatus.getValues());
 //            assertEquals(requestStatus.errors().size(), 1);
 //        } finally {
 //            jenkinsApi.close();

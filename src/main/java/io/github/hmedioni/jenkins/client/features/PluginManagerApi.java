@@ -17,7 +17,6 @@
 
 package io.github.hmedioni.jenkins.client.features;
 
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.plugins.*;
 import org.springframework.http.*;
 import org.springframework.lang.*;
@@ -31,18 +30,18 @@ import org.springframework.web.service.annotation.*;
 @HttpExchange(value = "/pluginManager", accept = MediaType.APPLICATION_JSON_VALUE, contentType = MediaType.APPLICATION_JSON_VALUE)
 public interface PluginManagerApi {
 
-    // @Named("pluginManager:plugins")
-    // @Fallback(JenkinsFallbacks.PluginsOnError.class)
     @GetExchange("/api/json")
+    Plugins plugins(@RequestParam("depth") Integer depth,
+                    @RequestParam("tree") String tree);
 
-    Plugins plugins(@Nullable @RequestParam("depth") Integer depth,
-                    @Nullable @RequestParam("tree") String tree);
+    @GetExchange("/api/json")
+    Plugins plugins(@RequestParam("depth") Integer depth);
 
     // @Named("pluginManager:install-necessary-plugins")
     @PostExchange("/installNecessaryPlugins")
-    // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-    //@ResponseParser(RequestStatusParser.class)
+    // @Fallback(JenkinsFallbacks.ResponseEntity<Void>OnError.class)
+    //@ResponseParser(ResponseEntity<Void>Parser.class)
     // @Produces(MediaType.APPLICATION_XML)
     // @Payload("<jenkins><install plugin=\"{pluginID}\"/></jenkins>")
-    ResponseEntity<Void> installNecessaryPlugins(@RequestBody String pluginID);
+    ResponseEntity<Void> installNecessaryPlugins(@RequestPart(value = "<jenkins><install plugin=\\\"{$pluginID}\\\"/></jenkins>") String pluginID);
 }

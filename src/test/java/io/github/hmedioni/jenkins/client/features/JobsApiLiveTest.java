@@ -1,679 +1,714 @@
-///*
-// * Licensed to the Apache Software Foundation (ASF) under one or more
-// * contributor license agreements.  See the NOTICE file distributed with
-// * this work for additional information regarding copyright ownership.
-// * The ASF licenses this file to You under the Apache License, Version 2.0
-// * (the "License"); you may not use this file except in compliance with
-// * the License.  You may obtain a copy of the License at
-// *
-// *     http://www.apache.org/licenses/LICENSE-2.0
-// *
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// */
-//package io.github.hmedioni.jenkins.client.features;
-//
-//import io.github.hmedioni.jenkins.client.*;
-//import io.github.hmedioni.jenkins.client.domain.common.*;
-//import io.github.hmedioni.jenkins.client.domain.job.*;
-//import io.github.hmedioni.jenkins.client.domain.plugins.*;
-//import io.github.hmedioni.jenkins.client.domain.queue.*;
-//import org.testng.annotations.*;
-//
-//import java.util.*;
-//
-//import static org.testng.Assert.*;
-//
-//@Test(groups = "live", testName = "JobsApiLiveTest", singleThreaded = true)
-//public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
-//
-//    private static final String FOLDER_PLUGIN_NAME = "cloudbees-folder";
-//    private static final String FOLDER_PLUGIN_VERSION = "latest";
-//    private static final String FREESTYLE_JOB_NAME = "FreeStyleSleep";
-//    private static final String PIPELINE_JOB_NAME = "PipelineSleep";
-//    private static final String PIPELINE_WITH_ACTION_JOB_NAME = "PipelineAction";
-//    private IntegerResponse queueId;
-//    private IntegerResponse queueIdForAnotherJob;
-//    private Integer buildNumber;
-//
-//    @Test
-//    public void testCreateJob() {
-//        String config = payloadFromResource("/freestyle-project-no-params.xml");
-//        RequestStatus success = api().create(null, "DevTest", config);
-//        assertTrue(success.getValue());
-//    }
-//
-//    // The next 3 tests must run one after the other as they use the same Job
-//    @Test
-//    public void testStopFreeStyleBuild() throws InterruptedException {
-//        String config = payloadFromResource("/freestyle-project-sleep-10-task.xml");
-//        RequestStatus createStatus = api().create(null, FREESTYLE_JOB_NAME, config);
-//        assertTrue(createStatus.getValue());
-//        IntegerResponse qId = api().build(null, FREESTYLE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus stopStatus = api().stop(null, FREESTYLE_JOB_NAME, queueItem.executable().number());
-//        assertTrue(stopStatus.getValue());
-//        BuildInfo buildInfo = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
-//        assertEquals(buildInfo.result(), "ABORTED");
-//    }
-//
-//    @Test(dependsOnMethods = "testStopFreeStyleBuild")
-//    public void testTermFreeStyleBuild() throws InterruptedException {
-//        IntegerResponse qId = api().build(null, FREESTYLE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus termStatus = api().term(null, FREESTYLE_JOB_NAME, queueItem.executable().number());
-//        // Strangely, term does not work on FreeStyleBuild
-//        assertFalse(termStatus.getValue());
-//        assertEquals(termStatus.errors().size(), 1);
-//        assertEquals(termStatus.errors().get(0).message(), "The term operation does not exist for " +
-//            System.getProperty("test.jenkins.endpoint") +
-//            "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.executable().number() + "/term/, try stop instead.");
-//        assertEquals(termStatus.errors().get(0).exceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
-//        api().stop(null, FREESTYLE_JOB_NAME, queueItem.executable().number());
-//        BuildInfo buildInfoStop = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
-//        assertEquals(buildInfoStop.result(), "ABORTED");
-//    }
-//
-//    @Test(dependsOnMethods = "testTermFreeStyleBuild")
-//    public void testKillFreeStyleBuild() throws InterruptedException {
-//        IntegerResponse qId = api().build(null, FREESTYLE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus killStatus = api().kill(null, FREESTYLE_JOB_NAME, queueItem.executable().number());
-//        // Strangely, kill does not work on FreeStyleBuild
-//        assertFalse(killStatus.getValue());
-//        assertEquals(killStatus.errors().size(), 1);
-//        assertEquals(killStatus.errors().get(0).message(), "The kill operation does not exist for " +
-//            System.getProperty("test.jenkins.endpoint") +
-//            "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.executable().number() + "/kill/, try stop instead.");
-//        assertEquals(killStatus.errors().get(0).exceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
-//        api().stop(null, FREESTYLE_JOB_NAME, queueItem.executable().number());
-//        BuildInfo buildInfoStop = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
-//        assertEquals(buildInfoStop.result(), "ABORTED");
-//
-//        // Delete the job, it's no longer needed
-//        RequestStatus success = api().delete(null, FREESTYLE_JOB_NAME);
-//        assertNotNull(success);
-//        assertTrue(success.getValue());
-//    }
-//
-//    // The next 3 tests must run one after the other as they use the same Job
-//    @Test
-//    public void testStopPipelineBuild() throws InterruptedException {
-//        String config = payloadFromResource("/pipeline.xml");
-//        RequestStatus createStatus = api().create(null, PIPELINE_JOB_NAME, config);
-//        assertTrue(createStatus.getValue());
-//        IntegerResponse qId = api().build(null, PIPELINE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus stopStatus = api().stop(null, PIPELINE_JOB_NAME, queueItem.executable().number());
-//        assertTrue(stopStatus.getValue());
-//        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
-//        assertEquals(buildInfo.result(), "ABORTED");
-//    }
-//
-//    @Test(dependsOnMethods = "testStopPipelineBuild")
-//    public void testTermPipelineBuild() throws InterruptedException {
-//        IntegerResponse qId = api().build(null, PIPELINE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus termStatus = api().term(null, PIPELINE_JOB_NAME, queueItem.executable().number());
-//        assertTrue(termStatus.getValue());
-//        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
-//        assertEquals(buildInfo.result(), "ABORTED");
-//    }
-//
-//    @Test(dependsOnMethods = "testTermPipelineBuild")
-//    public void testKillPipelineBuild() throws InterruptedException {
-//        IntegerResponse qId = api().build(null, PIPELINE_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        RequestStatus killStatus = api().kill(null, PIPELINE_JOB_NAME, queueItem.executable().number());
-//        assertTrue(killStatus.getValue());
-//        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
-//        assertEquals(buildInfo.result(), "ABORTED");
-//
-//        // The Job is no longer needed, delete it.
-//        RequestStatus success = api().delete(null, PIPELINE_JOB_NAME);
-//        assertNotNull(success);
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = {"testCreateJob", "testCreateJobForEmptyAndNullParams", "testKillPipelineBuild", "testKillFreeStyleBuild", "testDeleteFolders"})
-//    public void testGetJobListFromRoot() {
-//        JobList output = api().jobList("");
-//        assertNotNull(output);
-//        assertFalse(output.jobs().isEmpty());
-//        assertEquals(output.jobs().size(), 2);
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJob")
-//    public void testGetJobInfo() {
-//        JobInfo output = api().jobInfo(null, "DevTest");
-//        assertNotNull(output);
-//        assertEquals(output.name(), "DevTest");
-//        assertNull(output.lastBuild());
-//        assertNull(output.firstBuild());
-//        assertTrue(output.builds().isEmpty());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetJobInfo")
-//    public void testLastBuildNumberOnJobWithNoBuilds() {
-//        Integer output = api().lastBuildNumber(null, "DevTest");
-//        assertNull(output);
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildNumberOnJobWithNoBuilds")
-//    public void testLastBuildTimestampOnJobWithNoBuilds() {
-//        String output = api().lastBuildTimestamp(null, "DevTest");
-//        assertNull(output);
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildTimestampOnJobWithNoBuilds")
-//    public void testBuildJob() throws InterruptedException {
-//        queueId = api().build(null, "DevTest");
-//        assertNotNull(queueId);
-//        assertTrue(queueId.getValue() > 0);
-//        assertEquals(queueId.errors().size(), 0);
-//        // Before we exit the test, wait until the job runs
-//        QueueItem queueItem = getRunningQueueItem(queueId.getValue());
-//        getCompletedBuild("DevTest", queueItem);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildJob")
-//    public void testLastBuildNumberOnJob() {
-//        buildNumber = api().lastBuildNumber(null, "DevTest");
-//        assertNotNull(buildNumber);
-//        assertEquals((int) buildNumber, 1);
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildNumberOnJob")
-//    public void testLastBuildTimestamp() {
-//        String output = api().lastBuildTimestamp(null, "DevTest");
-//        assertNotNull(output);
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildTimestamp")
-//    public void testLastBuildGetProgressiveText() {
-//        ProgressiveText output = api().progressiveText(null, "DevTest", 0);
-//        assertNotNull(output);
-//        assertTrue(output.size() > 0);
-//        assertFalse(output.hasMoreData());
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildGetProgressiveText")
-//    public void testGetBuildInfo() {
-//        BuildInfo output = api().buildInfo(null, "DevTest", buildNumber);
-//        assertNotNull(output);
-//        assertEquals("DevTest #" + buildNumber, output.fullDisplayName());
-//        assertEquals((int) queueId.getValue(), output.queueId());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetBuildInfo")
-//    public void testGetBuildParametersOfLastJob() {
-//        List<Parameter> parameters = api().buildInfo(null, "DevTest", 1).actions().get(0).parameters();
-//        assertEquals(parameters.size(), 0);
-//    }
-//
-//    @Test
-//    public void testBuildInfoActions() throws InterruptedException {
-//        String config = payloadFromResource("/pipeline-with-action.xml");
-//        RequestStatus createStatus = api().create(null, PIPELINE_WITH_ACTION_JOB_NAME, config);
-//        assertTrue(createStatus.getValue());
-//        IntegerResponse qId = api().build(null, PIPELINE_WITH_ACTION_JOB_NAME);
-//        assertNotNull(qId);
-//        assertTrue(qId.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(qId.getValue());
-//        assertNotNull(queueItem);
-//        assertNotNull(queueItem.executable());
-//        assertNotNull(queueItem.executable().number());
-//        BuildInfo buildInfo = getCompletedBuild(PIPELINE_WITH_ACTION_JOB_NAME, queueItem);
-//        assertEquals(buildInfo.result(), "SUCCESS");
-//        System.out.println(buildInfo);
-//        boolean found = false;
-//        for (int idx = 0; idx < buildInfo.actions().size(); idx++) {
-//            if (buildInfo.actions().get(idx).text() != null) {
-//                if (buildInfo.actions().get(idx).text().equals("Hudson, we have a problem.") &&
-//                    buildInfo.actions().get(idx).iconPath().equals("error.svg") &&
-//                    buildInfo.actions().get(idx)._class().equals("com.jenkinsci.plugins.badge.action.BadgeSummaryAction")) {
-//                    found = true;
-//                }
-//            }
-//        }
-//        assertTrue(found);
-//
-//        // The Job is no longer needed, delete it.
-//        RequestStatus success = api().delete(null, PIPELINE_WITH_ACTION_JOB_NAME);
-//        assertNotNull(success);
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetBuildParametersOfLastJob")
-//    public void testCreateJobThatAlreadyExists() {
-//        String config = payloadFromResource("/freestyle-project.xml");
-//        RequestStatus success = api().create(null, "DevTest", config);
-//        assertFalse(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJobThatAlreadyExists")
-//    public void testSetDescription() {
-//        boolean success = api().description(null, "DevTest", "RandomDescription");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testSetDescription")
-//    public void testGetDescription() {
-//        String output = api().description(null, "DevTest");
-//        assertEquals(output, "RandomDescription");
-//    }
-//
-//    @Test(dependsOnMethods = "testGetDescription")
-//    public void testGetConfig() {
-//        String output = api().config(null, "DevTest");
-//        assertNotNull(output);
-//    }
-//
-//    @Test(dependsOnMethods = "testGetConfig")
-//    public void testUpdateConfig() {
-//        String config = payloadFromResource("/freestyle-project.xml");
-//        boolean success = api().config(null, "DevTest", config);
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testUpdateConfig")
-//    public void testBuildJobWithParameters() {
-//        Map<String, List<String>> params = new HashMap<>();
-//        params.put("SomeKey", Lists.newArrayList("SomeVeryNewValue"));
-//        IntegerResponse output = api().buildWithParameters(null, "DevTest", params);
-//        assertNotNull(output);
-//        assertTrue(output.getValue() > 0);
-//        assertEquals(output.errors().size(), 0);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildJobWithParameters")
-//    public void testBuildJobWithNullParametersMap() {
-//        IntegerResponse output = api().buildWithParameters(null, "DevTest", null);
-//        assertNotNull(output);
-//        assertTrue(output.getValue() > 0);
-//        assertEquals(output.errors().size(), 0);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildJobWithNullParametersMap")
-//    public void testBuildJobWithEmptyParametersMap() {
-//        IntegerResponse output = api().buildWithParameters(null, "DevTest", new HashMap<>());
-//        assertNotNull(output);
-//        assertNull(output.getValue());
-//        assertEquals(output.errors().size(), 1);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildJobWithEmptyParametersMap")
-//    public void testDisableJob() {
-//        boolean success = api().disable(null, "DevTest");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testDisableJob")
-//    public void testDisableJobAlreadyDisabled() {
-//        boolean success = api().disable(null, "DevTest");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testDisableJobAlreadyDisabled")
-//    public void testEnableJob() {
-//        boolean success = api().enable(null, "DevTest");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testEnableJob")
-//    public void testEnableJobAlreadyEnabled() {
-//        boolean success = api().enable(null, "DevTest");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testEnableJobAlreadyEnabled")
-//    public void testRenameJob() {
-//        boolean success = api().rename(null, "DevTest", "NewDevTest");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testRenameJob")
-//    public void testRenameJobNotExist() {
-//        boolean success = api().rename(null, "JobNotExist", "NewDevTest");
-//        assertFalse(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testRenameJobNotExist")
-//    public void testDeleteJob() {
-//        RequestStatus success = api().delete(null, "NewDevTest");
-//        assertNotNull(success);
-//        assertTrue(success.getValue());
-//    }
-//
-//    //
-//    // check for the presence of folder-plugin
-//    // If not present, attempt to install it.
-//    //
-//    @Test
-//    public void testInstallFolderPlugin() throws Exception {
-//        long endTime = 0;
-//        long maxWaitTime = 5 * 60 * 1000;
-//        if (!isFolderPluginInstalled()) {
-//            RequestStatus status = api.pluginManagerApi().installNecessaryPlugins(FOLDER_PLUGIN_NAME + "@" + FOLDER_PLUGIN_VERSION);
-//            assertTrue(status.getValue());
-//            while (endTime <= maxWaitTime) {
-//                if (!isFolderPluginInstalled()) {
-//                    Thread.sleep(10000);
-//                    endTime += 10000;
-//                } else {
-//                    break;
-//                }
-//            }
-//        }
-//        assertTrue(isFolderPluginInstalled());
-//    }
-//
-//    @Test(dependsOnMethods = "testInstallFolderPlugin")
-//    public void testCreateFoldersInJenkins() {
-//        String config = payloadFromResource("/folder-config.xml");
-//        RequestStatus success1 = api().create(null, "test-folder", config);
-//        assertTrue(success1.getValue());
-//        RequestStatus success2 = api().create("test-folder", "test-folder-1", config);
-//        assertTrue(success2.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
-//    public void testCreateJobInFolder() {
-//        String config = payloadFromResource("/freestyle-project-no-params.xml");
-//        RequestStatus success = api().create("test-folder/test-folder-1", "JobInFolder", config);
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
-//    public void testCreateJobWithIncorrectFolderPath() {
-//        String config = payloadFromResource("/folder-config.xml");
-//        RequestStatus success = api().create("/test-folder//test-folder-1/", "Job", config);
-//        assertFalse(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJobInFolder")
-//    public void testGetJobListInFolder() {
-//        JobList output = api().jobList("test-folder/test-folder-1");
-//        assertNotNull(output);
-//        assertFalse(output.jobs().isEmpty());
-//        assertEquals(output.jobs().size(), 1);
-//        assertEquals(output.jobs().get(0), Job.create("hudson.model.FreeStyleProject", "JobInFolder", System.getProperty("test.jenkins.endpoint") + "/job/test-folder/job/test-folder-1/job/JobInFolder/", "notbuilt"));
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJobInFolder")
-//    public void testUpdateJobConfigInFolder() {
-//        String config = payloadFromResource("/freestyle-project.xml");
-//        boolean success = api().config("test-folder/test-folder-1", "JobInFolder", config);
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testUpdateJobConfigInFolder")
-//    public void testDisableJobInFolder() {
-//        boolean success = api().disable("test-folder/test-folder-1", "JobInFolder");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testDisableJobInFolder")
-//    public void testEnableJobInFolder() {
-//        boolean success = api().enable("test-folder/test-folder-1", "JobInFolder");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testEnableJobInFolder")
-//    public void testSetDescriptionOfJobInFolder() {
-//        boolean success = api().description("test-folder/test-folder-1", "JobInFolder", "RandomDescription");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testSetDescriptionOfJobInFolder")
-//    public void testGetDescriptionOfJobInFolder() {
-//        String output = api().description("test-folder/test-folder-1", "JobInFolder");
-//        assertEquals(output, "RandomDescription");
-//    }
-//
-//    @Test(dependsOnMethods = "testGetDescriptionOfJobInFolder")
-//    public void testGetJobInfoInFolder() {
-//        JobInfo output = api().jobInfo("test-folder/test-folder-1", "JobInFolder");
-//        assertNotNull(output);
-//        assertEquals(output.name(), "JobInFolder");
-//        assertTrue(output.builds().isEmpty());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetJobInfoInFolder")
-//    public void testBuildWithParameters() throws InterruptedException {
-//        Map<String, List<String>> params = new HashMap<>();
-//        params.put("SomeKey", Lists.newArrayList("SomeVeryNewValue"));
-//        queueIdForAnotherJob = api().buildWithParameters("test-folder/test-folder-1", "JobInFolder", params);
-//        assertNotNull(queueIdForAnotherJob);
-//        assertTrue(queueIdForAnotherJob.getValue() > 0);
-//        QueueItem queueItem = getRunningQueueItem(queueIdForAnotherJob.getValue());
-//        assertNotNull(queueItem);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildWithParameters")
-//    public void testLastBuildTimestampOfJobInFolder() {
-//        String output = api().lastBuildTimestamp("test-folder/test-folder-1", "JobInFolder");
-//        assertNotNull(output);
-//    }
-//
-//    @Test(dependsOnMethods = "testLastBuildTimestampOfJobInFolder")
-//    public void testGetProgressiveText() {
-//        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 0);
-//        assertNotNull(output);
-//        assertTrue(output.size() > 0);
-//        assertFalse(output.hasMoreData());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetProgressiveText")
-//    public void testGetBuildInfoOfJobInFolder() {
-//        BuildInfo output = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1);
-//        assertNotNull(output);
-//        assertTrue(output.fullDisplayName().contains("JobInFolder #1"));
-//        assertEquals((int) queueIdForAnotherJob.getValue(), output.queueId());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetProgressiveText")
-//    public void testGetBuildParametersofJob() {
-//        List<Parameter> parameters = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).actions().get(0).parameters();
-//        assertNotNull(parameters);
-//        assertEquals(parameters.get(0).name(), "SomeKey");
-//        assertEquals(parameters.get(0).getValue(), "SomeVeryNewValue");
-//    }
-//
-//    @Test(dependsOnMethods = "testGetProgressiveText")
-//    public void testGetBuildCausesOfJob() {
-//        List<Cause> causes = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).actions().get(1).causes();
-//        assertNotNull(causes);
-//        assertTrue(causes.size() > 0);
-//        assertNotNull(causes.get(0).shortDescription());
-//        assertNotNull(causes.get(0).userId());
-//        assertNotNull(causes.get(0).userName());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetProgressiveText")
-//    public void testGetProgressiveTextOfBuildNumber() {
-//        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 1, 0);
-//        assertNotNull(output);
-//        assertTrue(output.size() > 0);
-//        assertFalse(output.hasMoreData());
-//    }
-//
-//    @Test
-//    public void testCreateJobForEmptyAndNullParams() {
-//        String config = payloadFromResource("/freestyle-project-empty-and-null-params.xml");
-//        RequestStatus success = api().create(null, "JobForEmptyAndNullParams", config);
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJobForEmptyAndNullParams")
-//    public void testBuildWithParametersOfJobForEmptyAndNullParams() throws InterruptedException {
-//        Map<String, List<String>> params = new HashMap<>();
-//        params.put("SomeKey1", Lists.newArrayList(""));
-//        params.put("SomeKey2", null);
-//        IntegerResponse job1 = api.jobsApi().buildWithParameters(null, "JobForEmptyAndNullParams", params);
-//        assertNotNull(job1);
-//        assertTrue(job1.getValue() > 0);
-//        assertEquals(job1.errors().size(), 0);
-//        QueueItem queueItem = getRunningQueueItem(job1.getValue());
-//        assertNotNull(queueItem);
-//    }
-//
-//    @Test(dependsOnMethods = "testBuildWithParametersOfJobForEmptyAndNullParams")
-//    public void testGetBuildParametersOfJobForEmptyAndNullParams() {
-//        List<Parameter> parameters = api().buildInfo(null, "JobForEmptyAndNullParams", 1).actions().get(0).parameters();
-//        assertNotNull(parameters);
-//        assertEquals(parameters.get(0).name(), "SomeKey1");
-//        assertTrue(parameters.get(0).getValue().isEmpty());
-//        assertEquals(parameters.get(1).name(), "SomeKey2");
-//        assertTrue(parameters.get(1).getValue().isEmpty());
-//    }
-//
-//    @Test(dependsOnMethods = {"testGetBuildParametersOfJobForEmptyAndNullParams", "testGetJobListFromRoot"})
-//    public void testDeleteJobForEmptyAndNullParams() {
-//        RequestStatus success = api().delete(null, "JobForEmptyAndNullParams");
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
-//    public void testCreateJobWithLeadingAndTrailingForwardSlashes() {
-//        String config = payloadFromResource("/freestyle-project-no-params.xml");
-//        RequestStatus success = api().create("/test-folder/test-folder-1/", "Job", config);
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testCreateJobWithLeadingAndTrailingForwardSlashes")
-//    public void testDeleteJobWithLeadingAndTrailingForwardSlashes() {
-//        RequestStatus success = api().delete("/test-folder/test-folder-1/", "Job");
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testGetBuildInfoOfJobInFolder")
-//    public void testRenameJonInFloder() {
-//        boolean success = api().rename("test-folder/test-folder-1", "JobInFolder", "NewJobInFolder");
-//        assertTrue(success);
-//    }
-//
-//    @Test(dependsOnMethods = "testRenameJonInFloder")
-//    public void testDeleteJobInFolder() {
-//        RequestStatus success = api().delete("test-folder/test-folder-1", "NewJobInFolder");
-//        assertTrue(success.getValue());
-//    }
-//
-//    @Test(dependsOnMethods = "testDeleteJobInFolder")
-//    public void testDeleteFolders() {
-//        RequestStatus success1 = api().delete("test-folder", "test-folder-1");
-//        assertTrue(success1.getValue());
-//        RequestStatus success2 = api().delete(null, "test-folder");
-//        assertTrue(success2.getValue());
-//    }
-//
-//    @Test
-//    public void testGetJobInfoNonExistentJob() {
-//        JobInfo output = api().jobInfo(null, randomString());
-//        assertNull(output);
-//    }
-//
-//    @Test
-//    public void testDeleteJobNonExistent() {
-//        RequestStatus success = api().delete(null, randomString());
-//        assertNotNull(success);
-//        assertFalse(success.getValue());
-//    }
-//
-//    @Test
-//    public void testGetConfigNonExistentJob() {
-//        String output = api().config(null, randomString());
-//        assertNull(output);
-//    }
-//
-//    @Test
-//    public void testSetDescriptionNonExistentJob() {
-//        boolean success = api().description(null, randomString(), "RandomDescription");
-//        assertFalse(success);
-//    }
-//
-//    @Test
-//    public void testGetDescriptionNonExistentJob() {
-//        String output = api().description(null, randomString());
-//        assertNull(output);
-//    }
-//
-//    @Test
-//    public void testBuildNonExistentJob() {
-//        IntegerResponse output = api().build(null, randomString());
-//        assertNotNull(output);
-//        assertNull(output.getValue());
-//        assertTrue(output.errors().size() > 0);
-//        assertNotNull(output.errors().get(0).context());
-//        assertNotNull(output.errors().get(0).message());
-//        assertEquals(output.errors().get(0).exceptionName(), "org.jclouds.rest.ResourceNotFoundException");
-//    }
-//
-//    @Test
-//    public void testGetBuildInfoNonExistentJob() {
-//        BuildInfo output = api().buildInfo(null, randomString(), 123);
-//        assertNull(output);
-//    }
-//
-//    @Test
-//    public void testBuildNonExistentJobWithParams() {
-//        Map<String, List<String>> params = new HashMap<>();
-//        params.put("SomeKey", Lists.newArrayList("SomeVeryNewValue"));
-//        IntegerResponse output = api().buildWithParameters(null, randomString(), params);
-//        assertNotNull(output);
-//        assertNull(output.getValue());
-//        assertTrue(output.errors().size() > 0);
-//        assertNotNull(output.errors().get(0).context());
-//        assertNotNull(output.errors().get(0).message());
-//        assertEquals(output.errors().get(0).exceptionName(), "org.jclouds.rest.ResourceNotFoundException");
-//    }
-//
-//    private boolean isFolderPluginInstalled() {
-//        boolean installed = false;
-//        Plugins plugins = api.pluginManagerApi().plugins(3, null);
-//        for (Plugin plugin : plugins.plugins()) {
-//            if (plugin.shortName().equals(FOLDER_PLUGIN_NAME)) {
-//                installed = true;
-//                break;
-//            }
-//        }
-//        return installed;
-//    }
-//
-//    private JobsApi api() {
-//        return api.jobsApi();
-//    }
-//}
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.hmedioni.jenkins.client.features;
+
+import io.github.hmedioni.jenkins.client.*;
+import io.github.hmedioni.jenkins.client.domain.common.*;
+import io.github.hmedioni.jenkins.client.domain.job.*;
+import io.github.hmedioni.jenkins.client.domain.plugins.*;
+import io.github.hmedioni.jenkins.client.domain.queue.*;
+import io.github.hmedioni.jenkins.client.exception.*;
+import lombok.extern.slf4j.*;
+import org.springframework.http.*;
+import org.testng.annotations.*;
+
+import java.util.*;
+
+import static org.testng.Assert.*;
+
+@Test(groups = "live", singleThreaded = true)
+@Slf4j
+public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
+
+    private static final String FOLDER_PLUGIN_NAME = "cloudbees-folder";
+    private static final String FOLDER_PLUGIN_VERSION = "latest";
+    private static final String FREESTYLE_JOB_NAME = "FreeStyleSleep";
+    private static final String PIPELINE_JOB_NAME = "PipelineSleep";
+    private static final String PIPELINE_WITH_ACTION_JOB_NAME = "PipelineAction";
+    private IntegerResponse queueId;
+    private IntegerResponse queueIdForAnotherJob;
+    private Integer buildNumber;
+
+    @BeforeTest
+    public void cleanJenkins() {
+        Objects.requireNonNull(api.jobsApi().jobList().getBody()).getJobs().forEach(job -> api().delete(job.getName()));
+        log.info("BeforeTest: Delete all Jobs!");
+    }
+
+    @Test
+    public void testCreateJob() {
+        String config = payloadFromResource("/freestyle-project-no-params.xml");
+        ResponseEntity<Void> success = api().create("DevTest", config);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    // The next 3 tests must run one after the other as they use the same Job
+    @Test
+    public void testStopFreeStyleBuild() throws InterruptedException {
+        String config = payloadFromResource("/freestyle-project-sleep-10-task.xml");
+        ResponseEntity<Void> createStatus = api().create(FREESTYLE_JOB_NAME, config);
+        assertTrue(createStatus.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> qIdResponse = api().build(FREESTYLE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(qIdResponse.getHeaders());
+        assertNotNull(qId);
+        assertTrue(Objects.requireNonNull(qId.getValues() > 0));
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        ResponseEntity<Void> stopStatus = api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+        assertTrue(stopStatus.getStatusCode().is3xxRedirection());
+        BuildInfo buildInfo = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
+        assertEquals(buildInfo.getResult(), "ABORTED");
+    }
+
+    @Test(dependsOnMethods = "testStopFreeStyleBuild")
+    public void testTermFreeStyleBuild() throws InterruptedException {
+        ResponseEntity<Void> responseEntity = api().build(FREESTYLE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        //Falling error
+        try {
+            ResponseEntity<Void> termStatus = api().term(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+            // Strangely, term does not work on FreeStyleBuild
+        } catch (JenkinsAppException e) {
+            assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
+            assertEquals(e.errors().get(0).getMessage(), "The term operation does not exist for " + System.getProperty("test.jenkins.endpoint") + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/term/, try stop instead.");
+
+        }
+        api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+        BuildInfo buildInfoStop = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
+        assertEquals(buildInfoStop.getResult(), "ABORTED");
+    }
+
+    @Test(dependsOnMethods = "testTermFreeStyleBuild")
+    public void testKillFreeStyleBuild() throws InterruptedException {
+        ResponseEntity<Void> responseEntity = api().build(FREESTYLE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        try {
+            ResponseEntity<Void> killStatus = api().kill(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+            // Strangely, term does not work on FreeStyleBuild
+        } catch (JenkinsAppException e) {
+            assertEquals(e.errors().get(0).getMessage(), "The kill operation does not exist for " + System.getProperty("test.jenkins.endpoint") + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/kill/, try stop instead.");
+            assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
+        }
+        // Strangely, kill does not work on FreeStyleBuild
+        api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+        BuildInfo buildInfoStop = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
+        assertEquals(buildInfoStop.getResult(), "ABORTED");
+
+        // Delete the job, it's no longer needed
+        ResponseEntity<Void> success = api().delete(FREESTYLE_JOB_NAME);
+        assertNotNull(success);
+        assertTrue(success.getStatusCode().is3xxRedirection());
+    }
+
+    // The next 3 tests must run one after the other as they use the same Job
+    @Test
+    public void testStopPipelineBuild() throws InterruptedException {
+        String config = payloadFromResource("/pipeline.xml");
+        ResponseEntity<Void> createStatus = api().create(PIPELINE_JOB_NAME, config);
+        assertTrue(createStatus.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> responseEntity = api().build(PIPELINE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        ResponseEntity<Void> stopStatus = api().stop(PIPELINE_JOB_NAME, queueItem.getExecutable().getNumber());
+        assertEquals(stopStatus.getStatusCode(), HttpStatus.FOUND);
+        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
+        assertEquals(buildInfo.getResult(), "ABORTED");
+    }
+
+    @Test(dependsOnMethods = "testStopPipelineBuild")
+    public void testTermPipelineBuild() throws InterruptedException {
+        ResponseEntity<Void> responseEntity = api().build(PIPELINE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        ResponseEntity<Void> termStatus = api().term(PIPELINE_JOB_NAME, queueItem.getExecutable().getNumber());
+        assertTrue(termStatus.getStatusCode().is3xxRedirection());
+        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
+        assertEquals(buildInfo.getResult(), "ABORTED");
+    }
+
+    @Test(dependsOnMethods = "testTermPipelineBuild")
+    public void testKillPipelineBuild() throws InterruptedException {
+        ResponseEntity<Void> responseEntity = api().build(PIPELINE_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        ResponseEntity<Void> killStatus = api().kill(PIPELINE_JOB_NAME, queueItem.getExecutable().getNumber());
+        assertTrue(killStatus.getStatusCode().is2xxSuccessful());
+        BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
+        assertEquals(buildInfo.getResult(), "ABORTED");
+
+        // The Job is no longer needed, delete it.
+        ResponseEntity<Void> success = api().delete(PIPELINE_JOB_NAME);
+        assertNotNull(success);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = {"testCreateJob", "testCreateJobForEmptyAndNullParams", "testKillPipelineBuild", "testKillFreeStyleBuild", "testDeleteFolders"})
+    public void testGetJobListFromRoot() {
+        JobList output = api().jobList("").getBody();
+        assertNotNull(output);
+        assertFalse(output.getJobs().isEmpty());
+        assertEquals(output.getJobs().size(), 2);
+    }
+
+    @Test(dependsOnMethods = "testCreateJob")
+    public void testGetJobInfo() {
+        JobInfo output = api().jobInfo("DevTest").getBody();
+        assertNotNull(output);
+        assertEquals(output.getName(), "DevTest");
+        assertNull(output.getLastBuild());
+        assertNull(output.getFirstBuild());
+        assertTrue(output.getBuilds().isEmpty());
+    }
+
+    @Test(dependsOnMethods = "testGetJobInfo")
+    public void testLastBuildNumberOnJobWithNoBuilds() {
+        Integer output = api().lastBuildNumber("DevTest");
+        assertNull(output);
+    }
+
+    @Test(dependsOnMethods = "testLastBuildNumberOnJobWithNoBuilds")
+    public void testLastBuildTimestampOnJobWithNoBuilds() {
+        String output = api().lastBuildTimestamp("DevTest");
+        assertNull(output);
+    }
+
+    @Test(dependsOnMethods = "testLastBuildTimestampOnJobWithNoBuilds")
+    public void testBuildJob() throws InterruptedException {
+        ResponseEntity<Void> responseEntity = api().build("DevTest");
+        queueId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+        assertNotNull(queueId);
+        assertTrue(queueId.getValues() > 0);
+        // Before we exit the test, wait until the job runs
+        QueueItem queueItem = getRunningQueueItem(queueId.getValues());
+        getCompletedBuild("DevTest", queueItem);
+    }
+
+    @Test(dependsOnMethods = "testBuildJob")
+    public void testLastBuildNumberOnJob() {
+        buildNumber = api().lastBuildNumber("DevTest");
+        assertNotNull(buildNumber);
+        assertEquals((int) buildNumber, 1);
+    }
+
+    @Test(dependsOnMethods = "testLastBuildNumberOnJob")
+    public void testLastBuildTimestamp() {
+        String output = api().lastBuildTimestamp("DevTest");
+        assertNotNull(output);
+    }
+
+    @Test(dependsOnMethods = "testLastBuildTimestamp")
+    public void testLastBuildGetProgressiveText() {
+        ProgressiveText output = api().progressiveText("DevTest", 0);
+        assertNotNull(output);
+        assertTrue(output.getSize() > 0);
+        assertFalse(output.isHasMoreData());
+    }
+
+    @Test(dependsOnMethods = "testLastBuildGetProgressiveText")
+    public void testGetBuildInfo() {
+        BuildInfo output = api().buildInfo("DevTest", buildNumber).getBody();
+        assertNotNull(output);
+        assertEquals("DevTest #" + buildNumber, output.getFullDisplayName());
+        assertEquals((int) queueId.getValues(), output.getQueueId());
+    }
+
+    @Test(dependsOnMethods = "testGetBuildInfo")
+    public void testGetBuildParametersOfLastJob() {
+        List<Parameter> parameters = api().buildInfo("DevTest", 1).getBody().getActions().get(0).getParameters();
+        assertEquals(parameters.size(), 0);
+    }
+
+    @Test
+    public void testBuildInfoActions() throws InterruptedException {
+        String config = payloadFromResource("/pipeline-with-action.xml");
+        ResponseEntity<Void> createStatus = api().create(PIPELINE_WITH_ACTION_JOB_NAME, config);
+        assertTrue(createStatus.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> responseEntity = api().build(PIPELINE_WITH_ACTION_JOB_NAME);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+
+        assertNotNull(qId);
+        assertTrue(qId.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(qId.getValues());
+        assertNotNull(queueItem);
+        assertNotNull(queueItem.getExecutable());
+        assertNotNull(queueItem.getExecutable().getNumber());
+        BuildInfo buildInfo = getCompletedBuild(PIPELINE_WITH_ACTION_JOB_NAME, queueItem);
+        assertEquals(buildInfo.getResult(), "SUCCESS");
+        System.out.println(buildInfo);
+        boolean found = false;
+        for (int idx = 0; idx < buildInfo.getActions().size(); idx++) {
+            if (buildInfo.getActions().get(idx).getText() != null) {
+                if (buildInfo.getActions().get(idx).getText().equals("Hudson, we have a problem.") && buildInfo.getActions().get(idx).getIconPath().equals("error.svg") && buildInfo.getActions().get(idx).getClazz().equals("com.jenkinsci.plugins.badge.action.BadgeSummaryAction")) {
+                    found = true;
+                }
+            }
+        }
+        assertTrue(found);
+
+        // The Job is no longer needed, delete it.
+        ResponseEntity<Void> success = api().delete(PIPELINE_WITH_ACTION_JOB_NAME);
+        assertNotNull(success);
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
+    }
+
+    @Test(dependsOnMethods = "testGetBuildParametersOfLastJob")
+    public void testCreateJobThatAlreadyExists() {
+        String config = payloadFromResource("/freestyle-project.xml");
+        ResponseEntity<Void> success = api().create("DevTest", config);
+        assertFalse(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateJobThatAlreadyExists")
+    public void testSetDescription() {
+        ResponseEntity<Boolean> success = api().pushDescription("DevTest", "RandomDescription");
+        assertTrue(success.getBody());
+    }
+
+    @Test(dependsOnMethods = "testSetDescription")
+    public void testGetDescription() {
+        String output = api().description("DevTest").getBody();
+        assertEquals(output, "RandomDescription");
+    }
+
+    @Test(dependsOnMethods = "testGetDescription")
+    public void testGetConfig() {
+        String output = api().config("DevTest");
+        assertNotNull(output);
+    }
+
+    @Test(dependsOnMethods = "testGetConfig")
+    public void testUpdateConfig() {
+        String config = payloadFromResource("/freestyle-project.xml");
+        boolean success = api().pushConfig("DevTest", config).getBody();
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testUpdateConfig")
+    public void testBuildJobWithParameters() {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("SomeKey", List.of("SomeVeryNewValue"));
+        ResponseEntity<Void> output = api().buildWithParameters("DevTest", params);
+        assertNotNull(output);
+        assertTrue(output.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testBuildJobWithParameters")
+    public void testBuildJobWithNullParametersMap() {
+        ResponseEntity<Void> output = api().buildWithParameters("DevTest", null);
+        IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(output.getHeaders());
+
+        assertNotNull(output);
+        assertTrue(qId.getValues() > 0);
+    }
+
+    @Test(dependsOnMethods = "testBuildJobWithNullParametersMap")
+    public void testBuildJobWithEmptyParametersMap() {
+        try {
+            ResponseEntity<Void> output = api().buildWithParameters("DevTest", new HashMap<>());
+
+        } catch (JenkinsAppException e) {
+            assertEquals(e.errors().size(), 1);
+        }
+    }
+
+    @Test(dependsOnMethods = "testBuildJobWithEmptyParametersMap")
+    public void testDisableJob() {
+        boolean success = api().disable("DevTest");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testDisableJob")
+    public void testDisableJobAlreadyDisabled() {
+        boolean success = api().disable("DevTest");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testDisableJobAlreadyDisabled")
+    public void testEnableJob() {
+        boolean success = api().enable("DevTest");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testEnableJob")
+    public void testEnableJobAlreadyEnabled() {
+        boolean success = api().enable("DevTest");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testEnableJobAlreadyEnabled")
+    public void testRenameJob() {
+        ResponseEntity<Boolean> success = api().rename("DevTest", "NewDevTest");
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testRenameJob")
+    public void testRenameJobNotExist() {
+        ResponseEntity<Boolean> success = api().rename("JobNotExist", "NewDevTest");
+        assertFalse(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testRenameJobNotExist")
+    public void testDeleteJob() {
+        ResponseEntity<Void> success = api().delete("NewDevTest");
+        assertNotNull(success);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    //
+    // check for the presence of folder-plugin
+    // If not present, attempt to install it.
+    //
+    @Test
+    public void testInstallFolderPlugin() throws Exception {
+        long endTime = 0;
+        long maxWaitTime = 5 * 60 * 1000;
+        if (!isFolderPluginInstalled()) {
+            ResponseEntity<Void> status = api.pluginManagerApi().installNecessaryPlugins(FOLDER_PLUGIN_NAME + "@" + FOLDER_PLUGIN_VERSION);
+            assertTrue(status.getStatusCode().is2xxSuccessful());
+            while (endTime <= maxWaitTime) {
+                if (!isFolderPluginInstalled()) {
+                    Thread.sleep(10000);
+                    endTime += 10000;
+                } else {
+                    break;
+                }
+            }
+        }
+        assertTrue(isFolderPluginInstalled());
+    }
+
+    @Test(dependsOnMethods = "testInstallFolderPlugin")
+    public void testCreateFoldersInJenkins() {
+        String config = payloadFromResource("/folder-config.xml");
+        ResponseEntity<Void> success1 = api().create("test-folder", config);
+        assertTrue(success1.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> success2 = api().create("test-folder", "test-folder-1", config);
+        assertTrue(success2.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
+    public void testCreateJobInFolder() {
+        String config = payloadFromResource("/freestyle-project-no-params.xml");
+        ResponseEntity<Void> success = api().create("test-folder/test-folder-1", "JobInFolder", config);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
+    public void testCreateJobWithIncorrectFolderPath() {
+        String config = payloadFromResource("/folder-config.xml");
+        ResponseEntity<Void> success = api().create("/test-folder//test-folder-1/", "Job", config);
+        assertFalse(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateJobInFolder")
+    public void testGetJobListInFolder() {
+        JobList output = api().jobList("test-folder/test-folder-1").getBody();
+        assertNotNull(output);
+        assertFalse(output.getJobs().isEmpty());
+        assertEquals(output.getJobs().size(), 1);
+        assertEquals(output.getJobs().get(0), new Job("hudson.model.FreeStyleProject", "JobInFolder", System.getProperty("test.jenkins.endpoint") + "/job/test-folder/job/test-folder-1/job/JobInFolder/", "notbuilt"));
+    }
+
+    @Test(dependsOnMethods = "testCreateJobInFolder")
+    public void testUpdateJobConfigInFolder() {
+        String config = payloadFromResource("/freestyle-project.xml");
+        ResponseEntity<Boolean> success = api().pushConfig("test-folder/test-folder-1", "JobInFolder", config);
+        assertTrue(success.getBody());
+    }
+
+    @Test(dependsOnMethods = "testUpdateJobConfigInFolder")
+    public void testDisableJobInFolder() {
+        boolean success = api().disable("test-folder/test-folder-1", "JobInFolder");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testDisableJobInFolder")
+    public void testEnableJobInFolder() {
+        boolean success = api().enable("test-folder/test-folder-1", "JobInFolder");
+        assertTrue(success);
+    }
+
+    @Test(dependsOnMethods = "testEnableJobInFolder")
+    public void testSetDescriptionOfJobInFolder() {
+        ResponseEntity<Boolean> success = api().pushDescription("test-folder/test-folder-1", "JobInFolder", "RandomDescription");
+        assertTrue(success.getBody());
+    }
+
+    @Test(dependsOnMethods = "testSetDescriptionOfJobInFolder")
+    public void testGetDescriptionOfJobInFolder() {
+        ResponseEntity<String> output = api().description("test-folder/test-folder-1", "JobInFolder");
+        assertEquals(output.getBody(), "RandomDescription");
+    }
+
+    @Test(dependsOnMethods = "testGetDescriptionOfJobInFolder")
+    public void testGetJobInfoInFolder() {
+        JobInfo output = api().jobInfo("test-folder/test-folder-1", "JobInFolder").getBody();
+        assertNotNull(output);
+        assertEquals(output.getName(), "JobInFolder");
+        assertTrue(output.getBuilds().isEmpty());
+    }
+
+    @Test(dependsOnMethods = "testGetJobInfoInFolder")
+    public void testBuildWithParameters() throws InterruptedException {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("SomeKey", List.of("SomeVeryNewValue"));
+        ResponseEntity<Void> responseEntity = api().buildWithParameters("test-folder/test-folder-1", "JobInFolder", params);
+        queueIdForAnotherJob = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+        assertNotNull(queueIdForAnotherJob);
+        assertTrue(queueIdForAnotherJob.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(queueIdForAnotherJob.getValues());
+        assertNotNull(queueItem);
+    }
+
+    @Test(dependsOnMethods = "testBuildWithParameters")
+    public void testLastBuildTimestampOfJobInFolder() {
+        String output = api().lastBuildTimestamp("test-folder/test-folder-1", "JobInFolder");
+        assertNotNull(output);
+    }
+
+    @Test(dependsOnMethods = "testLastBuildTimestampOfJobInFolder")
+    public void testGetProgressiveText() {
+        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 0);
+        assertNotNull(output);
+        assertTrue(output.getSize() > 0);
+        assertFalse(output.isHasMoreData());
+    }
+
+    @Test(dependsOnMethods = "testGetProgressiveText")
+    public void testGetBuildInfoOfJobInFolder() {
+        BuildInfo output = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody();
+        assertNotNull(output);
+        assertTrue(output.getFullDisplayName().contains("JobInFolder #1"));
+        assertEquals((int) queueIdForAnotherJob.getValues(), output.getQueueId());
+    }
+
+    @Test(dependsOnMethods = "testGetProgressiveText")
+    public void testGetBuildParametersofJob() {
+        List<Parameter> parameters = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody().getActions().get(0).getParameters();
+        assertNotNull(parameters);
+        assertEquals(parameters.get(0).getName(), "SomeKey");
+        assertEquals(parameters.get(0).getValue(), "SomeVeryNewValue");
+    }
+
+    @Test(dependsOnMethods = "testGetProgressiveText")
+    public void testGetBuildCausesOfJob() {
+        List<Cause> causes = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody().getActions().get(1).getCauses();
+        assertNotNull(causes);
+        assertTrue(causes.size() > 0);
+        assertNotNull(causes.get(0).getShortDescription());
+        assertNotNull(causes.get(0).getUserId());
+        assertNotNull(causes.get(0).getUserName());
+    }
+
+    @Test(dependsOnMethods = "testGetProgressiveText")
+    public void testGetProgressiveTextOfBuildNumber() {
+        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 1, 0);
+        assertNotNull(output);
+        assertTrue(output.getSize() > 0);
+        assertFalse(output.isHasMoreData());
+    }
+
+    @Test
+    public void testCreateJobForEmptyAndNullParams() {
+        String config = payloadFromResource("/freestyle-project-empty-and-null-params.xml");
+        ResponseEntity<Void> success = api().create("JobForEmptyAndNullParams", config);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateJobForEmptyAndNullParams")
+    public void testBuildWithParametersOfJobForEmptyAndNullParams() throws InterruptedException {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("SomeKey1", List.of(""));
+        params.put("SomeKey2", null);
+        ResponseEntity<Void> responseEntity = api.jobsApi().buildWithParameters("JobForEmptyAndNullParams", params);
+        IntegerResponse job1 = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
+        assertNotNull(job1);
+        assertTrue(job1.getValues() > 0);
+        QueueItem queueItem = getRunningQueueItem(job1.getValues());
+        assertNotNull(queueItem);
+    }
+
+    @Test(dependsOnMethods = "testBuildWithParametersOfJobForEmptyAndNullParams")
+    public void testGetBuildParametersOfJobForEmptyAndNullParams() {
+        List<Parameter> parameters = api().buildInfo("JobForEmptyAndNullParams", 1).getBody().getActions().get(0).getParameters();
+        assertNotNull(parameters);
+        assertEquals(parameters.get(0).getName(), "SomeKey1");
+        assertTrue(parameters.get(0).getValue().isEmpty());
+        assertEquals(parameters.get(1).getName(), "SomeKey2");
+        assertTrue(parameters.get(1).getValue().isEmpty());
+    }
+
+    @Test(dependsOnMethods = {"testGetBuildParametersOfJobForEmptyAndNullParams", "testGetJobListFromRoot"})
+    public void testDeleteJobForEmptyAndNullParams() {
+        ResponseEntity<Void> success = api().delete("JobForEmptyAndNullParams");
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateFoldersInJenkins")
+    public void testCreateJobWithLeadingAndTrailingForwardSlashes() {
+        String config = payloadFromResource("/freestyle-project-no-params.xml");
+        ResponseEntity<Void> success = api().create("/test-folder/test-folder-1/", "Job", config);
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testCreateJobWithLeadingAndTrailingForwardSlashes")
+    public void testDeleteJobWithLeadingAndTrailingForwardSlashes() {
+        ResponseEntity<Void> success = api().delete("/test-folder/test-folder-1/", "Job");
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testGetBuildInfoOfJobInFolder")
+    public void testRenameJonInFloder() {
+        ResponseEntity<Boolean> success = api().rename("test-folder/test-folder-1", "JobInFolder", "NewJobInFolder");
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testRenameJonInFloder")
+    public void testDeleteJobInFolder() {
+        ResponseEntity<Void> success = api().delete("test-folder/test-folder-1", "NewJobInFolder");
+        assertTrue(success.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test(dependsOnMethods = "testDeleteJobInFolder")
+    public void testDeleteFolders() {
+        ResponseEntity<Void> success1 = api().delete("test-folder", "test-folder-1");
+        assertTrue(success1.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> success2 = api().delete("test-folder");
+        assertTrue(success2.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test
+    public void testGetJobInfoNonExistentJob() {
+        try {
+            api().jobInfo(randomString()).getBody();
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testDeleteJobNonExistent() {
+        try {
+            api().delete(randomString());
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testGetConfigNonExistentJob() {
+        try {
+            api().config(randomString());
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testSetDescriptionNonExistentJob() {
+        boolean success = Boolean.TRUE.equals(api().pushDescription(randomString(), "RandomDescription").getBody());
+        assertFalse(success);
+    }
+
+    @Test
+    public void testGetDescriptionNonExistentJob() {
+        try {
+            api().description(randomString());
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testBuildNonExistentJob() {
+        try {
+            api().build(randomString());
+        } catch (JenkinsAppException e) {
+            assertEquals(e.errors().size(), 1);
+        }
+    }
+
+    @Test
+    public void testGetBuildInfoNonExistentJob() {
+        try {
+            api().buildInfo(randomString(), 123).getBody();
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testBuildNonExistentJobWithParams() {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("SomeKey", List.of("SomeVeryNewValue"));
+        try {
+            api().buildWithParameters(randomString(), params);
+        } catch (JenkinsAppException e) {
+            assertNotNull(e);
+            assertTrue(e.errors().size() > 0);
+        }
+    }
+
+    private boolean isFolderPluginInstalled() {
+        boolean installed = false;
+        Plugins plugins = api.pluginManagerApi().plugins(3);
+        for (Plugin plugin : plugins.getPlugins()) {
+            if (plugin.getShortName().equals(FOLDER_PLUGIN_NAME)) {
+                installed = true;
+                break;
+            }
+        }
+        return installed;
+    }
+
+    private JobsApi api() {
+        return api.jobsApi();
+    }
+}

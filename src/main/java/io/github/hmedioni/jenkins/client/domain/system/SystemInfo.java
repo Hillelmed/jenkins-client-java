@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client.domain.system;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 

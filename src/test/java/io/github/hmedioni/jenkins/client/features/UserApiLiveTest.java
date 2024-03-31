@@ -56,15 +56,15 @@
 //
 //    @Test(dependsOnMethods = "testGenerateNewToken")
 //    public void testRevokeApiToken() {
-//        RequestStatus status = api().revoke(token.data().tokenUuid());
+//        ResponseEntity<Void> status = api().revoke(token.data().tokenUuid());
 //        // Jenkins returns 200 whether the tokenUuid is correct or not.
-//        assertTrue(status.getValue());
+//        assertTrue(status.getValues());
 //    }
 //
 //    @Test
 //    public void testRevokeApiTokenWithEmptyUuid() {
-//        RequestStatus status = api().revoke("");
-//        assertFalse(status.getValue());
+//        ResponseEntity<Void> status = api().revoke("");
+//        assertFalse(status.getValues());
 //        // TODO: Deal with the HTML response from Jenkins Stapler
 //    }
 //

@@ -17,10 +17,7 @@
 
 package io.github.hmedioni.jenkins.client.features;
 
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.queue.*;
-
-import io.github.hmedioni.jenkins.client.filters.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
@@ -60,7 +57,7 @@ public interface QueueApi {
     // @Named("queue:cancel")
     @PostExchange("/cancelItem")
     // @Fallback(JenkinsFallbacks.JENKINS_21311.class)
-    //@ResponseParser(RequestStatusParser.class)
+    //@ResponseParser(ResponseEntity<Void>Parser.class)
     //@FormParam("id")
     ResponseEntity<Void> cancel(@RequestBody int id);
 }

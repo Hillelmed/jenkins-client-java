@@ -19,11 +19,12 @@ package io.github.hmedioni.jenkins.client.domain.user;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class ApiToken {
 
-    public String status;
+    private String status;
 
-    public ApiTokenData data;
+    private ApiTokenData data;
 
 
 //    @SerializedNames({"status", "data"})

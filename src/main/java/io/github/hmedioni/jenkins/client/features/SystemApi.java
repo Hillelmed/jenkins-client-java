@@ -17,10 +17,8 @@
 
 package io.github.hmedioni.jenkins.client.features;
 
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.system.*;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 
 
@@ -29,24 +27,27 @@ import org.springframework.web.service.annotation.*;
 @HttpExchange
 public interface SystemApi {
 
-    // @Named("system:info")
-    // @Fallback(JenkinsFallbacks.SystemInfoOnError.class)
-    //@ResponseParser(SystemInfoFromJenkinsHeaders.class)
     @GetExchange("/api/json/systemInfo")
     ResponseEntity<SystemInfo> systemInfo();
 
-    // @Named("system:quiet-down")
+    @PostExchange("/restart")
+    ResponseEntity<Void> restart();
+
+    @PostExchange("/safeRestart")
+    ResponseEntity<Void> safeRestart();
+
+    @PostExchange("/exit")
+    ResponseEntity<Void> exit();
+
+    @PostExchange("/safeExit")
+    ResponseEntity<Void> safeExit();
+
+
     @PostExchange("/quietDown")
-    // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-    //@ResponseParser(RequestStatusParser.class)
-    // @Consumes(MediaType.TEXT_HTML)
     ResponseEntity<Void> quietDown();
 
-    // @Named("system:cancel-quiet-down")
     @PostExchange("/cancelQuietDown")
-    // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-    //@ResponseParser(RequestStatusParser.class)
-    // @Consumes(MediaType.TEXT_HTML)
     ResponseEntity<Void> cancelQuietDown();
+
 
 }

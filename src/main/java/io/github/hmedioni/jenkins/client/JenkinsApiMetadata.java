@@ -17,9 +17,6 @@
 
 package io.github.hmedioni.jenkins.client;
 
-import java.net.*;
-import java.util.*;
-
 public class JenkinsApiMetadata  {
 
     public static final String API_VERSION = "1.0";

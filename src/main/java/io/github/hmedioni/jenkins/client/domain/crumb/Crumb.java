@@ -27,11 +27,11 @@ public class Crumb {
 
     @Nullable
     @JsonProperty("_class")
-    public String clazz;
+    private String clazz;
     @Nullable
     @JsonProperty("crumb")
-    public String value;
+    private String value;
     @Nullable
-    public String crumbRequestField;
+    private String crumbRequestField;
 
 }

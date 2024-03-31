@@ -65,9 +65,9 @@
 //        final JenkinsApi jenkinsApi = api(server.url("/").url());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
-//            final RequestStatus status = api.installNecessaryPlugins("artifactory@2.2.1");
+//            final ResponseEntity<Void> status = api.installNecessaryPlugins("artifactory@2.2.1");
 //            assertNotNull(status);
-//            assertTrue(status.getValue());
+//            assertTrue(status.getValues());
 //            assertTrue(status.errors().isEmpty());
 //            assertSent(server, "POST", "/pluginManager/installNecessaryPlugins");
 //        } finally {
@@ -83,9 +83,9 @@
 //        final JenkinsApi jenkinsApi = api(server.url("/").url());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
-//            final RequestStatus status = api.installNecessaryPlugins("artifactory@2.2.1");
+//            final ResponseEntity<Void> status = api.installNecessaryPlugins("artifactory@2.2.1");
 //            assertNotNull(status);
-//            assertFalse(status.getValue());
+//            assertFalse(status.getValues());
 //            assertFalse(status.errors().isEmpty());
 //            assertTrue(status.errors().get(0).exceptionName().endsWith("AuthorizationException"));
 //            assertSent(server, "POST", "/pluginManager/installNecessaryPlugins");

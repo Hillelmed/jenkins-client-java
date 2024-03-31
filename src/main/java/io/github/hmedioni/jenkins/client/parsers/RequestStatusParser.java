@@ -24,20 +24,20 @@
 //import javax.inject.*;
 //
 ///**
-// * Turn a valid response, but one that has no body, into a RequestStatus.
+// * Turn a valid response, but one that has no body, into a ResponseEntity<Void>.
 // */
 //@Singleton
-//public class RequestStatusParser implements Function<HttpResponse, RequestStatus> {
+//public class ResponseEntity<Void>Parser implements Function<HttpResponse, ResponseEntity<Void>> {
 //
 //    @Override
-//    public RequestStatus apply(final HttpResponse input) {
+//    public ResponseEntity<Void> apply(final HttpResponse input) {
 //        if (input == null) {
 //            throw new RuntimeException("Unexpected NULL HttpResponse object");
 //        }
 //
 //        final int statusCode = input.getStatusCode();
 //        if (statusCode >= 200 && statusCode < 400) {
-//            return RequestStatus.create(true, null);
+//            return ResponseEntity<Void>.create(true, null);
 //        } else {
 //            throw new RuntimeException(input.getStatusLine());
 //        }

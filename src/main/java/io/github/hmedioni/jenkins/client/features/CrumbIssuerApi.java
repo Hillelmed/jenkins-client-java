@@ -19,7 +19,6 @@ package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.domain.crumb.*;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 
 //@RequestFilters(JenkinsNoCrumbAuthenticationFilter.class)

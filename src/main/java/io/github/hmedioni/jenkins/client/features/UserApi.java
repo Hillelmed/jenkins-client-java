@@ -17,9 +17,9 @@
 
 package io.github.hmedioni.jenkins.client.features;
 
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.user.*;
 import org.springframework.http.*;
+import org.springframework.util.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 
@@ -37,23 +37,15 @@ public interface UserApi {
 
     // @Named("user:get")
     @GetExchange("/{user}/api/json")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    User get();
+    ResponseEntity<User> get(@PathVariable String user);
 
     // @Named("user:generateNewToken")
-    @PostExchange("/{user}/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_FORM_URLENCODED)
-    // @Payload("newTokenName={tokenName}")
-    ApiToken generateNewToken(@RequestBody String tokenName);
+    @PostExchange(contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, accept = MediaType.APPLICATION_JSON_VALUE,
+        value = "/{user}/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken")
+    ResponseEntity<ApiToken> generateNewToken(@PathVariable(value = "user") String user, @RequestParam(name = "newTokenName") String newTokenName);
 
     // @Named("user:revoke")
-    @PostExchange("/{user}/descriptorByName/jenkins.security.ApiTokenProperty/revoke")
-    // @Fallback(JenkinsFallbacks.RequestStatusOnError.class)
-    //@ResponseParser(RequestStatusParser.class)
-    // @Produces(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Payload("tokenUuid={tokenUuid}")
-    ResponseEntity<Void> revoke(@RequestBody String tokenUuid);
+    @PostExchange(contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+        value = "/{user}/descriptorByName/jenkins.security.ApiTokenProperty/revoke")
+    ResponseEntity<Void> revoke(@PathVariable("user") String user, @RequestParam(name = "tokenUuid") String newTokenName);
 }

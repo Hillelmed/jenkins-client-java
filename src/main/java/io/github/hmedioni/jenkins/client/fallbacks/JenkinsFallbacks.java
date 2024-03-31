@@ -41,9 +41,9 @@
 //     * @return List of culled Error's
 //     */
 //    public static List<Error> getErrors(final Exception output) {
-//        final Error error = Error.create(null, output.getMessage(),
+//        final Error error = Error.create( output.getMessage(),
 //            output.getClass().getName());
-//        return Lists.newArrayList(error);
+//        return List.of(error);
 //    }
 //
 //    /**
@@ -54,7 +54,7 @@
 //     */
 //    public static List<Error> getErrors(final Throwable output) {
 //
-//        final List<Error> errors = Lists.newArrayList();
+//        final List<Error> errors = List.of();
 //
 //        String context = null;
 //        String message = output.getMessage();
@@ -83,14 +83,14 @@
 //        }
 //    }
 //
-//    public static final class RequestStatusOnError implements Fallback<Object> {
+//    public static final class ResponseEntity<Void>OnError implements Fallback<Object> {
 //        @Override
 //        public Object createOrPropagate(final Throwable throwable) {
 //            checkNotNull(throwable, "throwable");
 //            try {
-//                return RequestStatus.create(false, getErrors(throwable));
+//                return ResponseEntity<Void>.create(false, getErrors(throwable));
 //            } catch (JsonSyntaxException e) {
-//                return RequestStatus.create(false, getErrors(e));
+//                return ResponseEntity<Void>.create(false, getErrors(e));
 //            }
 //        }
 //    }
@@ -100,9 +100,9 @@
 //        public Object createOrPropagate(final Throwable throwable) {
 //            checkNotNull(throwable, "throwable");
 //            try {
-//                return IntegerResponse.create(null, getErrors(throwable));
+//                return IntegerResponse.create( getErrors(throwable));
 //            } catch (JsonSyntaxException e) {
-//                return IntegerResponse.create(null, getErrors(e));
+//                return IntegerResponse.create( getErrors(e));
 //            }
 //        }
 //    }
@@ -112,9 +112,9 @@
 //        public Object createOrPropagate(final Throwable throwable) {
 //            checkNotNull(throwable, "throwable");
 //            try {
-//                return Crumb.create(null, getErrors(throwable));
+//                return Crumb.create( getErrors(throwable));
 //            } catch (JsonSyntaxException e) {
-//                return Crumb.create(null, getErrors(e));
+//                return Crumb.create( getErrors(e));
 //            }
 //        }
 //    }
@@ -124,9 +124,9 @@
 //        public Object createOrPropagate(final Throwable throwable) {
 //            checkNotNull(throwable, "throwable");
 //            try {
-//                return Plugins.create(null, null, getErrors(throwable));
+//                return Plugins.create(  getErrors(throwable));
 //            } catch (JsonSyntaxException e) {
-//                return Plugins.create(null, null, getErrors(e));
+//                return Plugins.create(  getErrors(e));
 //            }
 //        }
 //    }
@@ -138,12 +138,12 @@
 //            checkNotNull(throwable, "throwable");
 //            try {
 //                if (throwable.getClass() == ResourceNotFoundException.class) {
-//                    return RequestStatus.create(true, null);
+//                    return ResponseEntity<Void>.create(true, null);
 //                } else {
-//                    return RequestStatus.create(false, getErrors(throwable));
+//                    return ResponseEntity<Void>.create(false, getErrors(throwable));
 //                }
 //            } catch (JsonSyntaxException e) {
-//                return RequestStatus.create(false, getErrors(e));
+//                return ResponseEntity<Void>.create(false, getErrors(e));
 //            }
 //        }
 //    }

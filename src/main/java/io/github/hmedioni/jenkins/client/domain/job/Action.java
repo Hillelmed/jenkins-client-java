@@ -17,6 +17,7 @@
 
 package io.github.hmedioni.jenkins.client.domain.job;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.springframework.lang.*;
 
@@ -26,18 +27,19 @@ import java.util.*;
 @NoArgsConstructor
 public class Action {
 
-    public List<Cause> causes;
+    private List<Cause> causes;
 
-    public List<Parameter> parameters;
-
-    @Nullable
-    public String text;
+    private List<Parameter> parameters;
 
     @Nullable
-    public String iconPath;
+    private String text;
 
     @Nullable
-    public String _class;
+    private String iconPath;
+
+    @Nullable
+    @JsonProperty("_class")
+    private String clazz;
 
 //    @SerializedNames({"causes", "parameters", "text", "iconPath", "_class"})
 //    public static Action create(final List<Cause> causes, final List<Parameter> parameters, final String text, final String iconPath, final String _class) {
