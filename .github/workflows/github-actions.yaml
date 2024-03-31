@@ -25,6 +25,9 @@ jobs:
       - name: Run Jenkins LTS docker images
         run: docker run -d --rm -p 8080:8080 --name jenkins-rest jenkins-rest/jenkins
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Setup Gradle Build Action
         uses: gradle/gradle-build-action@v2.7.0
 
