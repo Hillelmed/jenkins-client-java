@@ -37,7 +37,7 @@ public class JenkinsApiClientImpl implements JenkinsApi {
     private final Map<Class<?>, Object> singletons;
 
     public JenkinsApiClientImpl(JenkinsProperties jenkinsProperties, WebClient webClient) {
-        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, TEMPLATE_AND_VALUES);
+        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, NONE);
         this.singletons = Collections.synchronizedMap(new HashMap<>());
     }
 

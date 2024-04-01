@@ -38,7 +38,7 @@ public interface JobsApi {
 //    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
 //    @Consumes(MediaType.APPLICATION_JSON)
 //    @GetExchange
-    @GetExchange("/{folderPath}api/json")
+    @GetExchange("/job/{folderPath}/api/json")
     ResponseEntity<JobList> jobList(@PathVariable("folderPath") String folderPath);
 
     @GetExchange("/api/json")
@@ -103,12 +103,12 @@ public interface JobsApi {
 //    @Consumes(MediaType.TEXT_HTML)
     // @Payload("{configXML}")
     @PostExchange("/job/{optionalFolderPath}/job/{name}/config.xml")
-    ResponseEntity<Boolean> pushConfig(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> pushConfig(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                                        @PathVariable("name") String jobName,
                                        @RequestBody String configXML);
 
     @PostExchange("/job/{name}/config.xml")
-    ResponseEntity<Boolean> pushConfig(@PathVariable("name") String jobName,
+    ResponseEntity<Void> pushConfig(@PathVariable("name") String jobName,
                                        @RequestBody String configXML);
 
     // @Named("jobs:get-description")
@@ -122,14 +122,16 @@ public interface JobsApi {
     ResponseEntity<String> description(@PathVariable("name") String jobName);
 
     //    @Consumes(MediaType.TEXT_HTML)
-    @PostExchange(value = "/job/{optionalFolderPath}/job/{name}/description", contentType = MediaType.TEXT_HTML_VALUE)
-    ResponseEntity<Boolean> pushDescription(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    @PostExchange(value = "/job/{optionalFolderPath}/job/{name}/description", accept = MediaType.TEXT_HTML_VALUE
+        , contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    ResponseEntity<Void> pushDescription(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                                             @PathVariable("name") String jobName,
-                                            @RequestPart("description") String description);
+                                            @RequestParam("description") String description);
 
-    @PostExchange(value = "/job/{name}/description", contentType = MediaType.TEXT_HTML_VALUE)
-    ResponseEntity<Boolean> pushDescription(@PathVariable("name") String jobName,
-                                            @RequestPart(value = "description") String description);
+    @PostExchange(value = "/job/{name}/description", accept = MediaType.TEXT_HTML_VALUE
+        , contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    ResponseEntity<Void> pushDescription(@PathVariable("name") String jobName,
+                                            @RequestParam(value = "description") String description);
 
 
     // @Named("jobs:set-description")
@@ -151,25 +153,25 @@ public interface JobsApi {
     @PostExchange("/job/{optionalFolderPath}/job/{name}/enable")
     // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
     // @Consumes(MediaType.TEXT_HTML)
-    boolean enable(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> enable(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                    @PathVariable("name") String jobName);
 
     @PostExchange("/job/{name}/enable")
         // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
         // @Consumes(MediaType.TEXT_HTML)
-    boolean enable(@PathVariable("name") String jobName);
+    ResponseEntity<Void> enable(@PathVariable("name") String jobName);
 
     // @Named("jobs:disable")
     @PostExchange("/job/{optionalFolderPath}/job/{name}/disable")
     // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
     // @Consumes(MediaType.TEXT_HTML)
-    boolean disable(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> disable(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                     @PathVariable("name") String jobName);
 
     @PostExchange("/job/{name}/disable")
         // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
         // @Consumes(MediaType.TEXT_HTML)
-    boolean disable(@PathVariable("name") String jobName);
+    ResponseEntity<Void> disable(@PathVariable("name") String jobName);
 
     // @Named("jobs:build")
     @PostExchange("/job/{optionalFolderPath}/job/{name}/build")
@@ -211,19 +213,26 @@ public interface JobsApi {
     @PostExchange("/job/{optionalFolderPath}/job/{name}/buildWithParameters")
     ResponseEntity<Void> buildWithParameters(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
                                              @PathVariable("name") String jobName,
-                                             @Nullable @RequestParam Map<String, List<String>> properties);
+                                             @RequestParam Map<String, List<String>> properties);
 
     @PostExchange(value = "/job/{name}/buildWithParameters", contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     ResponseEntity<Void> buildWithParameters(@PathVariable("name") String jobName,
-                                             @Nullable @RequestParam Map<String, List<String>> properties);
+                                             @RequestParam Map<String, List<String>> properties);
+
+    @PostExchange("/job/{optionalFolderPath}/job/{name}/buildWithParameters")
+    ResponseEntity<Void> buildWithParameters(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+                                             @PathVariable("name") String jobName);
+
+    @PostExchange(value = "/job/{name}/buildWithParameters", contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    ResponseEntity<Void> buildWithParameters(@PathVariable("name") String jobName);
 
     // @Named("jobs:last-build-number")
-    @GetExchange("/job/{optionalFolderPath}/job/{name}/lastBuild/buildNumber")
-    Integer lastBuildNumber(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
-                            @PathVariable("name") String jobName);
+    @GetExchange(value = "/job/{optionalFolderPath}/job/{name}/lastBuild/buildNumber", accept = "text/plain;charset=US-ASCII")
+    ResponseEntity<String> lastBuildNumber(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+                                           @PathVariable("name") String jobName);
 
-    @GetExchange("/job/{name}/lastBuild/buildNumber")
-    Integer lastBuildNumber(@PathVariable("name") String jobName);
+    @GetExchange(value = "/job/{name}/lastBuild/buildNumber", accept = "text/plain;charset=US-ASCII")
+    ResponseEntity<String> lastBuildNumber(@PathVariable("name") String jobName);
 
     @GetExchange("/job/{optionalFolderPath}/job/{name}/lastBuild/buildTimestamp")
     String lastBuildTimestamp(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
@@ -234,24 +243,24 @@ public interface JobsApi {
 
     // @Named("jobs:progressive-text")
     @GetExchange("/job/{optionalFolderPath}/job/{name}/lastBuild/logText/progressiveText")
-    ProgressiveText progressiveText(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
-                                    @PathVariable("name") String jobName,
-                                    @RequestParam("start") int start);
+    ResponseEntity<String> progressiveText(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+                                           @PathVariable("name") String jobName,
+                                           @RequestParam("start") int start);
 
     @GetExchange("/job/{name}/lastBuild/logText/progressiveText")
-    ProgressiveText progressiveText(@PathVariable("name") String jobName,
-                                    @RequestParam("start") int start);
+    ResponseEntity<String> progressiveText(@PathVariable("name") String jobName,
+                                           @RequestParam("start") int start);
 
     @GetExchange("/job/{optionalFolderPath}/job/{name}/{number}/logText/progressiveText")
-    ProgressiveText progressiveText(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
-                                    @PathVariable("name") String jobName,
-                                    @PathVariable("number") int buildNumber,
-                                    @RequestParam("start") int start);
+    ResponseEntity<String> progressiveText(@Nullable @PathVariable("optionalFolderPath") String optionalFolderPath,
+                                           @PathVariable("name") String jobName,
+                                           @PathVariable("number") int buildNumber,
+                                           @RequestParam("start") int start);
 
     @GetExchange("/job/{name}/{number}/logText/progressiveText")
-    ProgressiveText progressiveText(@PathVariable("name") String jobName,
-                                    @PathVariable("number") int buildNumber,
-                                    @RequestParam("start") int start);
+    ResponseEntity<String> progressiveText(@PathVariable("name") String jobName,
+                                           @PathVariable("number") int buildNumber,
+                                           @RequestParam("start") int start);
 
     // @Named("jobs:rename")
     @PostExchange("/job/{optionalFolderPath}/job/{name}/doRename")

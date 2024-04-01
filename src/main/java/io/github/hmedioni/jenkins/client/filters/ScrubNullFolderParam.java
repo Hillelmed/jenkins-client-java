@@ -47,10 +47,8 @@ public class ScrubNullFolderParam implements ExchangeFilterFunction {
                 requestPath = requestPath.substring(0, requestPath.length() - 1);
             }
             String newUrl = request.url().toString().replaceAll(oldPath, requestPath);
-            URI newURI = URI.create(newUrl);
-
             ClientRequest filteredRequest = ClientRequest.from(request)
-                .url(newURI)
+                .url(URI.create(newUrl))
                 .build();
             return next.exchange(filteredRequest);
         } else {

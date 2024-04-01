@@ -195,7 +195,7 @@
 //        JenkinsApi jenkinsApi = api(server.url("/").url());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
-//            ResponseEntity<Void> success = api.create("/test-folder/test-folder-1/", "JobInFolder", configXML);
+//            ResponseEntity<Void> success = api.create("/test-folder/job/test-folder-1/", "JobInFolder", configXML);
 //            assertNotNull(success);
 //            assertTrue(success.getValues());
 //            assertTrue(success.errors().isEmpty());

@@ -1,6 +1,7 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.springframework.lang.*;
 
@@ -10,6 +11,7 @@ import org.springframework.lang.*;
 public class Job {
 
     @Nullable
+    @JsonProperty("_class")
     private String clazz;
 
     private String name;

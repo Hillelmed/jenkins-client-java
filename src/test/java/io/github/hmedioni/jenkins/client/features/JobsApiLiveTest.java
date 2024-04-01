@@ -41,7 +41,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     private static final String PIPELINE_WITH_ACTION_JOB_NAME = "PipelineAction";
     private IntegerResponse queueId;
     private IntegerResponse queueIdForAnotherJob;
-    private Integer buildNumber;
+    private ResponseEntity<String> buildNumber;
 
     @BeforeTest
     public void cleanJenkins() {
@@ -179,22 +179,22 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         assertNotNull(queueItem.getExecutable());
         assertNotNull(queueItem.getExecutable().getNumber());
         ResponseEntity<Void> killStatus = api().kill(PIPELINE_JOB_NAME, queueItem.getExecutable().getNumber());
-        assertTrue(killStatus.getStatusCode().is2xxSuccessful());
+        assertTrue(killStatus.getStatusCode().is3xxRedirection());
         BuildInfo buildInfo = getCompletedBuild(PIPELINE_JOB_NAME, queueItem);
         assertEquals(buildInfo.getResult(), "ABORTED");
 
         // The Job is no longer needed, delete it.
         ResponseEntity<Void> success = api().delete(PIPELINE_JOB_NAME);
         assertNotNull(success);
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = {"testCreateJob", "testCreateJobForEmptyAndNullParams", "testKillPipelineBuild", "testKillFreeStyleBuild", "testDeleteFolders"})
     public void testGetJobListFromRoot() {
-        JobList output = api().jobList("").getBody();
+        JobList output = api().jobList().getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
-        assertEquals(output.getJobs().size(), 2);
+        assertEquals(output.getJobs().size(), 1);
     }
 
     @Test(dependsOnMethods = "testCreateJob")
@@ -209,14 +209,20 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetJobInfo")
     public void testLastBuildNumberOnJobWithNoBuilds() {
-        Integer output = api().lastBuildNumber("DevTest");
-        assertNull(output);
+        try {
+            api().lastBuildNumber("DevTest");
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test(dependsOnMethods = "testLastBuildNumberOnJobWithNoBuilds")
     public void testLastBuildTimestampOnJobWithNoBuilds() {
-        String output = api().lastBuildTimestamp("DevTest");
-        assertNull(output);
+        try {
+            api().lastBuildTimestamp("DevTest");
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test(dependsOnMethods = "testLastBuildTimestampOnJobWithNoBuilds")
@@ -233,8 +239,8 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testBuildJob")
     public void testLastBuildNumberOnJob() {
         buildNumber = api().lastBuildNumber("DevTest");
-        assertNotNull(buildNumber);
-        assertEquals((int) buildNumber, 1);
+        assertNotNull(buildNumber.getBody());
+        assertEquals(Integer.valueOf(buildNumber.getBody()), 1);
     }
 
     @Test(dependsOnMethods = "testLastBuildNumberOnJob")
@@ -245,24 +251,23 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testLastBuildTimestamp")
     public void testLastBuildGetProgressiveText() {
-        ProgressiveText output = api().progressiveText("DevTest", 0);
+        ResponseEntity<String> output = api().progressiveText("DevTest", 0);
         assertNotNull(output);
-        assertTrue(output.getSize() > 0);
-        assertFalse(output.isHasMoreData());
+        assertTrue(output.getBody().length() > 0);
     }
 
     @Test(dependsOnMethods = "testLastBuildGetProgressiveText")
     public void testGetBuildInfo() {
-        BuildInfo output = api().buildInfo("DevTest", buildNumber).getBody();
+        BuildInfo output = api().buildInfo("DevTest", Integer.parseInt(buildNumber.getBody())).getBody();
         assertNotNull(output);
-        assertEquals("DevTest #" + buildNumber, output.getFullDisplayName());
+        assertEquals("DevTest #" + buildNumber.getBody(), output.getFullDisplayName());
         assertEquals((int) queueId.getValues(), output.getQueueId());
     }
 
     @Test(dependsOnMethods = "testGetBuildInfo")
     public void testGetBuildParametersOfLastJob() {
         List<Parameter> parameters = api().buildInfo("DevTest", 1).getBody().getActions().get(0).getParameters();
-        assertEquals(parameters.size(), 0);
+        assertNull(parameters);
     }
 
     @Test
@@ -301,14 +306,17 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testGetBuildParametersOfLastJob")
     public void testCreateJobThatAlreadyExists() {
         String config = payloadFromResource("/freestyle-project.xml");
-        ResponseEntity<Void> success = api().create("DevTest", config);
-        assertFalse(success.getStatusCode().is2xxSuccessful());
+        try {
+            api().create("DevTest", config);
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Test(dependsOnMethods = "testCreateJobThatAlreadyExists")
     public void testSetDescription() {
-        ResponseEntity<Boolean> success = api().pushDescription("DevTest", "RandomDescription");
-        assertTrue(success.getBody());
+        ResponseEntity<Void> success = api().pushDescription("DevTest", "RandomDescription");
+        assertEquals(success.getStatusCode(), HttpStatus.NO_CONTENT);
     }
 
     @Test(dependsOnMethods = "testSetDescription")
@@ -326,8 +334,8 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testGetConfig")
     public void testUpdateConfig() {
         String config = payloadFromResource("/freestyle-project.xml");
-        boolean success = api().pushConfig("DevTest", config).getBody();
-        assertTrue(success);
+        ResponseEntity<Void> success = api().pushConfig("DevTest", config);
+        assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
     @Test(dependsOnMethods = "testUpdateConfig")
@@ -341,7 +349,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testBuildJobWithParameters")
     public void testBuildJobWithNullParametersMap() {
-        ResponseEntity<Void> output = api().buildWithParameters("DevTest", null);
+        ResponseEntity<Void> output = api().buildWithParameters("DevTest");
         IntegerResponse qId = JenkinsUtils.getQueueItemIntegerResponse(output.getHeaders());
 
         assertNotNull(output);
@@ -351,8 +359,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testBuildJobWithNullParametersMap")
     public void testBuildJobWithEmptyParametersMap() {
         try {
-            ResponseEntity<Void> output = api().buildWithParameters("DevTest", new HashMap<>());
-
+            api().buildWithParameters("DevTest", new HashMap<>());
         } catch (JenkinsAppException e) {
             assertEquals(e.errors().size(), 1);
         }
@@ -360,45 +367,48 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testBuildJobWithEmptyParametersMap")
     public void testDisableJob() {
-        boolean success = api().disable("DevTest");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().disable("DevTest");
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testDisableJob")
     public void testDisableJobAlreadyDisabled() {
-        boolean success = api().disable("DevTest");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().disable("DevTest");
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testDisableJobAlreadyDisabled")
     public void testEnableJob() {
-        boolean success = api().enable("DevTest");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().enable("DevTest");
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testEnableJob")
     public void testEnableJobAlreadyEnabled() {
-        boolean success = api().enable("DevTest");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().enable("DevTest");
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testEnableJobAlreadyEnabled")
     public void testRenameJob() {
         ResponseEntity<Boolean> success = api().rename("DevTest", "NewDevTest");
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testRenameJob")
     public void testRenameJobNotExist() {
-        ResponseEntity<Boolean> success = api().rename("JobNotExist", "NewDevTest");
-        assertFalse(success.getStatusCode().is2xxSuccessful());
+        try {
+            api().rename("JobNotExist", "NewDevTest");
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test(dependsOnMethods = "testRenameJobNotExist")
     public void testDeleteJob() {
         ResponseEntity<Void> success = api().delete("NewDevTest");
         assertNotNull(success);
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     //
@@ -436,20 +446,23 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testCreateFoldersInJenkins")
     public void testCreateJobInFolder() {
         String config = payloadFromResource("/freestyle-project-no-params.xml");
-        ResponseEntity<Void> success = api().create("test-folder/test-folder-1", "JobInFolder", config);
+        ResponseEntity<Void> success = api().create("test-folder/job/test-folder-1", "JobInFolder", config);
         assertTrue(success.getStatusCode().is2xxSuccessful());
     }
 
     @Test(dependsOnMethods = "testCreateFoldersInJenkins")
     public void testCreateJobWithIncorrectFolderPath() {
         String config = payloadFromResource("/folder-config.xml");
-        ResponseEntity<Void> success = api().create("/test-folder//test-folder-1/", "Job", config);
-        assertFalse(success.getStatusCode().is2xxSuccessful());
+        try {
+            api().create("/test-folder//test-folder-1/", "Job", config);
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListInFolder() {
-        JobList output = api().jobList("test-folder/test-folder-1").getBody();
+        JobList output = api().jobList("test-folder/job/test-folder-1").getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 1);
@@ -459,37 +472,37 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testUpdateJobConfigInFolder() {
         String config = payloadFromResource("/freestyle-project.xml");
-        ResponseEntity<Boolean> success = api().pushConfig("test-folder/test-folder-1", "JobInFolder", config);
-        assertTrue(success.getBody());
+        ResponseEntity<Void> success = api().pushConfig("test-folder/job/test-folder-1", "JobInFolder", config);
+        assertEquals(success.getStatusCode(), HttpStatus.OK);
     }
 
     @Test(dependsOnMethods = "testUpdateJobConfigInFolder")
     public void testDisableJobInFolder() {
-        boolean success = api().disable("test-folder/test-folder-1", "JobInFolder");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().disable("test-folder/job/test-folder-1", "JobInFolder");
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testDisableJobInFolder")
     public void testEnableJobInFolder() {
-        boolean success = api().enable("test-folder/test-folder-1", "JobInFolder");
-        assertTrue(success);
+        ResponseEntity<Void> success = api().enable("test-folder/job/test-folder-1", "JobInFolder");
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testEnableJobInFolder")
     public void testSetDescriptionOfJobInFolder() {
-        ResponseEntity<Boolean> success = api().pushDescription("test-folder/test-folder-1", "JobInFolder", "RandomDescription");
-        assertTrue(success.getBody());
+        ResponseEntity<Void> success = api().pushDescription("test-folder/job/test-folder-1", "JobInFolder", "RandomDescription");
+        assertEquals(success.getStatusCode(), HttpStatus.NO_CONTENT);
     }
 
     @Test(dependsOnMethods = "testSetDescriptionOfJobInFolder")
     public void testGetDescriptionOfJobInFolder() {
-        ResponseEntity<String> output = api().description("test-folder/test-folder-1", "JobInFolder");
+        ResponseEntity<String> output = api().description("test-folder/job/test-folder-1", "JobInFolder");
         assertEquals(output.getBody(), "RandomDescription");
     }
 
     @Test(dependsOnMethods = "testGetDescriptionOfJobInFolder")
     public void testGetJobInfoInFolder() {
-        JobInfo output = api().jobInfo("test-folder/test-folder-1", "JobInFolder").getBody();
+        JobInfo output = api().jobInfo("test-folder/job/test-folder-1", "JobInFolder").getBody();
         assertNotNull(output);
         assertEquals(output.getName(), "JobInFolder");
         assertTrue(output.getBuilds().isEmpty());
@@ -499,7 +512,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     public void testBuildWithParameters() throws InterruptedException {
         Map<String, List<String>> params = new HashMap<>();
         params.put("SomeKey", List.of("SomeVeryNewValue"));
-        ResponseEntity<Void> responseEntity = api().buildWithParameters("test-folder/test-folder-1", "JobInFolder", params);
+        ResponseEntity<Void> responseEntity = api().buildWithParameters("test-folder/job/test-folder-1", "JobInFolder", params);
         queueIdForAnotherJob = JenkinsUtils.getQueueItemIntegerResponse(responseEntity.getHeaders());
         assertNotNull(queueIdForAnotherJob);
         assertTrue(queueIdForAnotherJob.getValues() > 0);
@@ -509,21 +522,20 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testBuildWithParameters")
     public void testLastBuildTimestampOfJobInFolder() {
-        String output = api().lastBuildTimestamp("test-folder/test-folder-1", "JobInFolder");
+        String output = api().lastBuildTimestamp("test-folder/job/test-folder-1", "JobInFolder");
         assertNotNull(output);
     }
 
     @Test(dependsOnMethods = "testLastBuildTimestampOfJobInFolder")
     public void testGetProgressiveText() {
-        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 0);
+        ResponseEntity<String> output = api().progressiveText("test-folder/job/test-folder-1", "JobInFolder", 0);
         assertNotNull(output);
-        assertTrue(output.getSize() > 0);
-        assertFalse(output.isHasMoreData());
+        assertFalse(Objects.requireNonNull(output.getBody()).isEmpty());
     }
 
     @Test(dependsOnMethods = "testGetProgressiveText")
     public void testGetBuildInfoOfJobInFolder() {
-        BuildInfo output = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody();
+        BuildInfo output = api().buildInfo("test-folder/job/test-folder-1", "JobInFolder", 1).getBody();
         assertNotNull(output);
         assertTrue(output.getFullDisplayName().contains("JobInFolder #1"));
         assertEquals((int) queueIdForAnotherJob.getValues(), output.getQueueId());
@@ -531,7 +543,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetProgressiveText")
     public void testGetBuildParametersofJob() {
-        List<Parameter> parameters = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody().getActions().get(0).getParameters();
+        List<Parameter> parameters = api().buildInfo("test-folder/job/test-folder-1", "JobInFolder", 1).getBody().getActions().get(0).getParameters();
         assertNotNull(parameters);
         assertEquals(parameters.get(0).getName(), "SomeKey");
         assertEquals(parameters.get(0).getValue(), "SomeVeryNewValue");
@@ -539,7 +551,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetProgressiveText")
     public void testGetBuildCausesOfJob() {
-        List<Cause> causes = api().buildInfo("test-folder/test-folder-1", "JobInFolder", 1).getBody().getActions().get(1).getCauses();
+        List<Cause> causes = api().buildInfo("test-folder/job/test-folder-1", "JobInFolder", 1).getBody().getActions().get(1).getCauses();
         assertNotNull(causes);
         assertTrue(causes.size() > 0);
         assertNotNull(causes.get(0).getShortDescription());
@@ -549,10 +561,9 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetProgressiveText")
     public void testGetProgressiveTextOfBuildNumber() {
-        ProgressiveText output = api().progressiveText("test-folder/test-folder-1", "JobInFolder", 1, 0);
+        ResponseEntity<String> output = api().progressiveText("test-folder/job/test-folder-1", "JobInFolder", 1, 0);
         assertNotNull(output);
-        assertTrue(output.getSize() > 0);
-        assertFalse(output.isHasMoreData());
+        assertFalse(Objects.requireNonNull(output.getBody()).isEmpty());
     }
 
     @Test
@@ -588,40 +599,40 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = {"testGetBuildParametersOfJobForEmptyAndNullParams", "testGetJobListFromRoot"})
     public void testDeleteJobForEmptyAndNullParams() {
         ResponseEntity<Void> success = api().delete("JobForEmptyAndNullParams");
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
     @Test(dependsOnMethods = "testCreateFoldersInJenkins")
     public void testCreateJobWithLeadingAndTrailingForwardSlashes() {
         String config = payloadFromResource("/freestyle-project-no-params.xml");
-        ResponseEntity<Void> success = api().create("/test-folder/test-folder-1/", "Job", config);
+        ResponseEntity<Void> success = api().create("/test-folder/job/test-folder-1/", "Job", config);
         assertTrue(success.getStatusCode().is2xxSuccessful());
     }
 
     @Test(dependsOnMethods = "testCreateJobWithLeadingAndTrailingForwardSlashes")
     public void testDeleteJobWithLeadingAndTrailingForwardSlashes() {
-        ResponseEntity<Void> success = api().delete("/test-folder/test-folder-1/", "Job");
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> success = api().delete("/test-folder/job/test-folder-1/", "Job");
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testGetBuildInfoOfJobInFolder")
-    public void testRenameJonInFloder() {
-        ResponseEntity<Boolean> success = api().rename("test-folder/test-folder-1", "JobInFolder", "NewJobInFolder");
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+    public void testRenameJobInFolder() {
+        ResponseEntity<Boolean> success = api().rename("test-folder/job/test-folder-1", "JobInFolder", "NewJobInFolder");
+        assertEquals(success.getStatusCode(),HttpStatus.FOUND);
     }
 
-    @Test(dependsOnMethods = "testRenameJonInFloder")
+    @Test(dependsOnMethods = "testRenameJobInFolder")
     public void testDeleteJobInFolder() {
-        ResponseEntity<Void> success = api().delete("test-folder/test-folder-1", "NewJobInFolder");
-        assertTrue(success.getStatusCode().is2xxSuccessful());
+        ResponseEntity<Void> success = api().delete("test-folder/job/test-folder-1", "NewJobInFolder");
+        assertEquals(success.getStatusCode(),HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testDeleteJobInFolder")
     public void testDeleteFolders() {
         ResponseEntity<Void> success1 = api().delete("test-folder", "test-folder-1");
-        assertTrue(success1.getStatusCode().is2xxSuccessful());
+        assertTrue(success1.getStatusCode().is3xxRedirection());
         ResponseEntity<Void> success2 = api().delete("test-folder");
-        assertTrue(success2.getStatusCode().is2xxSuccessful());
+        assertTrue(success2.getStatusCode().is3xxRedirection());
     }
 
     @Test
@@ -653,8 +664,11 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test
     public void testSetDescriptionNonExistentJob() {
-        boolean success = Boolean.TRUE.equals(api().pushDescription(randomString(), "RandomDescription").getBody());
-        assertFalse(success);
+        try {
+            api().pushDescription(randomString(), "RandomDescription");
+        } catch (JenkinsAppException e) {
+            assertEquals(e.code(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test

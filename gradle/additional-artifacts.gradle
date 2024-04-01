@@ -19,16 +19,16 @@ shadowJar {
 }
 
 task sourcesJar(type: Jar) {
-    classifier 'sources'
+//    classifier 'sources'
     from sourceSets.main.allSource
 }
 
 task docsJar(type: Jar, dependsOn: javadoc) {
-    classifier 'javadoc'
+//    classifier 'javadoc'
     from javadoc.destinationDir
 }
 
 task testsJar(type: Jar) {
-    classifier 'tests'
+//    classifier 'tests'
     from sourceSets.test.output
 }
