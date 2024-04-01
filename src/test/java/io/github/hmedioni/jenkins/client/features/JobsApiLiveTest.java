@@ -22,7 +22,6 @@ import io.github.hmedioni.jenkins.client.domain.job.*;
 import io.github.hmedioni.jenkins.client.domain.plugins.*;
 import io.github.hmedioni.jenkins.client.domain.queue.*;
 import io.github.hmedioni.jenkins.client.exception.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
 
@@ -31,7 +30,6 @@ import java.util.*;
 import static org.testng.Assert.*;
 
 @Test(groups = "live", singleThreaded = true)
-@Slf4j
 public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     private static final String FOLDER_PLUGIN_NAME = "cloudbees-folder";
@@ -46,7 +44,6 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @BeforeTest
     public void cleanJenkins() {
         Objects.requireNonNull(api.jobsApi().jobList().getBody()).getJobs().forEach(job -> api().delete(job.getName()));
-        log.info("BeforeTest: Delete all Jobs!");
     }
 
     @Test

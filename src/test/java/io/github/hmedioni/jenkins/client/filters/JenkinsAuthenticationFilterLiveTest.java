@@ -25,6 +25,7 @@ import org.springframework.util.*;
 import org.testng.annotations.*;
 
 import java.net.*;
+import java.util.*;
 
 import static org.testng.Assert.*;
 
@@ -32,6 +33,12 @@ import static org.testng.Assert.*;
 public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
     final String usernamePassword = "admin:admin";
     private final String endPoint = "http://localhost:8080";
+
+    @BeforeTest
+    public void cleanJenkins() throws MalformedURLException {
+        JenkinsApi api = api(new URL(endPoint), AuthenticationType.USERNAME_PASSWORD, usernamePassword);
+        Objects.requireNonNull(api.jobsApi().jobList().getBody()).getJobs().forEach(job -> api.jobsApi().delete(job.getName()));
+    }
 
     @Test
     public void testAnonymousNeedsCrumb() throws Exception {
