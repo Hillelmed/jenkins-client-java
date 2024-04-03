@@ -69,6 +69,7 @@ tasks.register('mockTest', Test) {
     description = "Mock tests"
     useTestNG()
     include '**/**MockTest*'
+    forkEvery = 1
     maxParallelForks = 2
     testLogging {
         showStandardStreams = true
@@ -89,6 +90,7 @@ tasks.register('integTest', Test) {
         }
     }
     useTestNG()
+    forkEvery = 1
     include "**/**LiveTest*"
     maxParallelForks = 1
     testLogging {
