@@ -27,8 +27,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Setup Gradle Build Action
-        uses: gradle/gradle-build-action@v2.7.0
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
         run: ./gradlew clean build mockTest integTest --stacktrace
