@@ -55,8 +55,6 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
             if (localCrumb != null && localCrumb.getValue() != null && localCrumb.getCrumbRequestField() != null) {
                 builder.header(localCrumb.getCrumbRequestField(), localCrumb.getValue());
                 builder.cookie(crumbCookie.getName(), crumbCookie.getValue());
-            } else {
-                throw new RuntimeException("Crumb is invalid");
             }
         }
         return next.exchange(builder.build());
