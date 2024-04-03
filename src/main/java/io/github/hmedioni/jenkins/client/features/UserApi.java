@@ -19,7 +19,6 @@ package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.domain.user.*;
 import org.springframework.http.*;
-import org.springframework.util.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.*;
 

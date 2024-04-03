@@ -18,14 +18,13 @@ package io.github.hmedioni.jenkins.client.domain.user;
 
 
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 public class User {
 
     public String absoluteUrl;
 
-    @Nullable
+
     public String description;
 
     public String fullName;

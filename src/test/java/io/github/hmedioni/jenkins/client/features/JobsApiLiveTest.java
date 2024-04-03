@@ -85,12 +85,11 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         assertNotNull(queueItem.getExecutable().getNumber());
         //Falling error
         try {
-            ResponseEntity<Void> termStatus = api().term(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
+            api().term(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
             // Strangely, term does not work on FreeStyleBuild
         } catch (JenkinsAppException e) {
             assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
-            assertEquals(e.errors().get(0).getMessage(), "The term operation does not exist for " + System.getProperty("test.jenkins.endpoint") + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/term/, try stop instead.");
-
+            assertEquals(e.errors().get(0).getMessage(), "The term operation does not exist for " + url + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/term/, try stop instead.");
         }
         api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
         BuildInfo buildInfoStop = getCompletedBuild(FREESTYLE_JOB_NAME, queueItem);
@@ -112,7 +111,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
             ResponseEntity<Void> killStatus = api().kill(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
             // Strangely, term does not work on FreeStyleBuild
         } catch (JenkinsAppException e) {
-            assertEquals(e.errors().get(0).getMessage(), "The kill operation does not exist for " + System.getProperty("test.jenkins.endpoint") + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/kill/, try stop instead.");
+            assertEquals(e.errors().get(0).getMessage(), "The kill operation does not exist for " + url + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/kill/, try stop instead.");
             assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
         }
         // Strangely, kill does not work on FreeStyleBuild
@@ -191,7 +190,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         JobList output = api().jobList().getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
-        assertEquals(output.getJobs().size(), 1);
+        assertEquals(output.getJobs().size(), 2);
     }
 
     @Test(dependsOnMethods = "testCreateJob")
@@ -463,7 +462,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 1);
-        assertEquals(output.getJobs().get(0), new Job("hudson.model.FreeStyleProject", "JobInFolder", System.getProperty("test.jenkins.endpoint") + "/job/test-folder/job/test-folder-1/job/JobInFolder/", "notbuilt"));
+        assertEquals(output.getJobs().get(0), new Job("hudson.model.FreeStyleProject", "JobInFolder", url + "/job/test-folder/job/test-folder-1/job/JobInFolder/", "notbuilt"));
     }
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
@@ -615,13 +614,13 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test(dependsOnMethods = "testGetBuildInfoOfJobInFolder")
     public void testRenameJobInFolder() {
         ResponseEntity<Boolean> success = api().rename("test-folder/job/test-folder-1", "JobInFolder", "NewJobInFolder");
-        assertEquals(success.getStatusCode(),HttpStatus.FOUND);
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testRenameJobInFolder")
     public void testDeleteJobInFolder() {
         ResponseEntity<Void> success = api().delete("test-folder/job/test-folder-1", "NewJobInFolder");
-        assertEquals(success.getStatusCode(),HttpStatus.FOUND);
+        assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 
     @Test(dependsOnMethods = "testDeleteJobInFolder")

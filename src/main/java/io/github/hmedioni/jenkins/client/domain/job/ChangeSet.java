@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
@@ -34,10 +33,10 @@ public class ChangeSet {
 
     public Culprit author;
 
-    @Nullable
+
     public String authorEmail;
 
-    @Nullable
+
     public String comment;
 
 

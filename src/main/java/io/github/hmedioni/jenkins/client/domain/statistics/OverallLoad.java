@@ -18,38 +18,37 @@
 package io.github.hmedioni.jenkins.client.domain.statistics;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
 @Data
 public class OverallLoad {
 
-    @Nullable
+
     public Map<String, String> availableExecutors;
 
-    @Nullable
+
     public Map<String, String> busyExecutors;
 
-    @Nullable
+
     public Map<String, String> connectingExecutors;
 
-    @Nullable
+
     public Map<String, String> definedExecutors;
 
-    @Nullable
+
     public Map<String, String> idleExecutors;
 
-    @Nullable
+
     public Map<String, String> onlineExecutors;
 
-    @Nullable
+
     public Map<String, String> queueLength;
 
-    @Nullable
+
     public Map<String, String> totalExecutors;
 
-    @Nullable
+
     public Map<String, String> totalQueueLength;
 
 

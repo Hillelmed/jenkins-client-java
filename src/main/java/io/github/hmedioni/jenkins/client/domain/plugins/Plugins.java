@@ -19,14 +19,13 @@ package io.github.hmedioni.jenkins.client.domain.plugins;
 
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
 @Data
 public class Plugins {
 
-    @Nullable
+
     public String clazz;
 
     public List<Plugin> plugins;

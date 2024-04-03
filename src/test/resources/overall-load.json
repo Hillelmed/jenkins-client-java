@@ -1,29 +1,20 @@
-{  
-   "availableExecutors":{  
-
-   },
-   "busyExecutors":{  
-
-   },
-   "connectingExecutors":{  
-
-   },
-   "definedExecutors":{  
-
-   },
-   "idleExecutors":{  
-
-   },
-   "onlineExecutors":{  
-
-   },
-   "queueLength":{  
-
-   },
-   "totalExecutors":{  
-
-   },
-   "totalQueueLength":{  
-
-   }
+{
+  "availableExecutors": {
+  },
+  "busyExecutors": {
+  },
+  "connectingExecutors": {
+  },
+  "definedExecutors": {
+  },
+  "idleExecutors": {
+  },
+  "onlineExecutors": {
+  },
+  "queueLength": {
+  },
+  "totalExecutors": {
+  },
+  "totalQueueLength": {
+  }
 }

@@ -3,14 +3,13 @@ package io.github.hmedioni.jenkins.client.domain.job;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Job {
 
-    @Nullable
+
     @JsonProperty("_class")
     private String clazz;
 
@@ -18,7 +17,7 @@ public class Job {
 
     private String url;
 
-    @Nullable
+
     private String color;
 
 

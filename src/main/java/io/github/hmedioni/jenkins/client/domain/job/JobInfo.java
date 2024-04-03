@@ -20,20 +20,19 @@ package io.github.hmedioni.jenkins.client.domain.job;
 
 import io.github.hmedioni.jenkins.client.domain.queue.*;
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
 @Data
 public class JobInfo {
 
-    @Nullable
+
     public String description;
 
-    @Nullable
+
     public String displayName;
 
-    @Nullable
+
     public String displayNameOrNull;
 
     public String name;
@@ -44,40 +43,40 @@ public class JobInfo {
 
     public List<BuildInfo> builds;
 
-    @Nullable
+
     public String color;
 
-    @Nullable
+
     public BuildInfo firstBuild;
 
     public boolean inQueue;
 
     public boolean keepDependencies;
 
-    @Nullable
+
     public BuildInfo lastBuild;
 
-    @Nullable
+
     public BuildInfo lastCompleteBuild;
 
-    @Nullable
+
     public BuildInfo lastFailedBuild;
 
-    @Nullable
+
     public BuildInfo lastStableBuild;
 
-    @Nullable
+
     public BuildInfo lastSuccessfulBuild;
 
-    @Nullable
+
     public BuildInfo lastUnstableBuild;
 
-    @Nullable
+
     public BuildInfo lastUnsuccessfulBuild;
 
     public int nextBuildNumber;
 
-    @Nullable
+
     public QueueItem queueItem;
 
     public boolean concurrentBuild;

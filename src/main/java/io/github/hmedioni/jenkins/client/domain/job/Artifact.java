@@ -18,13 +18,12 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 @NoArgsConstructor
 public class Artifact {
 
-    @Nullable
+
     public String displayPath;
 
     public String fileName;

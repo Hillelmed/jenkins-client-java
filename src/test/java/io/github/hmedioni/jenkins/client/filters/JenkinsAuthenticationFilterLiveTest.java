@@ -21,7 +21,6 @@ import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.domain.user.*;
 import io.github.hmedioni.jenkins.client.features.*;
 import org.springframework.http.*;
-import org.springframework.util.*;
 import org.testng.annotations.*;
 
 import java.net.*;
@@ -31,8 +30,7 @@ import static org.testng.Assert.*;
 
 @Test(groups = "live", singleThreaded = true)
 public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
-    final String usernamePassword = "admin:admin";
-    private final String endPoint = "http://localhost:8080";
+
 
     @BeforeTest
     public void cleanJenkins() throws MalformedURLException {

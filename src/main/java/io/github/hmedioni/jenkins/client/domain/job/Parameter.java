@@ -18,23 +18,20 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
+@NoArgsConstructor
 public class Parameter {
 
-    @Nullable
-    public String clazz;
 
-    public String name;
+    @JsonProperty("_class")
+    private String clazz;
 
-    @Nullable
-    public String value;
+    private String name;
 
 
-//    @SerializedNames({"_class", "name", "value"})
-//    public static Parameter create(final String clazz, final String name, final String value) {
-//        return new AutoValue_Parameter(clazz, name, value);
-//    }
+    private String value;
+
 }

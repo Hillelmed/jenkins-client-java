@@ -19,7 +19,6 @@ package io.github.hmedioni.jenkins.client.domain.job;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
@@ -31,13 +30,13 @@ public class Action {
 
     private List<Parameter> parameters;
 
-    @Nullable
+
     private String text;
 
-    @Nullable
+
     private String iconPath;
 
-    @Nullable
+
     @JsonProperty("_class")
     private String clazz;
 

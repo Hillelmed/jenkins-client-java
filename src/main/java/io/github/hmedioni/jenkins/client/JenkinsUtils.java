@@ -1,13 +1,8 @@
 package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.domain.common.*;
-import io.github.hmedioni.jenkins.client.exception.*;
 import org.springframework.http.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.lang.*;
 
-import java.lang.*;
-import java.net.http.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -29,7 +24,7 @@ public class JenkinsUtils {
 
     private static final Pattern pattern = Pattern.compile("^.*/queue/item/(\\d+)/$");
 
-//    public static Object buildFormDataFormMap(Map<String, List<String>> properties) {
+    //    public static Object buildFormDataFormMap(Map<String, List<String>> properties) {
 //        Map<String, List<String>> props = (Map<String, List<String>>) properties;
 //
 //        for (Map.Entry<String, List<String>> prop : props.entrySet()) {
@@ -73,8 +68,8 @@ public class JenkinsUtils {
      * @param environmentVariable possibly existent Environment Variable.
      * @return found external value or null.
      */
-    public static String retrieveExternalValue(@Nullable final String systemProperty,
-                                               @Nullable final String environmentVariable) {
+    public static String retrieveExternalValue(final String systemProperty,
+                                               final String environmentVariable) {
 
         // 1.) Search for System Property
         if (systemProperty != null) {

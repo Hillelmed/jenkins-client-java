@@ -17,7 +17,6 @@ public class JenkinsAppException extends RuntimeException {
     private final HttpStatusCode httpStatusCode;
 
 
-
     public JenkinsAppException(final String responseBody, final List<JenkinsError> errors, HttpStatusCode httpStatusCode) {
         super(responseBody);
         this.errors = errors;

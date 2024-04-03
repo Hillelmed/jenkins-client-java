@@ -18,15 +18,14 @@
 package io.github.hmedioni.jenkins.client.domain.queue;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 public class Task {
 
-    @Nullable
+
     public String name;
 
-    @Nullable
+
     public String url;
 
 //

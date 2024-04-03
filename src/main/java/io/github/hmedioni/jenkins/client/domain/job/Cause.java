@@ -18,21 +18,20 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 @NoArgsConstructor
 public class Cause {
 
-    @Nullable
+
     public String clazz;
 
     public String shortDescription;
 
-    @Nullable
+
     public String userId;
 
-    @Nullable
+
     public String userName;
 
 //

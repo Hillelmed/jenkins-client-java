@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client.domain.queue;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
@@ -30,8 +29,8 @@ public class QueueItem {
     private ArrayList<Action> actions;
     private boolean blocked;
     private boolean buildable;
-    private int id;
-    private long inQueueSince;
+    private Integer id;
+    private Long inQueueSince;
     private String params;
     private boolean stuck;
     private Task task;
@@ -60,7 +59,7 @@ public class QueueItem {
     @NoArgsConstructor
     public static class Executable {
         private String _class;
-        private int number;
+        private Integer number;
         private String url;
     }
 

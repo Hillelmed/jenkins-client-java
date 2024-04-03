@@ -19,6 +19,7 @@ package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.config.*;
+import org.testng.annotations.*;
 
 import java.io.*;
 import java.net.*;
@@ -27,11 +28,19 @@ import java.nio.charset.*;
 /**
  * Base class for Jenkins mock tests and some Live tests.
  */
+@Test(groups = "live")
 public class BaseJenkinsTest {
 
-    // This token can only be used by mock test as real tokens can only be obtained from jenkins itself
-    public static final String USERNAME_APITOKEN = "user:token";
 
+    // This token can only be used by mock test as real tokens can only be obtained from jenkins itself
+    public static final String USERNAME_API_TOKEN = "user:token";
+
+//    final protected String usernamePassword = System.getProperty("test.jenkins.user")
+//        + ":"
+//        + System.getProperty("test.jenkins.password");
+    //    final protected String endPoint = System.getProperty("test.jenkins.endpoint");
+    final protected String endPoint = "http://127.0.0.1:8080";
+    final protected String usernamePassword = "admin:admin";
     protected final String provider;
 
     public BaseJenkinsTest() {
@@ -47,7 +56,7 @@ public class BaseJenkinsTest {
      * @return instance of JenkinsApi.
      */
     public JenkinsApi api(final URL url) {
-        return api(url, AuthenticationType.USERNAME_API_TOKEN, USERNAME_APITOKEN);
+        return api(url, AuthenticationType.USERNAME_API_TOKEN, USERNAME_API_TOKEN);
     }
 
     /**

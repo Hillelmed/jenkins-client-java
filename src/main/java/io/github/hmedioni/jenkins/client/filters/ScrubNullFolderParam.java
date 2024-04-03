@@ -19,10 +19,8 @@ package io.github.hmedioni.jenkins.client.filters;
 
 import lombok.*;
 import org.springframework.web.reactive.function.client.*;
-import org.springframework.web.util.*;
 import reactor.core.publisher.*;
 
-import java.io.*;
 import java.net.*;
 
 

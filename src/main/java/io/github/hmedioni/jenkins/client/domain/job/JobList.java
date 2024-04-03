@@ -19,19 +19,18 @@ package io.github.hmedioni.jenkins.client.domain.job;
 
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
 @Data
 public class JobList {
 
-    @Nullable
+
     public String clazz;
 
     public List<Job> jobs;
 
-    @Nullable
+
     public String url;
 
 

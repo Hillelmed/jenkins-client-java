@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
@@ -28,7 +27,7 @@ public class ChangeSetList {
 
     public List<ChangeSet> items;
 
-    @Nullable
+
     public String kind;
 
 

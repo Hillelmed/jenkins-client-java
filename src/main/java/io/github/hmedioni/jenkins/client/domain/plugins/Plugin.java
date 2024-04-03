@@ -19,51 +19,50 @@ package io.github.hmedioni.jenkins.client.domain.plugins;
 
 
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 public class Plugin {
 
-    @Nullable
+
     public Boolean active;
 
-    @Nullable
+
     public String backupVersion;
 
-    @Nullable
+
     public Boolean bundled;
 
-    @Nullable
+
     public Boolean deleted;
 
-    @Nullable
+
     public Boolean downgradable;
 
-    @Nullable
+
     public Boolean enabled;
 
-    @Nullable
+
     public Boolean hasUpdate;
 
-    @Nullable
+
     public String longName;
 
-    @Nullable
+
     public Boolean pinned;
 
-    @Nullable
+
     public String requiredCoreVersion;
 
-    @Nullable
+
     public String shortName;
 
-    @Nullable
+
     public String supportsDynamicLoad;
 
-    @Nullable
+
     public String url;
 
-    @Nullable
+
     public String version;
 
 

@@ -19,9 +19,7 @@ package io.github.hmedioni.jenkins.client;
 
 
 import io.github.hmedioni.jenkins.client.auth.*;
-import io.github.hmedioni.jenkins.client.exception.*;
 import lombok.*;
-import org.springframework.lang.*;
 import org.springframework.web.reactive.function.client.*;
 
 import java.nio.charset.*;
@@ -58,7 +56,7 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
      *
      * @return the base 64 encoded authentication value.
      */
-    @Nullable
+
     public String authValue() {
         return this.encodedCred;
     }

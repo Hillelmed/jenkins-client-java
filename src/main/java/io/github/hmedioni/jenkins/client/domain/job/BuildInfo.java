@@ -18,7 +18,6 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 import lombok.*;
-import org.springframework.lang.*;
 
 import java.util.*;
 
@@ -32,20 +31,20 @@ public class BuildInfo {
 
     private boolean building;
 
-    @Nullable
+
     private String description;
 
-    @Nullable
+
     private String displayName;
 
     private long duration;
 
     private long estimatedDuration;
 
-    @Nullable
+
     private String fullDisplayName;
 
-    @Nullable
+
     private String id;
 
     private boolean keepLog;
@@ -54,17 +53,17 @@ public class BuildInfo {
 
     private int queueId;
 
-    @Nullable
+
     private String result;
 
     private long timestamp;
 
-    @Nullable
+
     private String url;
 
     private List<ChangeSetList> changeSets;
 
-    @Nullable
+
     private String builtOn;
 
     private List<Culprit> culprits;

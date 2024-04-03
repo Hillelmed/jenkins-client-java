@@ -19,19 +19,18 @@ package io.github.hmedioni.jenkins.client.domain.crumb;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.springframework.lang.*;
 
 @Data
 @NoArgsConstructor
 public class Crumb {
 
-    @Nullable
+
     @JsonProperty("_class")
     private String clazz;
-    @Nullable
+
     @JsonProperty("crumb")
     private String value;
-    @Nullable
+
     private String crumbRequestField;
 
 }
