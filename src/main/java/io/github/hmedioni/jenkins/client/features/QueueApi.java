@@ -32,7 +32,7 @@ public interface QueueApi {
     // @Named("queue:queue")
     @GetExchange("/api/json")
 //    @SelectJson("items")
-    List<QueueItem> queue();
+    ResponseEntity<QueueItemsArray> queue();
 
     /**
      * Get a specific queue item.
@@ -59,5 +59,5 @@ public interface QueueApi {
     // @Fallback(JenkinsFallbacks.JENKINS_21311.class)
     //@ResponseParser(ResponseEntity<Void>Parser.class)
     //@FormParam("id")
-    ResponseEntity<Void> cancel(@RequestBody int id);
+    ResponseEntity<Void> cancel(@RequestParam(name = "id") int id);
 }

@@ -20,7 +20,7 @@
 //        final MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setBody(payloadFromResource("/plugins.json")).setResponseCode(200));
 //
-//        final JenkinsApi jenkinsApi = api(server.url("/").url());
+//        final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
 //            final Plugins plugins = api.plugins(3, null);
@@ -41,7 +41,7 @@
 //        final MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setResponseCode(401));
 //
-//        final JenkinsApi jenkinsApi = api(server.url("/").url());
+//        final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
 //            final Plugins plugins = api.plugins(3, null);
@@ -62,7 +62,7 @@
 //        final MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setResponseCode(200));
 //
-//        final JenkinsApi jenkinsApi = api(server.url("/").url());
+//        final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
 //            final ResponseEntity<Void> status = api.installNecessaryPlugins("artifactory@2.2.1");
@@ -80,7 +80,7 @@
 //        final MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setResponseCode(401));
 //
-//        final JenkinsApi jenkinsApi = api(server.url("/").url());
+//        final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        final PluginManagerApi api = jenkinsApi.pluginManagerApi();
 //        try {
 //            final ResponseEntity<Void> status = api.installNecessaryPlugins("artifactory@2.2.1");

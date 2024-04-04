@@ -35,8 +35,8 @@
 //
 //        String body = payloadFromResource("/user.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        //JenkinsApi jenkinsApi = api(server.url("/").url());
-//        try (JenkinsApi jenkinsApi = api(server.url("/").url())) {
+//        //JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
+//        try (JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort())) {
 //            UserApi api = jenkinsApi.userApi();
 //            User output = api.get();
 //            assertNotNull(output);
@@ -59,7 +59,7 @@
 //
 //        String body = payloadFromResource("/api-token.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        try (JenkinsApi jenkinsApi = api(server.url("/").url())) {
+//        try (JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort())) {
 //            UserApi api = jenkinsApi.userApi();
 //            ApiToken output = api.generateNewToken("random");
 //            assertNotNull(output);

@@ -55,7 +55,7 @@ public class BaseJenkinsTest {
      * @param url endpoint of instance.
      * @return instance of JenkinsApi.
      */
-    public JenkinsApi api(final URL url) {
+    public JenkinsApi api(final String url) {
         return api(url, AuthenticationType.USERNAME_API_TOKEN, USERNAME_API_TOKEN);
     }
 
@@ -65,7 +65,7 @@ public class BaseJenkinsTest {
      * @param url endpoint of instance.
      * @return instance of JenkinsApi.
      */
-    public JenkinsApi anonymousAuthApi(final URL url) {
+    public JenkinsApi anonymousAuthApi(final String url) {
         return api(url, AuthenticationType.ANONYMOUS, AuthenticationType.ANONYMOUS.name().toLowerCase());
     }
 
@@ -77,9 +77,9 @@ public class BaseJenkinsTest {
      * @param authString the string to use as the credential.
      * @return instance of JenkinsApi.
      */
-    public JenkinsApi api(final URL url, final AuthenticationType authType, final String authString) {
+    public JenkinsApi api(final String url, final AuthenticationType authType, final String authString) {
         final JenkinsAuthentication creds = creds(authType, authString);
-        JenkinsProperties jenkinsProperties = new JenkinsProperties(url.toString(), creds);
+        JenkinsProperties jenkinsProperties = new JenkinsProperties(url, creds);
         if (authString != null) {
             jenkinsProperties.setUser(authString.split(":")[0]);
             jenkinsProperties.setPassword(authString.split(":")[1]);

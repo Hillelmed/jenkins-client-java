@@ -43,8 +43,18 @@ public class QueueItem {
     @NoArgsConstructor
     public static class Action {
         private String _class;
+        private List<Parameter> parameters;
         private List<Cause> causes;
     }
+
+    @Data
+    @NoArgsConstructor
+    public static class Parameter {
+        private String _class;
+        private String name;
+        private String value;
+    }
+
 
     @Data
     @NoArgsConstructor

@@ -35,9 +35,9 @@ public class BaseJenkinsApiLiveTest {
     final protected String url = "http://127.0.0.1:8080";
 
     //    final private String user = System.getProperty("test.jenkins.user");;
-    final private String user = "admin";
+    final protected String user = "admin";
     //    final private String password = System.getProperty("test.jenkins.password");;
-    final private String password = "admin";
+    final protected String password = "admin";
 
     protected JenkinsProperties jenkinsProperties = new JenkinsProperties(url, user, password);
     protected JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);

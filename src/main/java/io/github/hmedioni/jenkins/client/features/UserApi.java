@@ -46,5 +46,6 @@ public interface UserApi {
     // @Named("user:revoke")
     @PostExchange(contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
         value = "/{user}/descriptorByName/jenkins.security.ApiTokenProperty/revoke")
-    ResponseEntity<Void> revoke(@PathVariable("user") String user, @RequestParam(name = "tokenUuid") String newTokenName);
+    ResponseEntity<Void> revoke(@PathVariable(value = "user") String user, @RequestParam(name = "tokenUuid") String newTokenName);
+
 }

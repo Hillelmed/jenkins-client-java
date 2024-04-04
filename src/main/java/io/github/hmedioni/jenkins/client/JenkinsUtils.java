@@ -3,6 +3,7 @@ package io.github.hmedioni.jenkins.client;
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import org.springframework.http.*;
 
+import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -41,6 +42,11 @@ public class JenkinsUtils {
 //        }
 //
 //    }
+
+    public static String buildPluginXmlRequest(String pluginId) {
+        return MessageFormat.format("<jenkins><install plugin=\"{0}\"/></jenkins>", pluginId);
+    }
+
     public static IntegerResponse getQueueItemIntegerResponse(HttpHeaders httpHeaders) {
         if (httpHeaders == null) {
             throw new RuntimeException("Unexpected NULL HttpResponse object");

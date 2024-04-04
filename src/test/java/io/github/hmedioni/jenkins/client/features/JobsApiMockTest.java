@@ -38,7 +38,7 @@
 //
 //        String body = payloadFromResource("/jobsInJenkinsFolder.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JobList output = api.jobList("Folder1/Folder 2");
@@ -58,7 +58,7 @@
 //
 //        String body = payloadFromResource("/jobsInRootFolder.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JobList output = api.jobList("");
@@ -77,7 +77,7 @@
 //
 //        String body = payloadFromResource("/job-info.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JobInfo output = api.jobInfo( "fish");
@@ -95,7 +95,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JobInfo output = api.jobInfo( "fish");
@@ -112,7 +112,7 @@
 //
 //        String body = payloadFromResource("/build-info.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            BuildInfo output = api.buildInfo( "fish", 10);
@@ -136,7 +136,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            BuildInfo output = api.buildInfo( "fish", 10);
@@ -153,7 +153,7 @@
 //
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.create( "DevTest", configXML);
@@ -172,7 +172,7 @@
 //
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.create("test-folder", "JobInFolder", configXML);
@@ -192,7 +192,7 @@
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setResponseCode(200));
 //
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.create("/test-folder/job/test-folder-1/", "JobInFolder", configXML);
@@ -212,7 +212,7 @@
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setHeader("X-Error", "A job already exists with the name ?DevTest?")
 //            .setResponseCode(400));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.create( "DevTest", configXML);
@@ -230,7 +230,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setBody("whatever").setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.description( "DevTest");
@@ -247,7 +247,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.description( "DevTest");
@@ -263,7 +263,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.description( "DevTest", "whatever");
@@ -280,7 +280,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.description( "DevTest", "whatever");
@@ -298,7 +298,7 @@
 //
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setBody(configXML).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.config( "DevTest");
@@ -315,7 +315,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.config( "DevTest");
@@ -332,7 +332,7 @@
 //
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.config( "DevTest", configXML);
@@ -349,7 +349,7 @@
 //
 //        String configXML = payloadFromResource("/freestyle-project.xml");
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.config( "DevTest", configXML);
@@ -365,7 +365,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.delete( "DevTest");
@@ -383,7 +383,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(400));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> success = api.delete( "DevTest");
@@ -401,7 +401,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.enable( "DevTest");
@@ -417,7 +417,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.enable( "DevTest");
@@ -433,7 +433,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.disable( "DevTest");
@@ -449,7 +449,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.disable( "DevTest");
@@ -466,7 +466,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setHeader("Location", "http://127.0.1.1:8080/queue/item/1/").setResponseCode(201));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> output = api.build( "DevTest");
@@ -485,7 +485,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setResponseCode(201));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> output = api.build( "DevTest");
@@ -506,7 +506,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> output = api.build( "DevTest");
@@ -528,7 +528,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setHeader("Location", "http://127.0.1.1:8080/queue/item/1/").setResponseCode(201));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Map<String, List<String>> params = new HashMap<>();
@@ -549,7 +549,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setHeader("Location", "http://127.0.1.1:8080/queue/item/1/").setResponseCode(201));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> output = api.buildWithParameters( "DevTest", null);
@@ -568,7 +568,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setHeader("Location", "http://127.0.1.1:8080/queue/item/1/").setResponseCode(201));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> output = api.buildWithParameters( "DevTest", new HashMap<>());
@@ -586,7 +586,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Map<String, List<String>> params = new HashMap<>();
@@ -610,7 +610,7 @@
 //
 //        String body = payloadFromResource("/build-info.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Parameter> output = api.buildInfo( "fish", 10).getActions().get(0).getParameters();
@@ -631,7 +631,7 @@
 //
 //        String body = payloadFromResource("/build-info-git-commit.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<ChangeSet> changeSets = api.buildInfo( "fish", 10).changeSets().get(0).items();
@@ -654,7 +654,7 @@
 //
 //        String body = payloadFromResource("/build-info-no-params.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Parameter> output = api.buildInfo( "fish", 10).getActions().get(0).getParameters();
@@ -671,7 +671,7 @@
 //
 //        String body = payloadFromResource("/build-info-empty-and-null-params.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Parameter> output = api.buildInfo( "fish", 10).getActions().get(0).getParameters();
@@ -692,7 +692,7 @@
 //
 //        String body = payloadFromResource("/build-info-no-params.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Cause> output = api.buildInfo( "fish", 10).getActions().get(0).causes();
@@ -712,7 +712,7 @@
 //
 //        String body = payloadFromResource("/build-number.txt");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Integer output = api.lastBuildNumber( "DevTest");
@@ -729,7 +729,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Integer output = api.lastBuildNumber( "DevTest");
@@ -746,7 +746,7 @@
 //
 //        String body = payloadFromResource("/build-timestamp.txt");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.lastBuildTimestamp("DevTest");
@@ -763,7 +763,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            String output = api.lastBuildTimestamp("DevTest");
@@ -780,7 +780,7 @@
 //
 //        String body = payloadFromResource("/progressive-text.txt");
 //        server.enqueue(new MockResponse().setHeader("X-Text-Size", "123").setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ProgressiveText output = api.progressiveText("DevTest", 0);
@@ -799,7 +799,7 @@
 //
 //        String body = payloadFromResource("/progressive-text.txt");
 //        server.enqueue(new MockResponse().setHeader("X-Text-Size", "123").setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ProgressiveText output = api.progressiveText("DevTest", 1, 0);
@@ -817,7 +817,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ProgressiveText output = api.progressiveText("DevTest", 0);
@@ -833,7 +833,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.rename("DevTest", "NewDevTest");
@@ -849,7 +849,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            boolean success = api.rename("DevTest", "NewDevTest");
@@ -866,7 +866,7 @@
 //        String body = payloadFromResource("/runHistory.json");
 //
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Workflow> workflows = api.runHistory("MockJob");
@@ -882,7 +882,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            List<Workflow> workflows = api.runHistory("MockJob");
@@ -899,7 +899,7 @@
 //        String body = payloadFromResource("/workflow.json");
 //
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Workflow success = api.workflow("DevTest", 16);
@@ -915,7 +915,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            Workflow success = api.workflow("DevTest", 16);
@@ -932,7 +932,7 @@
 //        String body = payloadFromResource("/pipeline-node.json");
 //
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            PipelineNode success = api.pipelineNode("DevTest", 16, 17);
@@ -948,7 +948,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            PipelineNode success = api.pipelineNode("DevTest", 16, 17);
@@ -964,7 +964,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setHeader("Content-Type", "application/json").setBody("{ \"empty\": false }").setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JsonObject testReport = api.testReport("DevTest", 16);
@@ -980,7 +980,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            JsonObject testReport = api.testReport("DevTest", 16);
@@ -996,7 +996,7 @@
 //        String body = payloadFromResource("/pipelineNodeLog.json");
 //
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            PipelineNodeLog pipelineNodeLog = api.pipelineNodeLog("MockJob", 16, 17);
@@ -1012,7 +1012,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            PipelineNodeLog pipelineNodeLog = api.pipelineNodeLog("MockJob", 16, 17);
@@ -1028,7 +1028,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> status = api.stop("fish", 99);
@@ -1046,7 +1046,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> status = api.term("fish", 99);
@@ -1064,7 +1064,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> status = api.kill("fish", 99);
@@ -1082,10 +1082,10 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse()
-//            .setHeader("Location", server.url("/").url() + "job/fish/99/term/")
+//            .setHeader("Location", "http://localhost:" + server.getPort() + "job/fish/99/term/")
 //            .setResponseCode(302));
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> status = api.term("fish", 99);
@@ -1096,7 +1096,7 @@
 //            assertEquals(status.errors().size(), 1);
 //            System.out.println("Mock Status: " + status);
 //            assertEquals(status.errors().get(0).message(), "The term operation does not exist for " +
-//                server.url("/").url() +
+//                "http://localhost:" + server.getPort() +
 //                "job/fish/99/term/, try stop instead.");
 //        } finally {
 //            jenkinsApi.close();
@@ -1108,10 +1108,10 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse()
-//            .setHeader("Location", server.url("/").url() + "job/fish/99/kill/")
+//            .setHeader("Location", "http://localhost:" + server.getPort() + "job/fish/99/kill/")
 //            .setResponseCode(302));
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        JobsApi api = jenkinsApi.jobsApi();
 //        try {
 //            ResponseEntity<Void> status = api.kill("fish", 99);
@@ -1121,7 +1121,7 @@
 //            assertFalse(status.errors().isEmpty());
 //            assertEquals(status.errors().size(), 1);
 //            assertEquals(status.errors().get(0).message(), "The kill operation does not exist for " +
-//                server.url("/").url() +
+//                "http://localhost:" + server.getPort() +
 //                "job/fish/99/kill/, try stop instead.");
 //        } finally {
 //            jenkinsApi.close();

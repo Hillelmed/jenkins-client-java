@@ -36,14 +36,14 @@
 //
 //        final String value = "04a1109fc2db171362c966ebe9fc87f0";
 //        server.enqueue(new MockResponse().setBody("Jenkins-Crumb:" + value).setResponseCode(200));
-//        JenkinsApi jenkinsApi = anonymousAuthApi(server.url("/").url());
+//        JenkinsApi jenkinsApi = anonymousAuthApi("http://localhost:" + server.getPort());
 //
 //        JenkinsAuthentication creds = creds(AuthenticationType.Anonymous, null);
 //        JenkinsAuthenticationFilter filter = new JenkinsAuthenticationFilter(creds, jenkinsApi);
-//        HttpRequest httpRequest = HttpRequest.builder().endpoint(server.url("/").url().toString()).method("POST").build();
+//        HttpRequest httpRequest = HttpRequest.builder().endpoint("http://localhost:" + server.getPort().toString()).method("POST").build();
 //        try {
 //            httpRequest = filter.filter(httpRequest);
-//            assertEquals(httpRequest.getEndpoint().toString(), server.url("/").url().toString());
+//            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            assertSentAccept(server, "GET", "/crumbIssuer/api/xml?xpath=concat%28//crumbRequestField,%22%3A%22,//crumb%29", MediaType.TEXT_PLAIN);
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 2);
@@ -62,14 +62,14 @@
 //        final String value = "04a1109fc2db171362c966ebe9fc87f0";
 //        final String usernamePassword = "random_user:random_password";
 //        server.enqueue(new MockResponse().setBody("Jenkins-Crumb:" + value).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url(), AuthenticationType.UsernamePassword, usernamePassword);
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort(), AuthenticationType.UsernamePassword, usernamePassword);
 //
 //        JenkinsAuthentication creds = creds(AuthenticationType.UsernamePassword, usernamePassword);
 //        JenkinsAuthenticationFilter filter = new JenkinsAuthenticationFilter(creds, jenkinsApi);
-//        HttpRequest httpRequest = HttpRequest.builder().endpoint(server.url("/").url().toString()).method("POST").build();
+//        HttpRequest httpRequest = HttpRequest.builder().endpoint("http://localhost:" + server.getPort().toString()).method("POST").build();
 //        try {
 //            httpRequest = filter.filter(httpRequest);
-//            assertEquals(httpRequest.getEndpoint().toString(), server.url("/").url().toString());
+//            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            assertSentAccept(server, "GET", "/crumbIssuer/api/xml?xpath=concat%28//crumbRequestField,%22%3A%22,//crumb%29", MediaType.TEXT_PLAIN);
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 3);
@@ -86,14 +86,14 @@
 //    public void testUsernameApiTokenNeedsNoCrumb() throws Exception {
 //        MockWebServer server = mockWebServer();
 //
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //
 //        JenkinsAuthentication creds = creds(AuthenticationType.UsernameApiToken, "random_user:random_token");
 //        JenkinsAuthenticationFilter filter = new JenkinsAuthenticationFilter(creds, jenkinsApi);
-//        HttpRequest httpRequest = HttpRequest.builder().endpoint(server.url("/").url().toString()).method("POST").build();
+//        HttpRequest httpRequest = HttpRequest.builder().endpoint("http://localhost:" + server.getPort().toString()).method("POST").build();
 //        try {
 //            httpRequest = filter.filter(httpRequest);
-//            assertEquals(httpRequest.getEndpoint().toString(), server.url("/").url().toString());
+//            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 1);
 //            assertTrue(headers.containsEntry("Authorization", creds.authType().getAuthScheme() + " " + creds.authValue()));
@@ -107,14 +107,14 @@
 //    public void getMethodNeedsNoCrumb() throws Exception {
 //        MockWebServer server = mockWebServer();
 //
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //
 //        JenkinsAuthentication creds = creds(AuthenticationType.UsernameApiToken, "random_user:random_token");
 //        JenkinsAuthenticationFilter filter = new JenkinsAuthenticationFilter(creds, jenkinsApi);
-//        HttpRequest httpRequest = HttpRequest.builder().endpoint(server.url("/").url().toString()).method("GET").build();
+//        HttpRequest httpRequest = HttpRequest.builder().endpoint("http://localhost:" + server.getPort().toString()).method("GET").build();
 //        try {
 //            httpRequest = filter.filter(httpRequest);
-//            assertEquals(httpRequest.getEndpoint().toString(), server.url("/").url().toString());
+//            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 1);
 //            assertTrue(headers.containsEntry("Authorization", creds.authType().getAuthScheme() + " " + creds.authValue()));

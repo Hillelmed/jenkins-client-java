@@ -35,7 +35,7 @@
 //
 //        final String value = "04a1109fc2db171362c966ebe9fc87f0";
 //        server.enqueue(new MockResponse().setBody("Jenkins-Crumb:" + value).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        CrumbIssuerApi api = jenkinsApi.crumbIssuerApi();
 //        try {
 //            final Crumb instance = api.crumb(null).getBody();

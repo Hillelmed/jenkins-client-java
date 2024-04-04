@@ -34,7 +34,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setBody(payloadFromResource("/overall-load.json")).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        StatisticsApi api = jenkinsApi.statisticsApi();
 //        try {
 //            OverallLoad load = api.overallLoad();

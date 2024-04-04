@@ -37,7 +37,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queue.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        QueueApi api = jenkinsApi.queueApi();
 //        try {
 //            List<QueueItem> output = api.queue();
@@ -53,7 +53,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemPending.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        try {
@@ -71,7 +71,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemCancelled.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        try {
@@ -89,7 +89,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemRunning.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        int buildNumber = 14;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
@@ -113,7 +113,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemMultipleParameters.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        Map<String, String> map = Maps.newHashMap();
@@ -132,7 +132,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemEmptyParameterValue.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        Map<String, String> map = Maps.newHashMap();
@@ -150,7 +150,7 @@
 //    public void testCancelQueueItem() throws Exception {
 //        MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setResponseCode(404));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        ResponseEntity<Void> result = jenkinsApi.queueApi().cancel(queueItemId);
 //        try {
@@ -167,7 +167,7 @@
 //    public void testCancelNonExistentQueueItem() throws Exception {
 //        MockWebServer server = mockWebServer();
 //        server.enqueue(new MockResponse().setResponseCode(500));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        ResponseEntity<Void> result = jenkinsApi.queueApi().cancel(queueItemId);
 //        try {
@@ -185,7 +185,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemNullTaskName.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        try {
@@ -203,7 +203,7 @@
 //        MockWebServer server = mockWebServer();
 //        String body = payloadFromResource("/queueItemMissingTaskUrl.json");
 //        server.enqueue(new MockResponse().setBody(body).setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        int queueItemId = 143;
 //        QueueItem queueItem = jenkinsApi.queueApi().queueItem(queueItemId);
 //        try {

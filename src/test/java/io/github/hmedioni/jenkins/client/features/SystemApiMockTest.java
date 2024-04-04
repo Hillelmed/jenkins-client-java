@@ -42,7 +42,7 @@
 //                .setHeader("X-Jenkins-CLI-Port", "50000").setHeader("X-Jenkins-CLI2-Port", "50000")
 //                .setHeader("X-Instance-Identity", "fdsa").setHeader("X-SSH-Endpoint", "127.0.1.1:46126")
 //                .setHeader("Server", "Jetty(winstone-2.9)").setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            final SystemInfo version = api.systemInfo();
@@ -60,7 +60,7 @@
 //
 //        server.enqueue(
 //            new MockResponse().setBody("Not Authorized").setResponseCode(401));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            final SystemInfo version = api.systemInfo();
@@ -77,7 +77,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            ResponseEntity<Void> success = api.quietDown();
@@ -94,7 +94,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(401));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            ResponseEntity<Void> status = api.quietDown();
@@ -112,7 +112,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(200));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            ResponseEntity<Void> success = api.cancelQuietDown();
@@ -129,7 +129,7 @@
 //        MockWebServer server = mockWebServer();
 //
 //        server.enqueue(new MockResponse().setResponseCode(401));
-//        JenkinsApi jenkinsApi = api(server.url("/").url());
+//        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
 //        SystemApi api = jenkinsApi.systemApi();
 //        try {
 //            ResponseEntity<Void> status = api.cancelQuietDown();

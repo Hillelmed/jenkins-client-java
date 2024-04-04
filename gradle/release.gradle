@@ -50,12 +50,12 @@ task pushTag {
     }
 }
 
-task tag {
+tasks.register('tag') {
     dependsOn pushTag
     mustRunAfter "publishToSonatype", "closeAndReleaseSonatypeStagingRepository"
 }
 
-task release {
+tasks.register('release') {
     description = 'Publishes artifacts to Bintray and tags repository with current project version.'
     dependsOn assemble, "publishToSonatype", "closeAndReleaseSonatypeStagingRepository", tag
 }

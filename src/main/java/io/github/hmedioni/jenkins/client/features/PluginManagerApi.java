@@ -37,10 +37,6 @@ public interface PluginManagerApi {
     Plugins plugins(@RequestParam("depth") Integer depth);
 
     // @Named("pluginManager:install-necessary-plugins")
-    @PostExchange("/installNecessaryPlugins")
-    // @Fallback(JenkinsFallbacks.ResponseEntity<Void>OnError.class)
-    //@ResponseParser(ResponseEntity<Void>Parser.class)
-    // @Produces(MediaType.APPLICATION_XML)
-    // @Payload("<jenkins><install plugin=\"{pluginID}\"/></jenkins>")
-    ResponseEntity<Void> installNecessaryPlugins(@RequestPart(value = "<jenkins><install plugin=\\\"{$pluginID}\\\"/></jenkins>") String pluginID);
+    @PostExchange(value = "/installNecessaryPlugins",contentType = MediaType.APPLICATION_XML_VALUE)
+    ResponseEntity<Void> installNecessaryPlugins(@RequestBody String pluginID);
 }

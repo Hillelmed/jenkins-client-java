@@ -15,19 +15,20 @@
  * limitations under the License.
  */
 
-package io.github.hmedioni.jenkins.client.features;
+package io.github.hmedioni.jenkins.client.domain.queue;
 
-import io.github.hmedioni.jenkins.client.domain.statistics.*;
-import org.springframework.http.*;
-import org.springframework.web.service.annotation.*;
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
 
+import java.util.*;
 
-// @RequestFilters(JenkinsAuthenticationFilter.class)
-// @Consumes(MediaType.APPLICATION_JSON)
-@HttpExchange(accept = MediaType.APPLICATION_JSON_VALUE, contentType = MediaType.APPLICATION_JSON_VALUE)
-public interface StatisticsApi {
+@Data
+@NoArgsConstructor
+public class QueueItemsArray {
 
-    // @Named("statistics:overall-load")
-    @GetExchange("/overallLoad/api/json")
-    OverallLoad overallLoad();
+    @JsonProperty("_class")
+    private String clazz;
+    private List<Object> discoverableItems;
+    private List<QueueItem> items;
+
 }

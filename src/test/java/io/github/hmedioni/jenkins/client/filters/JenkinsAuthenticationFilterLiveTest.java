@@ -34,13 +34,13 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
 
     @BeforeTest
     public void cleanJenkins() throws MalformedURLException {
-        JenkinsApi api = api(new URL(endPoint), AuthenticationType.USERNAME_PASSWORD, usernamePassword);
+        JenkinsApi api = api(endPoint, AuthenticationType.USERNAME_PASSWORD, usernamePassword);
         Objects.requireNonNull(api.jobsApi().jobList().getBody()).getJobs().forEach(job -> api.jobsApi().delete(job.getName()));
     }
 
     @Test
     public void testAnonymousNeedsCrumb() throws Exception {
-        try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.ANONYMOUS, null)) {
+        try (JenkinsApi jenkinsApi = api(endPoint, AuthenticationType.ANONYMOUS, null)) {
             // Do something that needs POST so the crumb logic is exercised
             String config = payloadFromResource("/freestyle-project-no-params.xml");
             ResponseEntity<Void> success = jenkinsApi.jobsApi().create("DevTest", config);
@@ -57,7 +57,7 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
     @Test
     public void testUsernamePasswordNeedsCrumb() throws Exception {
 
-        try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.USERNAME_PASSWORD, usernamePassword)) {
+        try (JenkinsApi jenkinsApi = api(endPoint, AuthenticationType.USERNAME_PASSWORD, usernamePassword)) {
             // Do something that needs POST so the crumb logic is exercized
             String config = payloadFromResource("/freestyle-project-no-params.xml");
             ResponseEntity<Void> success = jenkinsApi.jobsApi().create("DevTest", config);
@@ -80,7 +80,7 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
         System.out.println("Okay, we have the token: " + apiToken.getData().getTokenValue());
         final String usernameApiToken = usernamePassword.split(":")[0] + ":" + apiToken.getData().getTokenValue();
 
-        try (JenkinsApi jenkinsApi = api(new URL(endPoint), AuthenticationType.USERNAME_API_TOKEN, usernameApiToken)) {
+        try (JenkinsApi jenkinsApi = api(endPoint, AuthenticationType.USERNAME_API_TOKEN, usernameApiToken)) {
             // Do something that needs POST so the crumb logic is exercized
             String config = payloadFromResource("/freestyle-project-no-params.xml");
             ResponseEntity<Void> success = jenkinsApi.jobsApi().create("DevTest", config);
@@ -98,7 +98,7 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
 
     private ApiToken generateNewApiToken(final String credStr) throws Exception {
         UserApi user;
-        try (JenkinsApi api = api(new URL(endPoint), AuthenticationType.USERNAME_PASSWORD, credStr)) {
+        try (JenkinsApi api = api(endPoint, AuthenticationType.USERNAME_PASSWORD, credStr)) {
             user = api.userApi();
         }
         return user.generateNewToken(usernamePassword.split(":")[0], "filter-test-token").getBody();
@@ -106,7 +106,7 @@ public class JenkinsAuthenticationFilterLiveTest extends BaseJenkinsTest {
 
     private void revokeApiToken(final String credStr, final ApiToken apiToken) throws Exception {
         UserApi user;
-        try (JenkinsApi api = api(new URL(endPoint), AuthenticationType.USERNAME_API_TOKEN, credStr)) {
+        try (JenkinsApi api = api(endPoint, AuthenticationType.USERNAME_API_TOKEN, credStr)) {
             user = api.userApi();
         }
         user.revoke(usernamePassword.split(":")[0], apiToken.getData().getTokenUuid());
