@@ -33,22 +33,32 @@ jobs:
       - name: Execute Gradle build
         run: ./gradlew clean build mockTest integTest testCoverage --stacktrace
 
-      - name: Upload Report
-        uses: 'actions/upload-artifact@v2'
+      # generates coverage-report.md and publishes as checkrun
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
-          name: report.xml
-          path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+          coverage_results_path: jacoco-report/test.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 50
+          fail_below_threshold: false
+          publish_only_summary: false
 
+      # Publish Coverage Job Summary  # Optional
+      - name: Add Coverage Job Summary
+        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Add coverage to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.6.1
+      # uploads the coverage-report.md artifact  # Optional
+
+      - name: Upload Code Coverage Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          paths: |
-            ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
-            ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+          name: code-coverage-report-markdown
+          path: */coverage-results.md
+          retention-days: 1
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Stop docker
         run: docker stop jenkins-rest
