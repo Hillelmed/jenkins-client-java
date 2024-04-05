@@ -20,8 +20,4 @@ public enum AuthenticationType {
         this.authScheme = authScheme;
     }
 
-    @Override
-    public String toString() {
-        return authName;
-    }
 }
