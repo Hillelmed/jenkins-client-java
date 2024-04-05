@@ -45,7 +45,7 @@ jobs:
 
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v4.9
+        uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
           coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
           coverage_report_name: Coverage
@@ -65,6 +65,12 @@ jobs:
           echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
           echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
           echo "Coverage coverage_percentage ${{ steps.jacoco.outputs.coverage_percentage }}"
+      - name: Upload Code Coverage Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report-markdown
+          path: '*/coverage-results.md'
+          retention-days: 1
 
       - name: construct coverage job summary markdown
         run: |
@@ -78,7 +84,7 @@ jobs:
           EOF
           cat coverage_summary.md >> $GITHUB_STEP_SUMMARY
 
-      - name: print output
+      - name: Add Coverage Job Summary
         run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Stop docker
