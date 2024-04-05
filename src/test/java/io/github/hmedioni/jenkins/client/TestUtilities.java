@@ -22,15 +22,14 @@ public class TestUtilities extends JenkinsUtils {
      */
     public static JenkinsAuthentication inferTestAuthentication() {
 
-        final JenkinsAuthentication.Builder inferAuth = new JenkinsAuthentication.Builder();
+        final JenkinsAuthentication inferAuth = JenkinsAuthentication.builder().build();
 
         // 1.) Check for API Token as this requires no crumb hence is faster
         String authValue = JenkinsUtils
             .retrieveExternalValue(TEST_API_TOKEN_SYSTEM_PROPERTY,
                 TEST_API_TOKEN_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
-            inferAuth.apiToken(authValue);
-            return inferAuth.build();
+            return JenkinsAuthentication.builder().apiToken(authValue).build();
         }
 
         // 2.) Check for UsernamePassword auth credentials.
@@ -38,11 +37,10 @@ public class TestUtilities extends JenkinsUtils {
             .retrieveExternalValue(TEST_CREDENTIALS_SYSTEM_PROPERTY,
                 TEST_CREDENTIALS_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
-            inferAuth.credentials(authValue);
-            return inferAuth.build();
+            return JenkinsAuthentication.builder().credentials(authValue).build();
         }
 
         // 3.) If neither #1 or #2 find anything "Anonymous" access is assumed.
-        return inferAuth.build();
+        return inferAuth;
     }
 }

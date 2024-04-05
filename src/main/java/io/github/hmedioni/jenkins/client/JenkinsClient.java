@@ -1,7 +1,6 @@
 package io.github.hmedioni.jenkins.client;
 
 
-import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.config.*;
 import lombok.*;
 import org.springframework.web.reactive.function.client.*;
@@ -15,16 +14,13 @@ public final class JenkinsClient implements Closeable {
     private final JenkinsApi jenkinsApi;
 
     private JenkinsClient(JenkinsProperties jenkinsProperties, JenkinsApi jenkinsApi) {
-        JenkinsAuthentication jenkinsAuthentication1;
+        JenkinsAuthentication jenkinsAuthentication1 = null;
         if (jenkinsProperties != null) {
             if (jenkinsProperties.getUrl() == null) {
                 jenkinsProperties.setUrl(JenkinsUtils.inferEndpoint());
             }
-            if (jenkinsProperties.getUser() == null) {
+            if (jenkinsProperties.getJenkinsAuthentication() == null) {
                 jenkinsAuthentication1 = JenkinsUtils.inferAuthentication();
-            } else {
-                jenkinsAuthentication1 = new JenkinsAuthentication(jenkinsProperties.getUser() + ":" + jenkinsProperties.getPassword(),
-                    AuthenticationType.USERNAME_PASSWORD);
             }
         } else {
             jenkinsProperties = new JenkinsProperties();

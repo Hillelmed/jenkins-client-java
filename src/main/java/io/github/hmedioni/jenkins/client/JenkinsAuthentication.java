@@ -14,25 +14,14 @@ import java.util.*;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder(builderClassName = "JenkinsAuthenticationBuilder")
 public class JenkinsAuthentication extends ExchangeFilterFunctions {
 
     private final AuthenticationType authType;
+    private final String identity;
+    private final String credential;
     private final String encodedCred;
 
-
-    /**
-     * Create instance of JenkinsAuthentication.
-     *
-     * @param authType authentication type (e.g. UsernamePassword, UsernameApiToken, Anonymous).
-     */
-    public JenkinsAuthentication(final String authValue, final AuthenticationType authType) {
-        if (authType == AuthenticationType.USERNAME_PASSWORD || authType == AuthenticationType.USERNAME_API_TOKEN) {
-            this.encodedCred = Base64.getEncoder().encodeToString(authValue.getBytes());
-        } else {
-            this.encodedCred = "";
-        }
-        this.authType = authType;
-    }
 
     /**
      * Return the base64 encoded value of the credential.
@@ -40,24 +29,12 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
      * @return the base 64 encoded authentication value.
      */
 
-    public String authValue() {
-        return this.encodedCred;
-    }
-
-    /**
-     * Return the authentication type.
-     *
-     * @return the authentication type.
-     */
-    public AuthenticationType authType() {
-        return authType;
-    }
-
-    public static class Builder {
+    public static class JenkinsAuthenticationBuilder {
 
         private String identity = "anonymous";
         private String credential = identity + ":";
         private AuthenticationType authType = AuthenticationType.ANONYMOUS;
+        private String encodedCred = Base64.getEncoder().encodeToString(credential.getBytes(StandardCharsets.UTF_8));
 
         /**
          * Set 'UsernamePassword' credentials.
@@ -65,10 +42,24 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
          * @param usernamePassword value to use for 'UsernamePassword' credentials. It can be the {@code username:password} in clear text or its base64 encoded value.
          * @return this Builder.
          */
-        public Builder credentials(final String usernamePassword) {
+        public JenkinsAuthenticationBuilder credentials(final String usernamePassword) {
             this.identity = Objects.requireNonNull(extractIdentity(usernamePassword));
             this.credential = Objects.requireNonNull(usernamePassword);
             this.authType = AuthenticationType.USERNAME_PASSWORD;
+
+            this.encodedCred = Base64.getEncoder().encodeToString(this.credential.getBytes());
+            return this;
+        }
+
+        public JenkinsAuthenticationBuilder encodedCred(final String encodedCred) {
+            byte[] decodedBytes = Base64.getDecoder().decode(encodedCred);
+            String decodedString = new String(decodedBytes);
+            this.identity = Objects.requireNonNull(extractIdentity(decodedString));
+            this.credential = Objects.requireNonNull(decodedString);
+            this.encodedCred = encodedCred;
+            if (authType == AuthenticationType.ANONYMOUS) {
+                this.authType = AuthenticationType.USERNAME_PASSWORD;
+            }
             return this;
         }
 
@@ -78,10 +69,11 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
          * @param apiTokenCredentials value to use for 'ApiToken' credentials. It can be the {@code username:apiToken} in clear text or its base64 encoded value.
          * @return this Builder.
          */
-        public Builder apiToken(final String apiTokenCredentials) {
+        public JenkinsAuthenticationBuilder apiToken(final String apiTokenCredentials) {
             this.identity = Objects.requireNonNull(extractIdentity(apiTokenCredentials));
             this.credential = Objects.requireNonNull(apiTokenCredentials);
             this.authType = AuthenticationType.USERNAME_API_TOKEN;
+            this.encodedCred = Base64.getEncoder().encodeToString(this.credential.getBytes());
             return this;
         }
 
@@ -111,13 +103,6 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
             return decoded.split(":")[0];
         }
 
-        /**
-         * Build and instance of JenkinsCredentials.
-         *
-         * @return instance of JenkinsCredentials.
-         */
-        public JenkinsAuthentication build() {
-            return new JenkinsAuthentication(credential, authType);
-        }
+
     }
 }

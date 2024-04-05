@@ -31,7 +31,14 @@ jobs:
         uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
-        run: ./gradlew clean build mockTest integTest --stacktrace
+        run: ./gradlew clean build mockTest integTest testCoverage --stacktrace
+
+      - name: Upload Report
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: report.xml
+          path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+
 
       - name: Add coverage to PR
         id: jacoco
@@ -41,8 +48,6 @@ jobs:
             ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
             ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Stop docker

@@ -21,8 +21,9 @@ public class BaseJenkinsTest {
 //        + ":"
 //        + System.getProperty("test.jenkins.password");
     //    final protected String endPoint = System.getProperty("test.jenkins.endpoint");
-    public final String endPoint = "http://127.0.0.1:8080";
+    public final String url = "http://127.0.0.1:8080";
     public final String usernamePassword = "admin:admin";
+    public final String user = "admin";
     protected final String provider;
 
     public BaseJenkinsTest() {
@@ -62,10 +63,6 @@ public class BaseJenkinsTest {
     public JenkinsApi api(final String url, final AuthenticationType authType, final String authString) {
         final JenkinsAuthentication creds = creds(authType, authString);
         JenkinsProperties jenkinsProperties = new JenkinsProperties(url, creds);
-        if (authString != null) {
-            jenkinsProperties.setUser(authString.split(":")[0]);
-            jenkinsProperties.setPassword(authString.split(":")[1]);
-        }
         JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
         return jenkinsClient.api();
     }
@@ -78,7 +75,7 @@ public class BaseJenkinsTest {
      * @return an authentication instance.
      */
     public JenkinsAuthentication creds(final AuthenticationType authType, final String authString) {
-        final JenkinsAuthentication.Builder authBuilder = new JenkinsAuthentication.Builder();
+        final JenkinsAuthentication.JenkinsAuthenticationBuilder authBuilder = new JenkinsAuthentication.JenkinsAuthenticationBuilder();
         if (authType == AuthenticationType.USERNAME_PASSWORD) {
             authBuilder.credentials(authString);
         } else if (authType == AuthenticationType.USERNAME_API_TOKEN) {

@@ -113,7 +113,7 @@ public class JenkinsUtils {
      */
     public static JenkinsAuthentication inferAuthentication() {
 
-        final JenkinsAuthentication.Builder inferAuth = new JenkinsAuthentication.Builder();
+        final JenkinsAuthentication.JenkinsAuthenticationBuilder inferAuth = new JenkinsAuthentication.JenkinsAuthenticationBuilder();
         // 1.) Check for API Token as this requires no crumb hence is faster
         String authValue = JenkinsUtils
             .retrieveExternalValue(API_TOKEN_SYSTEM_PROPERTY,

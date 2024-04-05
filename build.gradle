@@ -50,6 +50,10 @@ test {
     forkEvery = 1
 }
 
+jacoco {
+    toolVersion '0.8.10'
+}
+
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
     reports {
@@ -90,6 +94,45 @@ tasks.register('mockTest', Test) {
         destinationFile = file("$rootDir/jacoco/test.exec")
     }
 
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+
+tasks.create(name: "testCoverage", type: JacocoReport, dependsOn: "test") {
+
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for the test build."
+
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+    }
+
+    def excludes = [
+        '**/*Test*.*',
+        '**/actions/*.*',
+        '**/core/*.*',
+        '**/markers/*.*',
+        '**/services/**/*.*',
+        '**/toolwindow/*.*',
+        '**/utils/*.*'
+    ]
+
+    def javaClasses = fileTree(dir: "${buildDir}/classes/java/main", excludes: excludes)
+    def kotlinClasses = fileTree(dir: "${buildDir}/classes/kotlin/main", excludes: excludes)
+    classDirectories.from = files([javaClasses, kotlinClasses])
+
+    sourceDirectories.from = files([
+        "$project.projectDir/src/main/java",
+        "$project.projectDir/src/main/kotlin",
+        "$buildDir/generated/source/kapt/test"
+    ])
+
+    executionData.from = files("${project.buildDir}/jacoco/test.exec")
 }
 
 tasks.register('integTest', Test) {

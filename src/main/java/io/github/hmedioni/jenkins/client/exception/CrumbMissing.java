@@ -2,7 +2,6 @@ package io.github.hmedioni.jenkins.client.exception;
 
 import org.springframework.http.*;
 
-import java.io.*;
 import java.util.*;
 
 /**

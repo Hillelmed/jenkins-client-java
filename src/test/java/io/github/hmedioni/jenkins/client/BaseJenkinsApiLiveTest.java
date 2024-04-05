@@ -1,5 +1,6 @@
 package io.github.hmedioni.jenkins.client;
 
+import io.github.hmedioni.jenkins.client.auth.*;
 import io.github.hmedioni.jenkins.client.config.*;
 import io.github.hmedioni.jenkins.client.domain.job.*;
 import io.github.hmedioni.jenkins.client.domain.queue.*;
@@ -14,16 +15,7 @@ import java.util.*;
 public class BaseJenkinsApiLiveTest extends BaseJenkinsTest {
 
     protected final JenkinsAuthentication jenkinsAuthentication;
-
-    //    final protected String url = System.getProperty("test.jenkins.endpoint");
-    final protected String url = "http://127.0.0.1:8080";
-
-    //    final private String user = System.getProperty("test.jenkins.user");;
-    final protected String user = "admin";
-    //    final private String password = System.getProperty("test.jenkins.password");;
-    final protected String password = "admin";
-
-    protected JenkinsProperties jenkinsProperties = new JenkinsProperties(url, user, password);
+    protected JenkinsProperties jenkinsProperties = new JenkinsProperties(url, JenkinsAuthentication.builder().authType(AuthenticationType.USERNAME_PASSWORD).credentials(usernamePassword).build());
     protected JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
     protected JenkinsApi api = jenkinsClient.api();
 

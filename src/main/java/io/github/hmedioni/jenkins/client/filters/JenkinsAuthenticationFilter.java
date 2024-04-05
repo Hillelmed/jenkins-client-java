@@ -25,15 +25,15 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
         ClientRequest.Builder builder = ClientRequest.from(request);
 
         // Password and API Token are both Basic authentication (there is no Bearer authentication in Jenkins)
-        if (jenkinsAuthentication.authType() == AuthenticationType.USERNAME_API_TOKEN || jenkinsAuthentication.authType() == AuthenticationType.USERNAME_PASSWORD) {
-            final String authHeader = jenkinsAuthentication.authType().getAuthScheme() + " " + jenkinsAuthentication.authValue();
+        if (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_API_TOKEN || jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD) {
+            final String authHeader = jenkinsAuthentication.getAuthType().getAuthScheme() + " " + jenkinsAuthentication.getEncodedCred();
             builder.header(org.springframework.http.HttpHeaders.AUTHORIZATION, authHeader);
         }
 
         //Anon and Password need the crumb and the cookie when POSTing
         //https://www.jenkins.io/doc/book/security/csrf-protection/#working-with-scripted-clients
-        if (request.method().equals(HttpMethod.POST) && (jenkinsAuthentication.authType() == AuthenticationType.USERNAME_PASSWORD
-            || jenkinsAuthentication.authType() == AuthenticationType.ANONYMOUS)) {
+        if (request.method().equals(HttpMethod.POST) && (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD
+            || jenkinsAuthentication.getAuthType() == AuthenticationType.ANONYMOUS)) {
             try {
                 final Crumb localCrumb = getCrumb();
                 if (localCrumb != null && localCrumb.getValue() != null && localCrumb.getCrumbRequestField() != null) {
@@ -52,7 +52,7 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
             crumb = WebClient.builder()
                 .build().get().uri(jenkinsProperties.getUrl() + "/crumbIssuer/api/json")
                 .header(HttpHeaders.AUTHORIZATION,
-                    jenkinsAuthentication.authType().getAuthScheme() + " " + jenkinsAuthentication.authValue())
+                    jenkinsAuthentication.getAuthType().getAuthScheme() + " " + jenkinsAuthentication.getEncodedCred())
                 .exchangeToMono(clientResponse -> {
                     clientResponse.cookies()
                         .forEach((s, responseCookies) -> crumbCookie =

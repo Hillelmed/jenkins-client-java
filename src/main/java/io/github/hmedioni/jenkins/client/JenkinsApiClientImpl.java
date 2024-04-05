@@ -26,9 +26,9 @@ public class JenkinsApiClientImpl implements JenkinsApi {
 
     private static HttpServiceProxyFactory buildHttpServiceProxyFactory(JenkinsProperties jenkinsProperties, WebClient webClient,
                                                                         DefaultUriBuilderFactory.EncodingMode encodingMode) {
-        ExchangeFilterFunction jenkinsAuthenticationFilter = new JenkinsAuthenticationFilter(jenkinsProperties, jenkinsProperties.jenkinsAuthentication());
+        ExchangeFilterFunction jenkinsAuthenticationFilter = new JenkinsAuthenticationFilter(jenkinsProperties, jenkinsProperties.getJenkinsAuthentication());
         ExchangeFilterFunction scrubNullFromPathFilter = new ScrubNullFolderParam();
-        ExchangeFilterFunction jenkinsUserInjectionFilter = new JenkinsUserInjectionFilter(jenkinsProperties.jenkinsAuthentication());
+        ExchangeFilterFunction jenkinsUserInjectionFilter = new JenkinsUserInjectionFilter(jenkinsProperties.getJenkinsAuthentication());
         if (webClient == null) {
             DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(jenkinsProperties.getUrl());
             factory.setEncodingMode(encodingMode);

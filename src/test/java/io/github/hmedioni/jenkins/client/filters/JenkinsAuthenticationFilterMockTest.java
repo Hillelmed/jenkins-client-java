@@ -1,4 +1,3 @@
-
 //
 //package io.github.hmedioni.jenkins.client.filters;
 //
@@ -59,7 +58,7 @@
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 3);
 //            assertTrue(headers.containsEntry("Jenkins-Crumb", value));
-//            assertTrue(headers.containsEntry("Authorization", creds.authType().getAuthScheme() + " " + creds.authValue()));
+//            assertTrue(headers.containsEntry("Authorization", creds.getAuthType().getAuthScheme() + " " + creds.getEncodedCred()));
 //            assertTrue(headers.containsEntry("Cookie", ""));
 //        } finally {
 //            jenkinsApi.close();
@@ -81,7 +80,7 @@
 //            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 1);
-//            assertTrue(headers.containsEntry("Authorization", creds.authType().getAuthScheme() + " " + creds.authValue()));
+//            assertTrue(headers.containsEntry("Authorization", creds.getAuthType().getAuthScheme() + " " + creds.getEncodedCred()));
 //        } finally {
 //            jenkinsApi.close();
 //            server.shutdown();
@@ -102,7 +101,7 @@
 //            assertEquals(httpRequest.getEndpoint().toString(), "http://localhost:" + server.getPort().toString());
 //            Multimap<String, String> headers = httpRequest.getHeaders();
 //            assertEquals(headers.size(), 1);
-//            assertTrue(headers.containsEntry("Authorization", creds.authType().getAuthScheme() + " " + creds.authValue()));
+//            assertTrue(headers.containsEntry("Authorization", creds.getAuthType().getAuthScheme() + " " + creds.getEncodedCred()));
 //        } finally {
 //            jenkinsApi.close();
 //            server.shutdown();

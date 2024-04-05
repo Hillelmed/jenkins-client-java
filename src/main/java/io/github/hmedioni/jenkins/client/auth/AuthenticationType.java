@@ -1,8 +1,11 @@
 package io.github.hmedioni.jenkins.client.auth;
 
+import lombok.*;
+
 /**
  * Supported Authentication Types for Jenkins.
  */
+@Getter
 public enum AuthenticationType {
 
     USERNAME_PASSWORD("UsernamePassword", "Basic"),
@@ -15,10 +18,6 @@ public enum AuthenticationType {
     AuthenticationType(final String authName, final String authScheme) {
         this.authName = authName;
         this.authScheme = authScheme;
-    }
-
-    public String getAuthScheme() {
-        return authScheme;
     }
 
     @Override
