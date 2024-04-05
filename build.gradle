@@ -50,6 +50,16 @@ test {
     forkEvery = 1
 }
 
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml' as Provider<? extends CharSequence>) as FileSystemLocation
+    }
+}
+
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Jenkins REST client',
