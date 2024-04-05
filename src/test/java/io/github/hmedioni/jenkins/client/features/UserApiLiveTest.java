@@ -1,24 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.github.hmedioni.jenkins.client.features;
 
 
 import io.github.hmedioni.jenkins.client.*;
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.user.*;
 import io.github.hmedioni.jenkins.client.exception.*;
 import org.springframework.http.*;
@@ -46,7 +29,7 @@ public class UserApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test
     public void testGenerateNewToken() {
-        token = api().generateNewToken(user,"user-api-test-token").getBody();
+        token = api().generateNewToken(user, "user-api-test-token").getBody();
         assertNotNull(token);
         assertEquals(token.getStatus(), "ok");
         assertNotNull(token.getData());
@@ -58,7 +41,7 @@ public class UserApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGenerateNewToken")
     public void testRevokeApiToken() {
-        ResponseEntity<Void> status = api().revoke(user,token.getData().getTokenUuid());
+        ResponseEntity<Void> status = api().revoke(user, token.getData().getTokenUuid());
         // Jenkins returns 200 whether the tokenUuid is correct or not.
         assertTrue(status.getStatusCode().is2xxSuccessful());
     }
@@ -66,7 +49,7 @@ public class UserApiLiveTest extends BaseJenkinsApiLiveTest {
     @Test
     public void testRevokeApiTokenWithEmptyUuid() {
         try {
-            api().revoke("","");
+            api().revoke("", "");
         } catch (JenkinsAppException e) {
             assertNotNull(e.errors());
         }

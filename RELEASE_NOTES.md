@@ -1,5 +1,5 @@
 ### Version 2.0.0 (April 1, 2024)
-* Fix to java 17 and change to use HttpClient with Spring
+* Update to java 17 and change to use Http interface with webClient with Spring
 
 ### Version 1.0.2 (September 29, 2022)
 * ADDED: extensive build info. - [Pull Request 259](https://github.com/cdancy/jenkins-rest/pull/259)

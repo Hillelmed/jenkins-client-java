@@ -1,8 +1,10 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.1'
     id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
+
 }
 
 apply from: "$rootDir/gradle/additional-artifacts.gradle"
@@ -75,6 +77,10 @@ tasks.register('mockTest', Test) {
         showStandardStreams = true
         events 'started', 'passed', 'failed'
     }
+    jacoco {
+        destinationFile = file("$rootDir/jacoco/test.exec")
+    }
+
 }
 
 tasks.register('integTest', Test) {
@@ -97,6 +103,10 @@ tasks.register('integTest', Test) {
         showStandardStreams = true
         events 'started', 'passed', 'failed'
     }
+    jacoco {
+        destinationFile = file("$rootDir/jacoco/test.exec")
+    }
+
 }
 
 javadoc {

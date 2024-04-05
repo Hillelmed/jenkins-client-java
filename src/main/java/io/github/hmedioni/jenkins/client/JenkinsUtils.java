@@ -64,11 +64,11 @@ public class JenkinsUtils {
 
 
     /**
-     * If the passed systemProperty is non-null we will attempt to query
+     * If the passed systemProperty is non-null, we will attempt to query
      * the `System Properties` for a value and return it. If no value
      * was found, and environmentVariable is non-null, we will attempt to
      * query the `Environment Variables` for a value and return it. If
-     * both are either null or can't be found than null will be returned.
+     * both are either null or can't be found, then null will be returned.
      *
      * @param systemProperty      possibly existent System Property.
      * @param environmentVariable possibly existent Environment Variable.

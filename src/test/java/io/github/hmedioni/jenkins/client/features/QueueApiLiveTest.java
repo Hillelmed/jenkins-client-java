@@ -1,19 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.*;
@@ -139,7 +123,7 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
         assertEquals(queueItem.getActions().get(0).get_class(), "hudson.model.ParametersAction");
         List<QueueItem.Parameter> parameters = queueItem.getActions().get(0).getParameters();
         assertTrue(map.containsKey(parameters.get(0).getName()));
-        assertEquals(map.get(parameters.get(0).getName()),parameters.get(0).getValue());
+        assertEquals(map.get(parameters.get(0).getName()), parameters.get(0).getValue());
     }
 
     @Test
@@ -175,9 +159,9 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
         assertTrue(map.containsKey(parameters.get(0).getName()));
         assertTrue(map.containsKey(parameters.get(1).getName()));
         assertTrue(map.containsKey(parameters.get(2).getName()));
-        assertEquals(map.get(parameters.get(0).getName()),parameters.get(0).getValue());
-        assertEquals(map.get(parameters.get(1).getName()),parameters.get(1).getValue());
-        assertEquals(map.get(parameters.get(2).getName()),parameters.get(2).getValue());
+        assertEquals(map.get(parameters.get(0).getName()), parameters.get(0).getValue());
+        assertEquals(map.get(parameters.get(1).getName()), parameters.get(1).getValue());
+        assertEquals(map.get(parameters.get(2).getName()), parameters.get(2).getValue());
 
     }
 
@@ -203,9 +187,9 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
         assertTrue(map.containsKey(parameters.get(0).getName()));
         assertTrue(map.containsKey(parameters.get(1).getName()));
         assertTrue(map.containsKey(parameters.get(2).getName()));
-        assertEquals(map.get(parameters.get(0).getName()),parameters.get(0).getValue());
-        assertEquals(map.get(parameters.get(1).getName()),parameters.get(1).getValue());
-        assertEquals(map.get(parameters.get(2).getName()),parameters.get(2).getValue());
+        assertEquals(map.get(parameters.get(0).getName()), parameters.get(0).getValue());
+        assertEquals(map.get(parameters.get(1).getName()), parameters.get(1).getValue());
+        assertEquals(map.get(parameters.get(2).getName()), parameters.get(2).getValue());
     }
 
     @Test
@@ -218,7 +202,7 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
 
         ResponseEntity<Void> success = api().cancel(job2Value.getValues());
         assertNotNull(success);
-        assertEquals(success.getStatusCode(),HttpStatus.NO_CONTENT);
+        assertEquals(success.getStatusCode(), HttpStatus.NO_CONTENT);
 
         QueueItem queueItem = api().queueItem(job2Value.getValues());
         assertTrue(queueItem.isCancelled());
