@@ -31,7 +31,7 @@ jobs:
         uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
-        run: ./gradlew clean build mockTest integTest testCoverage --stacktrace
+        run: ./gradlew clean build mockTest integTest --stacktrace
 
       - name: Add coverage to PR
         id: jacoco
