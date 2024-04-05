@@ -33,8 +33,8 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
 
         private String identity = "anonymous";
         private String credential = identity + ":";
-        private AuthenticationType authType = AuthenticationType.ANONYMOUS;
         private String encodedCred = Base64.getEncoder().encodeToString(credential.getBytes(StandardCharsets.UTF_8));
+        private AuthenticationType authType = AuthenticationType.ANONYMOUS;
 
         /**
          * Set 'UsernamePassword' credentials.

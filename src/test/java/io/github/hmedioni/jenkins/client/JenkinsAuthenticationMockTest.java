@@ -52,7 +52,7 @@ public class JenkinsAuthenticationMockTest {
             .build();
         assertEquals(ja.getIdentity(), "user");
         Assert.assertEquals(ja.getAuthType(), AuthenticationType.USERNAME_PASSWORD);
-        assertEquals(ja.getEncodedCred(),  Base64.getEncoder().encodeToString(encoded.getBytes(StandardCharsets.UTF_8)));
+        assertEquals(ja.getEncodedCred(), Base64.getEncoder().encodeToString(encoded.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Test
