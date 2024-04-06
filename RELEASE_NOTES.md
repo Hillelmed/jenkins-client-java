@@ -1,4 +1,4 @@
-### Version 1.0.0 start from beginning (April 1, 2024) With hmedioni
+### Version 1.0.0 start from beginning (April 1, 2024) With hillelmed
 * Update to java 17 and change to use Http interface with webClient with Spring
 
 ### Version 1.0.2 (September 29, 2022)

@@ -24,7 +24,7 @@ assertTrue(systemInfo.getUrl().equals("http://localhost:8080/"));
 Can be found in maven like so:
 ```
 <dependency>
-  <groupId>io.github.hmedioni</groupId>
+  <groupId>io.github.hillelmed</groupId>
   <artifactId>jenkins-client-java</artifactId>
   <version>X.Y.Z</version>
   <classifier>sources|tests|javadoc|all</classifier> (Optional)
@@ -33,7 +33,7 @@ Can be found in maven like so:
 
 ## Documentation
 
-* javadocs can be found via [github pages here](http://hmedioni.github.io/jenkins-client-java/docs/javadoc/)
+* javadocs can be found via [github pages here](http://hillelmed.github.io/jenkins-client-java/docs/javadoc/)
 * the [jenkins-rest wiki](https://github.com/cdancy/jenkins-rest/wiki)
 
 ## Property based setup
@@ -90,9 +90,9 @@ For more details, see
 
 ## Understanding Error objects
 
-When something pops server-side `Jenkins` will hand us back a list of [JenkinsError](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hmedioni/jenkins/client/exception/JenkinsError.java) objects. we're throwing an exception at runtime we attach this List of `Error` objects
-The throwing object is Jenkins [JenkinsAppException.java](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hmedioni/jenkins/client/exception/BitbucketAppException.java)
-to most [domain](https://github.com/Hillelmed/jenkins-client-java/tree/main/src/main/java/io/github/hmedioni/jenkins/client/domain) objects. Thus, it is up to the user to check the handed back domain object to see if the attached List is empty, and if not, iterate over the `Error` objects to see if it's something
+When something pops server-side `Jenkins` will hand us back a list of [JenkinsError](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hillelmed/jenkins/client/exception/JenkinsError.java) objects. we're throwing an exception at runtime we attach this List of `Error` objects
+The throwing object is Jenkins [JenkinsAppException.java](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hillelmed/jenkins/client/exception/BitbucketAppException.java)
+to most [domain](https://github.com/Hillelmed/jenkins-client-java/tree/main/src/main/java/io/github/hillelmed/jenkins/client/domain) objects. Thus, it is up to the user to check the handed back domain object to see if the attached List is empty, and if not, iterate over the `Error` objects to see if it's something
 truly warranting an exception. List of `Error` objects itself will always be non-null but in most cases empty (unless something has failed).
 
 An example on how one might proceed:

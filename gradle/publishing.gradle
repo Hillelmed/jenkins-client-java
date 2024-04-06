@@ -1,31 +1,31 @@
-apply plugin: 'maven-publish'
+apply plugin: 'maven'
 apply plugin: 'signing'
 
-group = 'io.github.hmedioni'
+group = 'io.github.hillelmed'
 version = '1.0.0'
+archivesBaseName = "jenkins-client-java"
 
 java {
     withJavadocJar()
     withSourcesJar()
 }
+uploadArchives {
+    repositories {
+        mavenDeployer {
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'jenkins-client-java'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
-            pom {
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
                 name = 'Jenkins rest client in java'
                 description = 'Java client for working with Jenkins REST API'
                 url = 'https://github.com/Hillelmed/jenkins-client-java'
+                packaging 'jar'
                 licenses {
                     license {
                         name = 'The MIT License (MIT)'
@@ -47,18 +47,23 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            // change URLs to point to your repos, e.g. http://my.org/repo
-            def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
-            def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-        }
-    }
 }
 
+
 signing {
-    sign publishing.publications.mavenJava
+    sign configurations.archives
+}
+artifacts {
+    archives javadocJar, sourcesJar
+}
+tasks.register('javadocJar', Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+tasks.register('sourcesJar', Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 
