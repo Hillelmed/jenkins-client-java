@@ -51,6 +51,7 @@ ext.targetCompatibility = compatibilityVersion
 test {
     useTestNG()
     forkEvery = 1
+    maxParallelForks = 1
 }
 
 jar {
@@ -86,14 +87,6 @@ tasks.register('mockTest', Test) {
 tasks.register('integTest', Test) {
     group = "Verification"
     description = "Integration tests - Jenkins must be running. See the README."
-    doFirst {
-        def integProjectDir = project.file("${buildDir}/integ-projects")
-        if (!integProjectDir.exists()) {
-            if (!integProjectDir.mkdirs()) {
-                throw new RuntimeException("Failed to create integ-project directory @ ${integProjectDir.path}")
-            }
-        }
-    }
     useTestNG()
     include "**/**LiveTest*"
     forkEvery = 1
@@ -105,9 +98,6 @@ jacocoTestReport {
         xml.required = true
         csv.required = true
         html.required = true
-        html.destination file("${buildDir}/jacoco/jacocoHtml")
-        xml.destination file("${buildDir}/jacoco/jacocoXml.xml")
-        csv.destination file("${buildDir}/jacoco/jacocoCsv.csv")
     }
 }
 
