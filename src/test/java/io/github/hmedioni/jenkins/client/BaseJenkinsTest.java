@@ -61,8 +61,8 @@ public class BaseJenkinsTest {
      * @return instance of JenkinsApi.
      */
     public JenkinsApi api(final String url, final AuthenticationType authType, final String authString) {
-        final JenkinsAuthentication creds = creds(authType, authString);
-        JenkinsProperties jenkinsProperties = new JenkinsProperties(url, creds);
+        final JenkinsAuthentication jenkinsAuth = creds(authType, authString);
+        JenkinsProperties jenkinsProperties = JenkinsProperties.builder().url(url).jenkinsAuthentication(jenkinsAuth).build();
         JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
         return jenkinsClient.api();
     }

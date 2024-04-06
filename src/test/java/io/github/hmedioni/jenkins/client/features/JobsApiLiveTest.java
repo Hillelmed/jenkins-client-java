@@ -307,7 +307,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetDescription")
     public void testGetConfig() {
-        String output = api().config("DevTest");
+        String output = api().config("DevTest").getBody();
         assertNotNull(output);
     }
 
@@ -371,7 +371,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testEnableJobAlreadyEnabled")
     public void testRenameJob() {
-        ResponseEntity<Boolean> success = api().rename("DevTest", "NewDevTest");
+        ResponseEntity<Void> success = api().rename("DevTest", "NewDevTest");
         assertTrue(success.getStatusCode().is3xxRedirection());
     }
 
@@ -597,7 +597,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testGetBuildInfoOfJobInFolder")
     public void testRenameJobInFolder() {
-        ResponseEntity<Boolean> success = api().rename("test-folder/job/test-folder-1", "JobInFolder", "NewJobInFolder");
+        ResponseEntity<Void> success = api().rename("test-folder/job/test-folder-1", "JobInFolder", "NewJobInFolder");
         assertEquals(success.getStatusCode(), HttpStatus.FOUND);
     }
 

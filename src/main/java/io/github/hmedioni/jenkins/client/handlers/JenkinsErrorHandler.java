@@ -16,6 +16,7 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JenkinsErrorHandler {
 
+    private static final String ERROR_HEADER = "X-Error";
     private static final ObjectMapper mapper = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -26,15 +27,23 @@ public class JenkinsErrorHandler {
             if (statusCode.is5xxServerError() || statusCode.is4xxClientError()) {
                 return clientResponse.bodyToMono(String.class)
                     .defaultIfEmpty("{}")
-                    .flatMap(errorBody -> Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody), statusCode)));
+                    .flatMap(errorBody -> Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody, clientResponse), statusCode)));
             } else {
                 return Mono.just(clientResponse);
             }
         });
     }
 
-    private static List<JenkinsError> getErrors(String errorBody) {
-        return parseMessage(errorBody);
+    private static List<JenkinsError> getErrors(String errorBody, ClientResponse clientResponse) {
+        List<JenkinsError> jenkinsErrors = new ArrayList<>();
+        HttpHeaders headers = clientResponse.headers().asHttpHeaders();
+        if (headers.containsKey(ERROR_HEADER)) {
+            JenkinsError error = new JenkinsError();
+            error.setMessage(headers.getFirst(ERROR_HEADER));
+            jenkinsErrors.add(error);
+        }
+        jenkinsErrors.addAll(parseMessage(errorBody));
+        return jenkinsErrors;
     }
 
     private static List<JenkinsError> parseMessage(String errorBody) {

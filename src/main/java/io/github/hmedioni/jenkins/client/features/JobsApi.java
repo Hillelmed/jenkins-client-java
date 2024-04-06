@@ -45,7 +45,7 @@ public interface JobsApi {
                                         @PathVariable("number") int buildNumber);
 
     // @Named("jobs:artifact")
-//    @Consumes(MediaType.WILDCARD)
+//    @Consumes(MediaType.TEXT_XML_VALUE)
     @GetExchange("/job/{optionalFolderPath}/job/{name}/{number}/artifact/{relativeArtifactPath}")
     // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     ResponseEntity<InputStream> artifact(@PathVariable("optionalFolderPath") String optionalFolderPath,
@@ -57,7 +57,7 @@ public interface JobsApi {
     // @Fallback(JenkinsFallbacks.ResponseEntity<Void>OnError.class)
 //    @ResponseParser(ResponseEntity<Void>Parser.class)
 //    @Produces(MediaType.APPLICATION_XML)
-//    @Consumes(MediaType.WILDCARD)
+//    @Consumes(MediaType.TEXT_XML_VALUE)
     // @Payload("{configXML}")
     @PostExchange("/job/{optionalFolderPath}/createItem")
     ResponseEntity<Void> create(@PathVariable(name = "optionalFolderPath") String optionalFolderPath,
@@ -68,20 +68,17 @@ public interface JobsApi {
     ResponseEntity<Void> create(@RequestParam("name") String jobName,
                                 @RequestBody String configXML);
 
-    // @Named("jobs:get-config")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-//    @Consumes(MediaType.TEXT_PLAIN)
     @GetExchange("/job/{optionalFolderPath}/job/{name}/config.xml")
-    String config(@PathVariable(value = "optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<String> config(@PathVariable(value = "optionalFolderPath") String optionalFolderPath,
                   @PathVariable("name") String jobName);
 
     @GetExchange("/job/{name}/config.xml")
-    String config(@PathVariable("name") String jobName);
+    ResponseEntity<String> config(@PathVariable("name") String jobName);
 
     // @Named("jobs:update-config")
     // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
 //    @Produces(MediaType.APPLICATION_XML + ";charset=UTF-8")
-//    @Consumes(MediaType.TEXT_HTML)
+//    @Consumes(MediaType.TEXT_HTML_VALUE)
     // @Payload("{configXML}")
     @PostExchange("/job/{optionalFolderPath}/job/{name}/config.xml")
     ResponseEntity<Void> pushConfig(@PathVariable("optionalFolderPath") String optionalFolderPath,
@@ -102,7 +99,7 @@ public interface JobsApi {
     @GetExchange(value = "/job/{name}/description", accept = MediaType.TEXT_PLAIN_VALUE)
     ResponseEntity<String> description(@PathVariable("name") String jobName);
 
-    //    @Consumes(MediaType.TEXT_HTML)
+    //    @Consumes(MediaType.TEXT_HTML_VALUE)
     @PostExchange(value = "/job/{optionalFolderPath}/job/{name}/description", accept = MediaType.TEXT_HTML_VALUE
         , contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     ResponseEntity<Void> pushDescription(@PathVariable("optionalFolderPath") String optionalFolderPath,
@@ -247,14 +244,14 @@ public interface JobsApi {
     @PostExchange("/job/{optionalFolderPath}/job/{name}/doRename")
     // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
     // @Consumes(MediaType.TEXT_HTML)
-    ResponseEntity<Boolean> rename(@PathVariable("optionalFolderPath") String optionalFolderPath,
+    ResponseEntity<Void> rename(@PathVariable("optionalFolderPath") String optionalFolderPath,
                                    @PathVariable("name") String jobName,
                                    @RequestParam("newName") String newName);
 
     @PostExchange("/job/{name}/doRename")
         // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
         // @Consumes(MediaType.TEXT_HTML)
-    ResponseEntity<Boolean> rename(@PathVariable("name") String jobName,
+    ResponseEntity<Void> rename(@PathVariable("name") String jobName,
                                    @RequestParam("newName") String newName);
 
     // below four apis are for "pipeline-stage-view-plugin",
@@ -266,12 +263,21 @@ public interface JobsApi {
     List<Workflow> runHistory(@PathVariable("optionalFolderPath") String optionalFolderPath,
                               @PathVariable("name") String jobName);
 
+    @GetExchange("/job/{name}/wfapi/runs")
+    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+    // @Consumes(MediaType.APPLICATION_JSON)
+    List<Workflow> runHistory(@PathVariable("name") String jobName);
+
     // @Named("jobs:workflow")
     @GetExchange("/job/{optionalFolderPath}/job/{name}/{number}/wfapi/describe")
     // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     // @Consumes(MediaType.APPLICATION_JSON)
     Workflow workflow(@PathVariable("optionalFolderPath") String optionalFolderPath,
                       @PathVariable("name") String jobName,
+                      @PathVariable("number") int buildNumber);
+
+    @GetExchange("/job/{name}/{number}/wfapi/describe")
+    Workflow workflow(@PathVariable("name") String jobName,
                       @PathVariable("number") int buildNumber);
 
     // @Named("jobs:pipeline-node")
@@ -282,12 +288,22 @@ public interface JobsApi {
                               @PathVariable("name") String jobName,
                               @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
 
+    @GetExchange("/job/{name}/{number}/execution/node/{nodeId}/wfapi/describe")
+    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+    // @Consumes(MediaType.APPLICATION_JSON)
+    PipelineNode pipelineNode(@PathVariable("name") String jobName,
+                              @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
+
     //    @Named("jobs:pipeline-node-log")
 //    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
 //    @Consumes(MediaType.APPLICATION_JSON)
     @GetExchange("/job/{optionalFolderPath}/job/{name}/{number}/execution/node/{nodeId}/wfapi/log")
     ResponseEntity<PipelineNodeLog> pipelineNodeLog(@PathVariable("optionalFolderPath") String optionalFolderPath,
                                                     @PathVariable("name") String jobName,
+                                                    @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
+
+    @GetExchange("/job/{name}/{number}/execution/node/{nodeId}/wfapi/log")
+    ResponseEntity<PipelineNodeLog> pipelineNodeLog(@PathVariable("name") String jobName,
                                                     @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
 
     //    @Named("jobs:testReport")
@@ -297,6 +313,10 @@ public interface JobsApi {
     @GetExchange("/job/{optionalFolderPath}/job/{name}/{number}/testReport/api/json")
     ResponseEntity<JsonNode> testReport(@PathVariable("optionalFolderPath") String optionalFolderPath,
                                         @PathVariable("name") String jobName,
+                                        @PathVariable("number") int buildNumber);
+
+    @GetExchange("/job/{name}/{number}/testReport/api/json")
+    ResponseEntity<JsonNode> testReport(@PathVariable("name") String jobName,
                                         @PathVariable("number") int buildNumber);
 
 }

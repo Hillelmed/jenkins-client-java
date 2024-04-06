@@ -2,7 +2,9 @@ package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
 
+import java.net.http.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;
@@ -47,9 +49,49 @@ public class JenkinsUtils {
         return MessageFormat.format("<jenkins><install plugin=\"{0}\"/></jenkins>", pluginId);
     }
 
+    public static int getTextSize(HttpHeaders httpHeaders) {
+        if (httpHeaders == null) {
+            throw new RuntimeException("Unexpected NULL httpHeaders object");
+        }
+        if (httpHeaders.containsKey("X-Text-Size")) {
+            return Integer.parseInt(httpHeaders.getFirst("X-Text-Size"));
+        }
+        return -1;
+    }
+
+    public static boolean hasMoreData(HttpHeaders httpHeaders) {
+        if (httpHeaders == null) {
+            throw new RuntimeException("Unexpected NULL httpHeaders object");
+        }
+        if (httpHeaders.containsKey("X-More-Data")) {
+            return Boolean.parseBoolean(httpHeaders.getFirst("X-More-Data"));
+        }
+        return false;
+    }
+
+    public static Map<String, String> buildMapFromParamsStr(String params) {
+        if (params == null) {
+            throw new RuntimeException("Unexpected NULL params object");
+        }
+        Map<String, String> map = new HashMap<>();
+        String[] tmpStr = params.split("\n");
+        for (String str : tmpStr) {
+            String[] splitter = str.split("=");
+            if (splitter.length == 2) {
+                String key = splitter[0];
+                String value = splitter[1];
+                map.put(key, value);
+            } else if (splitter.length == 1 && !splitter[0].isEmpty()) {
+                String key = splitter[0];
+                map.put(key, "");
+            }
+        }
+        return map;
+    }
+
     public static IntegerResponse getQueueItemIntegerResponse(HttpHeaders httpHeaders) {
         if (httpHeaders == null) {
-            throw new RuntimeException("Unexpected NULL HttpResponse object");
+            throw new RuntimeException("Unexpected NULL httpHeaders object");
         }
 
         List<String> url = httpHeaders.get("Location");
@@ -74,8 +116,7 @@ public class JenkinsUtils {
      * @param environmentVariable possibly existent Environment Variable.
      * @return found external value or null.
      */
-    public static String retrieveExternalValue(final String systemProperty,
-                                               final String environmentVariable) {
+    public static String retrieveExternalValue(final String systemProperty, final String environmentVariable) {
 
         // 1.) Search for System Property
         if (systemProperty != null) {
@@ -100,9 +141,7 @@ public class JenkinsUtils {
      * @return endpoint or null if it can't be found.
      */
     public static String inferEndpoint() {
-        final String possibleValue = JenkinsUtils
-            .retrieveExternalValue(ENDPOINT_SYSTEM_PROPERTY,
-                ENDPOINT_ENVIRONMENT_VARIABLE);
+        final String possibleValue = JenkinsUtils.retrieveExternalValue(ENDPOINT_SYSTEM_PROPERTY, ENDPOINT_ENVIRONMENT_VARIABLE);
         return possibleValue != null ? possibleValue : DEFAULT_ENDPOINT;
     }
 
@@ -115,18 +154,14 @@ public class JenkinsUtils {
 
         final JenkinsAuthentication.JenkinsAuthenticationBuilder inferAuth = new JenkinsAuthentication.JenkinsAuthenticationBuilder();
         // 1.) Check for API Token as this requires no crumb hence is faster
-        String authValue = JenkinsUtils
-            .retrieveExternalValue(API_TOKEN_SYSTEM_PROPERTY,
-                API_TOKEN_ENVIRONMENT_VARIABLE);
+        String authValue = JenkinsUtils.retrieveExternalValue(API_TOKEN_SYSTEM_PROPERTY, API_TOKEN_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
             inferAuth.apiToken(authValue);
             return inferAuth.build();
         }
 
         // 2.) Check for UsernamePassword auth credentials.
-        authValue = JenkinsUtils
-            .retrieveExternalValue(CREDENTIALS_SYSTEM_PROPERTY,
-                CREDENTIALS_ENVIRONMENT_VARIABLE);
+        authValue = JenkinsUtils.retrieveExternalValue(CREDENTIALS_SYSTEM_PROPERTY, CREDENTIALS_ENVIRONMENT_VARIABLE);
         if (authValue != null) {
             inferAuth.credentials(authValue);
             return inferAuth.build();

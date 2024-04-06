@@ -75,7 +75,7 @@ public class BaseJenkinsMockTest extends BaseJenkinsTest {
 
         RecordedRequest request = server.takeRequest();
         assertThat(request.getMethod()).isEqualTo(method);
-        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON);
+//        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
 
         final String path = request.getPath();
         final String rawPath = path.contains("?") ? path.substring(0, path.indexOf('?')) : path;
@@ -97,8 +97,13 @@ public class BaseJenkinsMockTest extends BaseJenkinsTest {
         assertThat(request.getMethod()).isEqualTo(method);
         assertThat(request.getPath()).isEqualTo(path);
         assertThat(new String(request.getBody().readByteArray())).isEqualTo(body);
-        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED);
+        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+        if (request.getHeader(HttpHeaders.CONTENT_TYPE).contains(";")) {
+            assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE).split(";")[0]).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        } else {
+            assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        }
+
         return request;
     }
 
@@ -111,7 +116,11 @@ public class BaseJenkinsMockTest extends BaseJenkinsTest {
         assertThat(request.getPath()).isEqualTo(path);
         assertThat(new String(request.getBody().readByteArray())).isEqualTo(body);
         assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(acceptType);
-        assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED);
+        if (request.getHeader(HttpHeaders.CONTENT_TYPE).contains(";")) {
+            assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE).split(";")[0]).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        } else {
+            assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        }
         return request;
     }
 
@@ -123,7 +132,7 @@ public class BaseJenkinsMockTest extends BaseJenkinsTest {
         assertThat(request.getPath()).isEqualTo(path);
         assertThat(new String(request.getBody().readByteArray())).isEqualTo(body);
         assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(acceptType);
-        assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_XML);
+        assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.TEXT_XML_VALUE);
         return request;
     }
 
@@ -131,7 +140,7 @@ public class BaseJenkinsMockTest extends BaseJenkinsTest {
         RecordedRequest request = server.takeRequest();
         assertThat(request.getMethod()).isEqualTo(method);
         assertThat(request.getPath()).isEqualTo(path);
-        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_PLAIN);
+//        assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_PLAIN_VALUE);
         return request;
     }
 

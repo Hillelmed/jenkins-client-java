@@ -15,7 +15,9 @@ import java.util.*;
 public class BaseJenkinsApiLiveTest extends BaseJenkinsTest {
 
     protected final JenkinsAuthentication jenkinsAuthentication;
-    protected JenkinsProperties jenkinsProperties = new JenkinsProperties(url, JenkinsAuthentication.builder().authType(AuthenticationType.USERNAME_PASSWORD).credentials(usernamePassword).build());
+    protected JenkinsProperties jenkinsProperties = JenkinsProperties.builder().url(url)
+        .jenkinsAuthentication(JenkinsAuthentication.builder().authType(AuthenticationType.USERNAME_PASSWORD)
+            .credentials(usernamePassword).build()).build();
     protected JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
     protected JenkinsApi api = jenkinsClient.api();
 

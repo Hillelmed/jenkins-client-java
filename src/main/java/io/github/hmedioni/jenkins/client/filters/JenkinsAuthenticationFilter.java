@@ -9,7 +9,7 @@ import lombok.*;
 import org.jetbrains.annotations.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.*;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {

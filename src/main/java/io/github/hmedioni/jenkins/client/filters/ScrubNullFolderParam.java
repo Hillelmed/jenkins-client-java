@@ -2,7 +2,7 @@ package io.github.hmedioni.jenkins.client.filters;
 
 import lombok.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.*;
+import reactor.core.publisher.Mono;
 
 import java.net.*;
 

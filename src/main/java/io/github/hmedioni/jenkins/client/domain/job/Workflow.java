@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class Workflow {
 
     public String name;

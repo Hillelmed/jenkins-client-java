@@ -18,7 +18,7 @@ public class QueueItem {
     private boolean stuck;
     private Task task;
     private String url;
-    private Object why;
+    private String why;
     private boolean cancelled;
     private Executable executable;
 

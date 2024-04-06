@@ -42,8 +42,8 @@ dependencies {
 
 ext.compatibilityVersion = JavaVersion.VERSION_17
 ext.javadocPath = compatibilityVersion.isJava8() ? '' : 'en/java/'
-sourceCompatibility = compatibilityVersion
-targetCompatibility = compatibilityVersion
+ext.sourceCompatibility = compatibilityVersion
+ext.targetCompatibility = compatibilityVersion
 
 test {
     useTestNG()
@@ -77,23 +77,6 @@ jar {
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add("-parameters")
     options.compilerArgs += ["-Xlint:-options"]
-}
-
-tasks.register('mockTest', Test) {
-    group = "Verification"
-    description = "Mock tests"
-    useTestNG()
-    include '**/**MockTest*'
-    forkEvery = 1
-    maxParallelForks = 2
-    testLogging {
-        showStandardStreams = true
-        events 'started', 'passed', 'failed'
-    }
-    jacoco {
-        destinationFile = file("$rootDir/jacoco/test.exec")
-    }
-
 }
 
 tasks.withType(Test) {
@@ -135,8 +118,24 @@ tasks.create(name: "testCoverage", type: JacocoReport, dependsOn: "test") {
     executionData.from = files("${project.buildDir}/jacoco/test.exec")
 }
 
+tasks.register('mockTest', Test) {
+    group = "Verification"
+    description = "Mock tests"
+    useTestNG()
+    include '**/**MockTest*'
+    forkEvery = 1
+    maxParallelForks = 2
+    testLogging {
+        showStandardStreams = true
+        events 'started', 'passed', 'failed'
+    }
+    jacoco {
+        destinationFile = file("$rootDir/jacoco/test.exec")
+    }
+
+}
+
 tasks.register('integTest', Test) {
-//    dependsOn mockTest
     group = "Verification"
     description = "Integration tests - Jenkins must be running. See the README."
     doFirst {
@@ -158,7 +157,6 @@ tasks.register('integTest', Test) {
     jacoco {
         destinationFile = file("$rootDir/jacoco/test.exec")
     }
-
 }
 
 javadoc {
