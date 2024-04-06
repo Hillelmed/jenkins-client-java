@@ -1,15 +1,11 @@
 plugins {
     id 'java'
     id 'jacoco'
-//    id 'maven-publish'
-//    id 'com.github.johnrengelman.shadow' version '7.1.1'
-//    id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
-//apply from: "$rootDir/gradle/additional-artifacts.gradle"
-//apply from: "$rootDir/gradle/dependencies.gradle"
-//apply from: "$rootDir/gradle/publishing.gradle"
-//apply from: "$rootDir/gradle/release.gradle"
+apply from: "$rootDir/gradle/publishing.gradle"
 
 repositories {
     mavenCentral()
