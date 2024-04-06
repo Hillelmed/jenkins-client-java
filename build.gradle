@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
 }
 
+jacoco {
+    toolVersion '0.8.11'
+}
+
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.0'
     ext.autoValueVersion = '2.0.0'
@@ -77,10 +81,6 @@ tasks.register('mockTest', Test) {
     include '**/**MockTest*'
     forkEvery = 1
     maxParallelForks = 4
-    testLogging {
-        showStandardStreams = true
-        events 'started', 'passed', 'failed'
-    }
 }
 
 tasks.register('integTest', Test) {
@@ -95,13 +95,9 @@ tasks.register('integTest', Test) {
         }
     }
     useTestNG()
-    forkEvery = 1
     include "**/**LiveTest*"
+    forkEvery = 1
     maxParallelForks = 1
-    testLogging {
-        showStandardStreams = true
-        events 'started', 'passed', 'failed'
-    }
 }
 
 jacocoTestReport {
@@ -114,11 +110,6 @@ jacocoTestReport {
         xml.destination file("${buildDir}/jacoco/jacocoXml.xml")
         csv.destination file("${buildDir}/jacoco/jacocoCsv.csv")
     }
-}
-
-
-jacoco {
-    toolVersion '0.8.11'
 }
 
 javadoc {
