@@ -31,7 +31,7 @@ jobs:
         uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
-        run: ./gradlew clean build jacocoTestReport --stacktrace
+        run: ./gradlew clean build mockTest integTest jacocoTestReport --stacktrace
 
       - name: Jacoco Report to PR
         id: jacoco
@@ -44,11 +44,11 @@ jobs:
           update-comment: true
           title: 'Jacoco Report'
 
-#      - name: Generate JaCoCo Badge
-#        uses: cicirello/jacoco-badge-generator@v2
-#        with:
-#          generate-branches-badge: true
-#          jacoco-csv-file: ${{ github.workspace }}/build/jacoco/jacocoCsv.csv
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-branches-badge: true
+          jacoco-csv-file: ${{ github.workspace }}/build/jacoco/jacocoCsv.csv
 
         # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
@@ -60,7 +60,7 @@ jobs:
           echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
           echo "Coverage coverage_percentage ${{ steps.jacoco.outputs.coverage_percentage }}"
       - name: Upload Code Coverage Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report-markdown
           path: '*/coverage-results.md'

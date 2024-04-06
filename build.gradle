@@ -101,7 +101,6 @@ tasks.register('integTest', Test) {
 }
 
 jacocoTestReport {
-    dependsOn(mockTest, integTest)
     reports {
         xml.required = true
         csv.required = true
