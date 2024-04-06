@@ -1,74 +1,74 @@
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-group = 'io.github.hillelmed'
-version = '1.0.0'
-archivesBaseName = "jenkins-client-java"
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name = 'Jenkins rest client in java'
-                description = 'Java client for working with Jenkins REST API'
-                url = 'https://github.com/Hillelmed/jenkins-client-java'
-                packaging 'jar'
-                licenses {
-                    license {
-                        name = 'The MIT License (MIT)'
-                        url = 'http://opensource.org/licenses/MIT'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'HillelMed'
-                        name = 'Hillel medioni'
-                        email = 'hillel95med@gmail.com'
-                    }
-                }
-                scm {
-                    connection = 'scm:https://github.com/Hillelmed/jenkins-client-java.git'
-                    developerConnection = 'scm:git://github.com/Hillelmed/jenkins-client-java.git'
-                    url = 'https://github.com/Hillelmed/jenkins-client-java/'
-                }
-            }
-        }
-    }
-}
-
-
-signing {
-    sign configurations.archives
-}
-artifacts {
-    archives javadocJar, sourcesJar
-}
-tasks.register('javadocJar', Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-tasks.register('sourcesJar', Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
+//apply plugin: 'maven-upload'
+//apply plugin: 'signing'
+//
+//group = 'io.github.hillelmed'
+//version = '1.0.0'
+//archivesBaseName = "jenkins-client-java"
+//
+//java {
+//    withJavadocJar()
+//    withSourcesJar()
+//}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//
+//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            pom.project {
+//                name = 'Jenkins rest client in java'
+//                description = 'Java client for working with Jenkins REST API'
+//                url = 'https://github.com/Hillelmed/jenkins-client-java'
+//                packaging 'jar'
+//                licenses {
+//                    license {
+//                        name = 'The MIT License (MIT)'
+//                        url = 'http://opensource.org/licenses/MIT'
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id = 'HillelMed'
+//                        name = 'Hillel medioni'
+//                        email = 'hillel95med@gmail.com'
+//                    }
+//                }
+//                scm {
+//                    connection = 'scm:https://github.com/Hillelmed/jenkins-client-java.git'
+//                    developerConnection = 'scm:git://github.com/Hillelmed/jenkins-client-java.git'
+//                    url = 'https://github.com/Hillelmed/jenkins-client-java/'
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//signing {
+//    sign configurations.archives
+//}
+//artifacts {
+//    archives javadocJar, sourcesJar
+//}
+//tasks.register('javadocJar', Jar) {
+//    classifier = 'javadoc'
+//    from javadoc
+//}
+//
+//tasks.register('sourcesJar', Jar) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
+//
+//
+//javadoc {
+//    if (JavaVersion.current().isJava9Compatible()) {
+//        options.addBooleanOption('html5', true)
+//    }
+//}
