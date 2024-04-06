@@ -1,5 +1,6 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 @Data
@@ -7,19 +8,16 @@ import lombok.*;
 public class Cause {
 
 
-    public String clazz;
+    @JsonProperty("_class")
+    private String clazz;
 
-    public String shortDescription;
-
-
-    public String userId;
+    private String shortDescription;
 
 
-    public String userName;
+    private String userId;
 
-//
-//    @SerializedNames({"_class", "shortDescription", "userId", "userName"})
-//    public static Cause create(final String clazz, final String shortDescription, final String userId, final String userName) {
-//        return new AutoValue_Cause(clazz, shortDescription, userId, userName);
-//    }
+
+    private String userName;
+
+
 }

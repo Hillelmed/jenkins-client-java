@@ -3,7 +3,6 @@ package io.github.hmedioni.jenkins.client.filters;
 import io.github.hmedioni.jenkins.client.*;
 import lombok.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.Mono;
 
 import java.net.*;
 
@@ -16,7 +15,7 @@ public class JenkinsUserInjectionFilter implements ExchangeFilterFunction {
     private final JenkinsAuthentication creds;
 
     @Override
-    public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
+    public reactor.core.publisher.Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
         ClientRequest.Builder builder = ClientRequest.from(request);
         builder.url(URI.create(request.url().toString().replaceAll(USER_PLACE_HOLDER, creds.getEncodedCred())));
         return next.exchange(builder.build());

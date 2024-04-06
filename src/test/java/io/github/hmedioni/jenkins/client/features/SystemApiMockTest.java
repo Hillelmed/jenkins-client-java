@@ -1,14 +1,11 @@
 package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.*;
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.system.*;
 import io.github.hmedioni.jenkins.client.exception.*;
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
-
-
 
 import static org.testng.Assert.*;
 
@@ -23,8 +20,8 @@ public class SystemApiMockTest extends BaseJenkinsMockTest {
         String body = payloadFromResource("/system-info.json");
 
         server.enqueue(
-            new MockResponse().setHeader(HttpHeaders.ACCEPT,MediaType.APPLICATION_JSON_VALUE)
-                .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            new MockResponse().setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -79,7 +76,7 @@ public class SystemApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             SystemApi api = jenkinsApi.systemApi();
             ResponseEntity<Void> status = api.quietDown();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertFalse(e.errors().isEmpty());
             assertTrue(e.errors().get(0).getExceptionName().endsWith("AuthorizationException"));
@@ -112,7 +109,7 @@ public class SystemApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             SystemApi api = jenkinsApi.systemApi();
             ResponseEntity<Void> status = api.cancelQuietDown();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertFalse(e.errors().isEmpty());
             assertTrue(e.errors().get(0).getExceptionName().endsWith("AuthorizationException"));

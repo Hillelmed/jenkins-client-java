@@ -5,15 +5,12 @@ import lombok.*;
 
 
 @Data
+@NoArgsConstructor
 public class Culprit {
 
-    public String absoluteUrl;
+    private String absoluteUrl;
 
-    public String fullName;
+    private String fullName;
 
 
-//    @SerializedNames({"absoluteUrl", "fullName"})
-//    public static Culprit create(String absoluteUrl, String fullName) {
-//        return new AutoValue_Culprit(absoluteUrl, fullName);
-//    }
 }

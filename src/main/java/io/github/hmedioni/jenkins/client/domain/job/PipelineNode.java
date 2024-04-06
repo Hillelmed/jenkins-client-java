@@ -6,21 +6,18 @@ import lombok.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class PipelineNode {
 
-    public String name;
+    private String name;
 
-    public String status;
+    private String status;
 
-    public long startTimeMillis;
+    private long startTimeMillis;
 
-    public long durationTimeMillis;
+    private long durationTimeMillis;
 
-    public List<StageFlowNode> stageFlowNodes;
+    private List<StageFlowNode> stageFlowNodes;
 
 
-//    @SerializedNames({"name", "status", "startTimeMillis", "durationTimeMillis", "stageFlowNodes"})
-//    public static PipelineNode create(String name, String status, long startTimeMillis, long durationTimeMillis, List<StageFlowNode> stageFlowNodes) {
-//        return new AutoValue_PipelineNode(name, status, startTimeMillis, durationTimeMillis, stageFlowNodes);
-//    }
 }

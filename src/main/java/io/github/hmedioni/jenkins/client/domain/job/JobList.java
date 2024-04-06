@@ -1,24 +1,22 @@
 package io.github.hmedioni.jenkins.client.domain.job;
 
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class JobList {
 
+    @JsonProperty("_class")
+    private String clazz;
 
-    public String clazz;
-
-    public List<Job> jobs;
-
-
-    public String url;
+    private List<Job> jobs;
 
 
-//    @SerializedNames({"_class", "jobs", "url"})
-//    public static JobList create(final String clazz, final List<Job> jobs, final String url) {
-//        return new AutoValue_JobList(clazz, jobs, url);
-//    }
+    private String url;
+
+
 }

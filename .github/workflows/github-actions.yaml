@@ -31,32 +31,24 @@ jobs:
         uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
-        run: ./gradlew clean build mockTest integTest testCoverage --stacktrace
+        run: ./gradlew clean build jacocoTestReport --stacktrace
 
       - name: Jacoco Report to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
         with:
-          paths: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+          paths: ${{ github.workspace }}/build/jacoco/jacocoXml.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: '80%'
           min-coverage-changed-files: '80%'
           update-comment: true
           title: 'Jacoco Report'
 
-
-      - name: JaCoCo Code Coverage Report
-        id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v5.0
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
         with:
-          coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
-          coverage_report_name: Coverage
-          coverage_report_title: JaCoCo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: true # set to false to publish check run
-          minimum_coverage: 80
-          fail_below_threshold: false # set to false to pass below even when threshold is not met
-          publish_only_summary: false. #set to true to publish only summary to avoid 65k problem
+          generate-branches-badge: true
+          jacoco-csv-file: ${{ github.workspace }}/build/jacoco/jacocoCsv.csv
 
         # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary

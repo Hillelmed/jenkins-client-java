@@ -6,21 +6,18 @@ import lombok.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class StageFlowNode {
 
-    public String name;
+    private String name;
 
-    public String status;
+    private String status;
 
-    public long startTimeMillis;
+    private long startTimeMillis;
 
-    public long durationTimeMillis;
+    private long durationTimeMillis;
 
-    public List<Long> parentNodes;
+    private List<Long> parentNodes;
 
 
-//    @SerializedNames({"name", "status", "startTimeMillis", "durationTimeMillis", "parentNodes"})
-//    public static StageFlowNode create(String name, String status, long startTimeMillis, long durationTimeMillis, List<Long> parentNodes) {
-//        return new AutoValue_StageFlowNode(name, status, startTimeMillis, durationTimeMillis, parentNodes);
-//    }
 }

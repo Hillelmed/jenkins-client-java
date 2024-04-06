@@ -5,24 +5,21 @@ import lombok.*;
 
 
 @Data
+@NoArgsConstructor
 public class Stage {
-    public String id;
+    private String id;
 
-    public String name;
+    private String name;
 
-    public String status;
+    private String status;
 
-    public long startTimeMillis;
+    private long startTimeMillis;
 
-    public long endTimeMillis;
+    private long endTimeMillis;
 
-    public long pauseDurationMillis;
+    private long pauseDurationMillis;
 
-    public long durationMillis;
+    private long durationMillis;
 
 
-//    @SerializedNames({"id", "name", "status", "startTimeMillis", "endTimeMillis", "pauseDurationMillis", "durationMillis"})
-//    public static Stage create(String id, String name, String status, long startTimeMillis, long endTimeMillis, long pauseDurationMillis, long durationMillis) {
-//        return new AutoValue_Stage(id, name, status, startTimeMillis, endTimeMillis, pauseDurationMillis, durationMillis);
-//    }
 }

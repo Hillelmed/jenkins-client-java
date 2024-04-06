@@ -7,76 +7,63 @@ import lombok.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class JobInfo {
 
 
-    public String description;
+    private String description;
 
 
-    public String displayName;
+    private String displayName;
 
 
-    public String displayNameOrNull;
+    private String displayNameOrNull;
 
-    public String name;
+    private String name;
 
-    public String url;
+    private String url;
 
-    public boolean buildable;
+    private boolean buildable;
 
-    public List<BuildInfo> builds;
-
-
-    public String color;
+    private List<BuildInfo> builds;
 
 
-    public BuildInfo firstBuild;
-
-    public boolean inQueue;
-
-    public boolean keepDependencies;
+    private String color;
 
 
-    public BuildInfo lastBuild;
+    private BuildInfo firstBuild;
+
+    private boolean inQueue;
+
+    private boolean keepDependencies;
 
 
-    public BuildInfo lastCompleteBuild;
+    private BuildInfo lastBuild;
 
 
-    public BuildInfo lastFailedBuild;
+    private BuildInfo lastCompleteBuild;
 
 
-    public BuildInfo lastStableBuild;
+    private BuildInfo lastFailedBuild;
 
 
-    public BuildInfo lastSuccessfulBuild;
+    private BuildInfo lastStableBuild;
 
 
-    public BuildInfo lastUnstableBuild;
+    private BuildInfo lastSuccessfulBuild;
 
 
-    public BuildInfo lastUnsuccessfulBuild;
-
-    public int nextBuildNumber;
+    private BuildInfo lastUnstableBuild;
 
 
-    public QueueItem queueItem;
+    private BuildInfo lastUnsuccessfulBuild;
 
-    public boolean concurrentBuild;
+    private int nextBuildNumber;
 
 
-//    @SerializedNames({"description", "displayName", "displayNameOrNull", "name", "url", "buildable", "builds", "color",
-//        "firstBuild", "inQueue", "keepDependencies", "lastBuild", "lastCompleteBuild", "lastFailedBuild",
-//        "lastStableBuild", "lastSuccessfulBuild", "lastUnstableBuild", "lastUnsuccessfulBuild", "nextBuildNumber",
-//        "queueItem", "concurrentBuild"})
-//    public static JobInfo create(String description, String displayName, String displayNameOrNull, String name,
-//                                 String url, boolean buildable, List<BuildInfo> builds, String color, BuildInfo firstBuild, boolean inQueue,
-//                                 boolean keepDependencies, BuildInfo lastBuild, BuildInfo lastCompleteBuild, BuildInfo lastFailedBuild,
-//                                 BuildInfo lastStableBuild, BuildInfo lastSuccessfulBuild, BuildInfo lastUnstableBuild, BuildInfo lastUnsuccessfulBuild,
-//                                 int nextBuildNumber, QueueItem queueItem, boolean concurrentBuild) {
-//        return new AutoValue_JobInfo(description, displayName, displayNameOrNull, name, url, buildable,
-//            builds != null ? ImmutableList.copyOf(builds) : ImmutableList.<BuildInfo>of, color, firstBuild, inQueue,
-//            keepDependencies, lastBuild, lastCompleteBuild, lastFailedBuild, lastStableBuild, lastSuccessfulBuild,
-//            lastUnstableBuild, lastUnsuccessfulBuild, nextBuildNumber, queueItem, concurrentBuild);
-//    }
+    private QueueItem queueItem;
+
+    private boolean concurrentBuild;
+
+
 }

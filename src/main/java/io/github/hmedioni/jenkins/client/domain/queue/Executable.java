@@ -4,15 +4,12 @@ package io.github.hmedioni.jenkins.client.domain.queue;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class Executable {
 
-    public Integer number;
+    private Integer number;
 
-    public String url;
+    private String url;
 
 
-//    @SerializedNames({"number", "url"})
-//    public static Executable create(Integer number, String url) {
-//        return new AutoValue_Executable(number, url);
-//    }
 }

@@ -23,13 +23,6 @@ public class Action {
     @JsonProperty("_class")
     private String clazz;
 
-//    @SerializedNames({"causes", "parameters", "text", "iconPath", "_class"})
-//    public static Action create(final List<Cause> causes, final List<Parameter> parameters, final String text, final String iconPath, final String _class) {
-//        return new AutoValue_Action(
-//            causes != null ? ImmutableList.copyOf(causes) : ImmutableList.<Cause>of,
-//            parameters != null ? ImmutableList.copyOf(parameters) : ImmutableList.<Parameter>of,
-//            text, iconPath, _class
-//        );
-//    }
+
 }
 

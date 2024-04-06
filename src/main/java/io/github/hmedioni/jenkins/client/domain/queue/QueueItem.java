@@ -1,5 +1,6 @@
 package io.github.hmedioni.jenkins.client.domain.queue;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.*;
@@ -8,7 +9,8 @@ import java.util.*;
 @NoArgsConstructor
 public class QueueItem {
 
-    private String _class;
+    @JsonProperty("_class")
+    private String clazz;
     private ArrayList<Action> actions;
     private boolean blocked;
     private boolean buildable;
@@ -25,7 +27,8 @@ public class QueueItem {
     @Data
     @NoArgsConstructor
     public static class Action {
-        private String _class;
+        @JsonProperty("_class")
+        private String clazz;
         private List<Parameter> parameters;
         private List<Cause> causes;
     }
@@ -33,7 +36,8 @@ public class QueueItem {
     @Data
     @NoArgsConstructor
     public static class Parameter {
-        private String _class;
+        @JsonProperty("_class")
+        private String clazz;
         private String name;
         private String value;
     }
@@ -42,7 +46,8 @@ public class QueueItem {
     @Data
     @NoArgsConstructor
     public static class Cause {
-        private String _class;
+        @JsonProperty("_class")
+        private String clazz;
         private String shortDescription;
         private String userId;
         private String userName;
@@ -51,7 +56,8 @@ public class QueueItem {
     @Data
     @NoArgsConstructor
     public static class Executable {
-        private String _class;
+        @JsonProperty("_class")
+        private String clazz;
         private Integer number;
         private String url;
     }
@@ -59,29 +65,12 @@ public class QueueItem {
     @Data
     @NoArgsConstructor
     public static class Task {
-        private String _class;
+        @JsonProperty("_class")
+        private String clazz;
         private String name;
         private String url;
         private String color;
     }
 
 
-//    @SerializedNames({"blocked", "buildable", "id", "inQueueSince", "params", "stuck", "task", "url", "why",
-//        "buildableStartMilliseconds", "cancelled", "executable", "timestamp"})
-//    public static QueueItem create(boolean blocked, boolean buildable, int id, long inQueueSince, String params,
-//                                   boolean stuck, Task task, String url, String why, long buildableStartMilliseconds,
-//                                   boolean cancelled, Executable executable, Long timestamp) {
-//        Map<String, String> parameters = Maps.newHashMap;
-//        if (params != null) {
-//            params = params.trim;
-//            if (params.length > 0) {
-//                for (String keyValue : params.split("\n")) {
-//                    String[] pair = keyValue.split("=");
-//                    parameters.put(pair[0], pair.length > 1 ? pair[1] : "");
-//                }
-//            }
-//        }
-//        return new AutoValue_QueueItem(blocked, buildable, id, inQueueSince, parameters, stuck, task, url, why,
-//            buildableStartMilliseconds, cancelled, executable, timestamp);
-//    }
 }

@@ -4,65 +4,50 @@ package io.github.hmedioni.jenkins.client.domain.plugins;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class Plugin {
 
 
-    public Boolean active;
+    private Boolean active;
 
 
-    public String backupVersion;
+    private String backupVersion;
 
 
-    public Boolean bundled;
+    private Boolean bundled;
 
 
-    public Boolean deleted;
+    private Boolean deleted;
 
 
-    public Boolean downgradable;
+    private Boolean downgradable;
 
 
-    public Boolean enabled;
+    private Boolean enabled;
 
 
-    public Boolean hasUpdate;
+    private Boolean hasUpdate;
 
 
-    public String longName;
+    private String longName;
 
 
-    public Boolean pinned;
+    private Boolean pinned;
 
 
-    public String requiredCoreVersion;
+    private String requiredCoreVersion;
 
 
-    public String shortName;
+    private String shortName;
 
 
-    public String supportsDynamicLoad;
+    private String supportsDynamicLoad;
 
 
-    public String url;
+    private String url;
 
 
-    public String version;
+    private String version;
 
 
-//    @SerializedNames({"active", "backupVersion", "bundled",
-//        "deleted", "downgradable", "enabled",
-//        "hasUpdate", "longName", "pinned",
-//        "requiredCoreVersion", "shortName", "supportsDynamicLoad",
-//        "url", "version"})
-//    public static Plugin create(Boolean active, String backupVersion, Boolean bundled,
-//                                Boolean deleted, Boolean downgradable, Boolean enabled,
-//                                Boolean hasUpdate, String longName, Boolean pinned,
-//                                String requiredCoreVersion, String shortName, String supportsDynamicLoad,
-//                                String url, String version) {
-//        return new AutoValue_Plugin(active, backupVersion, bundled,
-//            deleted, downgradable, enabled,
-//            hasUpdate, longName, pinned,
-//            requiredCoreVersion, shortName, supportsDynamicLoad,
-//            url, version);
-//    }
 }

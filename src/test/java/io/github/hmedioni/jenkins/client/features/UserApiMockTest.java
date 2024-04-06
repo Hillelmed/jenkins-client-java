@@ -20,7 +20,7 @@ public class UserApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/user.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         //JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort())) {
@@ -46,7 +46,7 @@ public class UserApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/api-token.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         try (JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort())) {
             UserApi api = jenkinsApi.userApi();

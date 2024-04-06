@@ -5,7 +5,6 @@ import io.github.hmedioni.jenkins.client.exception.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.*;
 
 import java.util.*;
 
@@ -27,9 +26,9 @@ public class JenkinsErrorHandler {
             if (statusCode.is5xxServerError() || statusCode.is4xxClientError()) {
                 return clientResponse.bodyToMono(String.class)
                     .defaultIfEmpty("{}")
-                    .flatMap(errorBody -> Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody, clientResponse), statusCode)));
+                    .flatMap(errorBody -> reactor.core.publisher.Mono.error(new JenkinsAppException(errorBody, getErrors(errorBody, clientResponse), statusCode)));
             } else {
-                return Mono.just(clientResponse);
+                return reactor.core.publisher.Mono.just(clientResponse);
             }
         });
     }

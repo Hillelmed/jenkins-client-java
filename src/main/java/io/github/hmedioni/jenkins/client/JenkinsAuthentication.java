@@ -23,12 +23,6 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
     private final String encodedCred;
 
 
-    /**
-     * Return the base64 encoded value of the credential.
-     *
-     * @return the base 64 encoded authentication value.
-     */
-
     public static class JenkinsAuthenticationBuilder {
 
         private String identity = "anonymous";

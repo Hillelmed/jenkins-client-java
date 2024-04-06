@@ -13,9 +13,7 @@ import java.util.*;
 
 import static org.testng.Assert.*;
 
-/**
- * Mock tests for the {@link JobsApi} class.
- */
+
 @Test(groups = "unit")
 public class JobsApiMockTest extends BaseJenkinsMockTest {
 
@@ -24,7 +22,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/jobsInJenkinsFolder.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -45,7 +43,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/jobsInRootFolder.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -65,7 +63,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/job-info.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -88,7 +86,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             JobInfo output = api.jobInfo("fish").getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/fish/api/json");
         } finally {
@@ -101,7 +99,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -130,7 +128,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             api.buildInfo("fish", 10).getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/fish/10/api/json");
         } finally {
@@ -234,7 +232,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             String output = api.description("DevTest").getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSentAcceptText(server, "GET", "/job/DevTest/description");
         } finally {
@@ -246,8 +244,8 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         MockWebServer server = mockWebServer();
 
         server.enqueue(new MockResponse()
-                .setHeader(HttpHeaders.ACCEPT,MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -303,7 +301,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             String output = api.config("DevTest").getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSentAcceptText(server, "GET", "/job/DevTest/config.xml");
         } finally {
@@ -568,7 +566,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -590,7 +588,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info-git-commit.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -614,7 +612,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info-no-params.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -635,7 +633,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info-empty-and-null-params.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -657,7 +655,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/build-info-no-params.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -731,7 +729,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             api.lastBuildTimestamp("DevTest");
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSentAcceptText(server, "GET", "/job/DevTest/lastBuild/buildTimestamp");
         } finally {
@@ -801,7 +799,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             ResponseEntity<String> output = api.progressiveText("DevTest", 0);
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSentAcceptText(server, "GET", "/job/DevTest/lastBuild/logText/progressiveText?start=0");
         } finally {
@@ -832,7 +830,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             api.rename("DevTest", "NewDevTest");
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSentAccept(server, "POST", "/job/DevTest/doRename?newName=NewDevTest", MediaType.TEXT_HTML_VALUE);
         } finally {
@@ -845,7 +843,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         String body = payloadFromResource("/runHistory.json");
 
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -866,7 +864,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             List<Workflow> workflows = api.runHistory("MockJob");
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/MockJob/wfapi/runs");
         } finally {
@@ -878,7 +876,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         MockWebServer server = mockWebServer();
         String body = payloadFromResource("/workflow.json");
 
-        server.enqueue(new MockResponse().setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE).setBody(body).setResponseCode(200));
+        server.enqueue(new MockResponse().setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
@@ -898,7 +896,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             api.workflow("DevTest", 16);
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/DevTest/16/wfapi/describe");
         } finally {
@@ -930,7 +928,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             PipelineNode success = api.pipelineNode("DevTest", 16, 17);
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/DevTest/16/execution/node/17/wfapi/describe");
         } finally {
@@ -942,7 +940,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         MockWebServer server = mockWebServer(false);
 
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody("{ \"empty\": false }").setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -963,7 +961,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             JsonNode testReport = api.testReport("DevTest", 16).getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
         } finally {
             server.shutdown();
@@ -994,7 +992,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             PipelineNodeLog pipelineNodeLog = api.pipelineNodeLog("MockJob", 16, 17).getBody();
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "GET", "/job/MockJob/16/execution/node/17/wfapi/log");
         } finally {
@@ -1059,7 +1057,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
             ResponseEntity<Void> status = api.kill("fish", 99);
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertSent(server, "POST", "/job/fish/99/kill");
             assertNotNull(e);

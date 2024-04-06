@@ -1,5 +1,6 @@
 package io.github.hmedioni.jenkins.client.domain.system;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.*;
@@ -8,46 +9,63 @@ import java.util.*;
 @NoArgsConstructor
 public class SystemInfo {
 
-    public String _class;
-    public ArrayList<AssignedLabel> assignedLabels;
-    public String mode;
-    public String nodeDescription;
-    public String nodeName;
-    public int numExecutors;
-    public String description;
-    public ArrayList<Object> jobs;
-    public OverallLoad overallLoad;
-    public PrimaryView primaryView;
-    public Object quietDownReason;
-    public boolean quietingDown;
-    public int slaveAgentPort;
-    public UnlabeledLoad unlabeledLoad;
-    public Object url;
-    public boolean useCrumbs;
-    public boolean useSecurity;
-    public ArrayList<View> views;
+    @JsonProperty("_class")
+    private String clazz;
+    private ArrayList<AssignedLabel> assignedLabels;
+    private String mode;
+    private String nodeDescription;
+    private String nodeName;
+    private int numExecutors;
+    private String description;
+    private ArrayList<Object> jobs;
+    private OverallLoad overallLoad;
+    private PrimaryView primaryView;
+    private Object quietDownReason;
+    private boolean quietingDown;
+    private int slaveAgentPort;
+    private UnlabeledLoad unlabeledLoad;
+    private String url;
+    private boolean useCrumbs;
+    private boolean useSecurity;
+    private ArrayList<View> views;
 
+
+    @Data
+    @NoArgsConstructor
     public static class AssignedLabel {
-        public String name;
+        private String name;
     }
 
+    @Data
+    @NoArgsConstructor
     public static class OverallLoad {
     }
 
+    @Data
+    @NoArgsConstructor
     public static class PrimaryView {
-        public String _class;
-        public String name;
-        public String url;
+        @JsonProperty("_class")
+        private String clazz;
+        private String name;
+        private String url;
     }
+
+    @Data
+    @NoArgsConstructor
 
     public static class UnlabeledLoad {
-        public String _class;
+        @JsonProperty("_class")
+        private String clazz;
     }
 
+    @Data
+    @NoArgsConstructor
+
     public static class View {
-        public String _class;
-        public String name;
-        public String url;
+        @JsonProperty("_class")
+        private String clazz;
+        private String name;
+        private String url;
     }
 
 }

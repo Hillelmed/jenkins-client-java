@@ -1,4 +1,3 @@
-
 package io.github.hmedioni.jenkins.client.filters;
 
 
@@ -8,8 +7,6 @@ import io.github.hmedioni.jenkins.client.domain.crumb.*;
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
-
-
 
 import static org.testng.Assert.*;
 

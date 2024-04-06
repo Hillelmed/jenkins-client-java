@@ -11,8 +11,4 @@ public class ApiToken {
     private ApiTokenData data;
 
 
-//    @SerializedNames({"status", "data"})
-//    public static ApiToken create(final String status, final ApiTokenData data) {
-//        return new AutoValue_ApiToken(status, data);
-//    }
 }

@@ -7,15 +7,11 @@ import lombok.*;
 public class Artifact {
 
 
-    public String displayPath;
+    private String displayPath;
 
-    public String fileName;
+    private String fileName;
 
-    public String relativePath;
+    private String relativePath;
 
 
-//   @SerializedNames({ "displayPath", "fileName", "relativePath" })
-//   public static Artifact create(String displayPath, String fileName, String relativePath) {
-//      return new AutoValue_Artifact(displayPath, fileName, relativePath);
-//   }
 }

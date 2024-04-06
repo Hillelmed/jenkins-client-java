@@ -3,7 +3,6 @@ package io.github.hmedioni.jenkins.client.domain.user;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.springframework.core.convert.*;
 
 import java.util.*;
 

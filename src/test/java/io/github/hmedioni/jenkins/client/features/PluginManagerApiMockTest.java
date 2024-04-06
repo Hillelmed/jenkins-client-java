@@ -1,7 +1,6 @@
 package io.github.hmedioni.jenkins.client.features;
 
 import io.github.hmedioni.jenkins.client.*;
-import io.github.hmedioni.jenkins.client.domain.common.*;
 import io.github.hmedioni.jenkins.client.domain.plugins.*;
 import io.github.hmedioni.jenkins.client.exception.*;
 import okhttp3.mockwebserver.*;
@@ -20,7 +19,7 @@ public class PluginManagerApiMockTest extends BaseJenkinsMockTest {
 
     public void testGetPlugins() throws Exception {
         final MockWebServer server = mockWebServer(false);
-        server.enqueue(new MockResponse().setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE).setBody(payloadFromResource("/plugins.json")).setResponseCode(200));
+        server.enqueue(new MockResponse().setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).setBody(payloadFromResource("/plugins.json")).setResponseCode(200));
 
         final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
@@ -79,7 +78,7 @@ public class PluginManagerApiMockTest extends BaseJenkinsMockTest {
         try (jenkinsApi) {
             final PluginManagerApi api = jenkinsApi.pluginManagerApi();
             api.installNecessaryPlugins("artifactory@2.2.1");
-        }catch (JenkinsAppException e) {
+        } catch (JenkinsAppException e) {
             assertTrue(e.code().is4xxClientError());
             assertFalse(e.errors().isEmpty());
             assertTrue(e.errors().get(0).getExceptionName().endsWith("AuthorizationException"));

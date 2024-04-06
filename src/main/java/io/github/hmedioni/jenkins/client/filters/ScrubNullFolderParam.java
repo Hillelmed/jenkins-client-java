@@ -2,7 +2,6 @@ package io.github.hmedioni.jenkins.client.filters;
 
 import lombok.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.Mono;
 
 import java.net.*;
 
@@ -18,7 +17,7 @@ public class ScrubNullFolderParam implements ExchangeFilterFunction {
 
 
     @Override
-    public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
+    public reactor.core.publisher.Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
         String oldPath = request.url().getPath();
         String requestPath = request.url().getPath()
             .replace(SCRUB_NULL_PARAM, EMPTY_STRING)

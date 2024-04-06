@@ -120,7 +120,7 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
 
         Map<String, String> map = new HashMap<>();
         map.put("SomeKey", "SomeVeryNewValue1");
-        assertEquals(queueItem.getActions().get(0).get_class(), "hudson.model.ParametersAction");
+        assertEquals(queueItem.getActions().get(0).getClazz(), "hudson.model.ParametersAction");
         List<QueueItem.Parameter> parameters = queueItem.getActions().get(0).getParameters();
         assertTrue(map.containsKey(parameters.get(0).getName()));
         assertEquals(map.get(parameters.get(0).getName()), parameters.get(0).getValue());
@@ -154,7 +154,7 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
         map.put("SomeKey1", "SomeVeryNewValue1");
         map.put("SomeKey2", "SomeValue2");
         map.put("SomeKey3", "SomeValue3");
-        assertEquals(queueItem.getActions().get(0).get_class(), "hudson.model.ParametersAction");
+        assertEquals(queueItem.getActions().get(0).getClazz(), "hudson.model.ParametersAction");
         List<QueueItem.Parameter> parameters = queueItem.getActions().get(0).getParameters();
         assertTrue(map.containsKey(parameters.get(0).getName()));
         assertTrue(map.containsKey(parameters.get(1).getName()));
@@ -182,7 +182,7 @@ public class QueueApiLiveTest extends BaseJenkinsApiLiveTest {
         map.put("SomeKey1", "");
         map.put("SomeKey2", "SomeValue2");
         map.put("SomeKey3", "SomeValue3");
-        assertEquals(queueItem.getActions().get(0).get_class(), "hudson.model.ParametersAction");
+        assertEquals(queueItem.getActions().get(0).getClazz(), "hudson.model.ParametersAction");
         List<QueueItem.Parameter> parameters = queueItem.getActions().get(0).getParameters();
         assertTrue(map.containsKey(parameters.get(0).getName()));
         assertTrue(map.containsKey(parameters.get(1).getName()));

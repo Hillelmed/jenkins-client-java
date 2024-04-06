@@ -8,25 +8,19 @@ import java.util.*;
 @NoArgsConstructor
 public class ChangeSet {
 
-    public List<String> affectedPaths;
+    private List<String> affectedPaths;
 
-    public String commitId;
+    private String commitId;
 
-    public long timestamp;
+    private long timestamp;
 
-    public Culprit author;
-
-
-    public String authorEmail;
+    private Culprit author;
 
 
-    public String comment;
+    private String authorEmail;
 
 
-//   @SerializedNames({ "affectedPaths", "commitId", "timestamp", "author", "authorEmail", "comment" })
-//   public static ChangeSet create(List<String> affectedPaths, String commitId, long timestamp, Culprit author, String authorEmail, String comment) {
-//      return new AutoValue_ChangeSet(
-//         affectedPaths != null ? ImmutableList.copyOf(affectedPaths) : ImmutableList.<String> of,
-//         commitId, timestamp, author, authorEmail, comment);
-//   }
+    private String comment;
+
+
 }

@@ -1,24 +1,20 @@
 package io.github.hmedioni.jenkins.client.domain.plugins;
 
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.*;
 
 @Data
+@NoArgsConstructor
 public class Plugins {
 
 
-    public String clazz;
+    @JsonProperty("_class")
+    private String clazz;
 
-    public List<Plugin> plugins;
+    private List<Plugin> plugins;
 
-//    @SerializedNames({"_class", "plugins", "errors"})
-//    public static Plugins create(final String clazz,
-//                                 final List<Plugin> plugins,
-//                                 final List<Error> errors) {
-//        return new AutoValue_Plugins(JenkinsUtils.nullToEmpty(errors),
-//            clazz,
-//            JenkinsUtils.nullToEmpty(plugins));
-//    }
+
 }

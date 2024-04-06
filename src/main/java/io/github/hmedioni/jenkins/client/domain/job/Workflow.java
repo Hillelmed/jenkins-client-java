@@ -9,19 +9,15 @@ import java.util.*;
 @NoArgsConstructor
 public class Workflow {
 
-    public String name;
+    private String name;
 
-    public String status;
+    private String status;
 
-    public long startTimeMillis;
+    private long startTimeMillis;
 
-    public long durationTimeMillis;
+    private long durationTimeMillis;
 
-    public List<Stage> stages;
+    private List<Stage> stages;
 
 
-//    @SerializedNames({"name", "status", "startTimeMillis", "durationTimeMillis", "stages"})
-//    public static Workflow create(String name, String status, long startTimeMillis, long durationTimeMillis, List<Stage> stages) {
-//        return new AutoValue_Workflow(name, status, startTimeMillis, durationTimeMillis, stages);
-//    }
 }

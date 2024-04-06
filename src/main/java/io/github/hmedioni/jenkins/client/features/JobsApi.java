@@ -70,7 +70,7 @@ public interface JobsApi {
 
     @GetExchange("/job/{optionalFolderPath}/job/{name}/config.xml")
     ResponseEntity<String> config(@PathVariable(value = "optionalFolderPath") String optionalFolderPath,
-                  @PathVariable("name") String jobName);
+                                  @PathVariable("name") String jobName);
 
     @GetExchange("/job/{name}/config.xml")
     ResponseEntity<String> config(@PathVariable("name") String jobName);
@@ -245,14 +245,14 @@ public interface JobsApi {
     // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
     // @Consumes(MediaType.TEXT_HTML)
     ResponseEntity<Void> rename(@PathVariable("optionalFolderPath") String optionalFolderPath,
-                                   @PathVariable("name") String jobName,
-                                   @RequestParam("newName") String newName);
+                                @PathVariable("name") String jobName,
+                                @RequestParam("newName") String newName);
 
     @PostExchange("/job/{name}/doRename")
         // @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
         // @Consumes(MediaType.TEXT_HTML)
     ResponseEntity<Void> rename(@PathVariable("name") String jobName,
-                                   @RequestParam("newName") String newName);
+                                @RequestParam("newName") String newName);
 
     // below four apis are for "pipeline-stage-view-plugin",
     // see https://github.com/jenkinsci/pipeline-stage-view-plugin/tree/master/rest-api
@@ -264,8 +264,8 @@ public interface JobsApi {
                               @PathVariable("name") String jobName);
 
     @GetExchange("/job/{name}/wfapi/runs")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-    // @Consumes(MediaType.APPLICATION_JSON)
+        // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+        // @Consumes(MediaType.APPLICATION_JSON)
     List<Workflow> runHistory(@PathVariable("name") String jobName);
 
     // @Named("jobs:workflow")
@@ -289,8 +289,8 @@ public interface JobsApi {
                               @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
 
     @GetExchange("/job/{name}/{number}/execution/node/{nodeId}/wfapi/describe")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-    // @Consumes(MediaType.APPLICATION_JSON)
+        // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+        // @Consumes(MediaType.APPLICATION_JSON)
     PipelineNode pipelineNode(@PathVariable("name") String jobName,
                               @PathVariable("number") int buildNumber, @PathVariable("nodeId") int nodeId);
 

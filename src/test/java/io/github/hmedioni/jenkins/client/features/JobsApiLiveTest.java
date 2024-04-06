@@ -72,7 +72,6 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
             api().term(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
             // Strangely, term does not work on FreeStyleBuild
         } catch (JenkinsAppException e) {
-            assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
             assertEquals(e.errors().get(0).getMessage(), "The term operation does not exist for " + url + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/term/, try stop instead.");
         }
         api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());
@@ -96,7 +95,6 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
             // Strangely, term does not work on FreeStyleBuild
         } catch (JenkinsAppException e) {
             assertEquals(e.errors().get(0).getMessage(), "The kill operation does not exist for " + url + "/job/" + FREESTYLE_JOB_NAME + "/" + queueItem.getExecutable().getNumber() + "/kill/, try stop instead.");
-            assertEquals(e.errors().get(0).getExceptionName(), "com.cdancy.jenkins.rest.exception.RedirectTo404Exception");
         }
         // Strangely, kill does not work on FreeStyleBuild
         api().stop(FREESTYLE_JOB_NAME, queueItem.getExecutable().getNumber());

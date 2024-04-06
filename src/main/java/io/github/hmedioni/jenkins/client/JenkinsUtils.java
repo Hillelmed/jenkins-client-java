@@ -2,9 +2,7 @@ package io.github.hmedioni.jenkins.client;
 
 import io.github.hmedioni.jenkins.client.domain.common.*;
 import org.springframework.http.*;
-import org.springframework.http.HttpHeaders;
 
-import java.net.http.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;

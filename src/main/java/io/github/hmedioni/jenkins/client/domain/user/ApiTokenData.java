@@ -7,13 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 public class ApiTokenData {
 
-    public String tokenName;
-    public String tokenUuid;
-    public String tokenValue;
+    private String tokenName;
+    private String tokenUuid;
+    private String tokenValue;
 
 
-//    @SerializedNames({"tokenName", "tokenUuid", "tokenValue"})
-//    public static ApiTokenData create(final String tokenName, final String tokenUuid, final String tokenValue) {
-//        return new AutoValue_ApiTokenData(tokenName, tokenUuid, tokenValue);
-//    }
 }

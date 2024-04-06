@@ -21,8 +21,4 @@ public class Job {
     private String color;
 
 
-//    @SerializedNames({"_class", "name", "url", "color"})
-//    public static Job create(final String clazz, final String name, final String url, final String color) {
-//        return new AutoValue_Job(clazz, name, url, color);
-//    }
 }

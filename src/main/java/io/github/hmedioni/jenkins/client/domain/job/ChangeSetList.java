@@ -8,16 +8,10 @@ import java.util.*;
 @NoArgsConstructor
 public class ChangeSetList {
 
-    public List<ChangeSet> items;
+    private List<ChangeSet> items;
 
 
-    public String kind;
+    private String kind;
 
 
-//   @SerializedNames({ "items", "kind" })
-//   public static ChangeSetList create(List<ChangeSet> items, String kind) {
-//      return new AutoValue_ChangeSetList(
-//         items != null ? ImmutableList.copyOf(items) : ImmutableList.<ChangeSet> of,
-//         kind);
-//   }
 }

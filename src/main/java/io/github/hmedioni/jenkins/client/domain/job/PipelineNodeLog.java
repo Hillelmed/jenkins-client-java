@@ -5,22 +5,20 @@ import lombok.*;
 
 
 @Data
+@NoArgsConstructor
 public class PipelineNodeLog {
 
-    public String nodeId;
+    private String nodeId;
 
-    public String nodeStatus;
+    private String nodeStatus;
 
-    public int length;
+    private int length;
 
-    public boolean hasMore;
+    private boolean hasMore;
 
-    public String text;
+    private String text;
 
-    public String consoleUrl;
+    private String consoleUrl;
 
-//    @SerializedNames({"nodeId", "nodeStatus", "length", "hasMore", "text", "consoleUrl"})
-//    public static PipelineNodeLog create(String nodeId, String nodeStatus, int length, boolean hasMore, String text, String consoleUrl) {
-//        return new AutoValue_PipelineNodeLog(nodeId, nodeStatus, length, hasMore, text, consoleUrl);
-//    }
+
 }

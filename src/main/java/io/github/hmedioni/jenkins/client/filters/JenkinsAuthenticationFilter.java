@@ -9,7 +9,8 @@ import lombok.*;
 import org.jetbrains.annotations.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.Mono;
+
+import static io.github.hmedioni.jenkins.client.JenkinsConstants.JENKINS_COOKIES_JSESSIONID;
 
 @RequiredArgsConstructor
 public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
@@ -21,7 +22,7 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
 
     // key = Crumb, value = true if exception is ResourceNotFoundException false otherwise
     @Override
-    public @NotNull Mono<ClientResponse> filter(@NotNull ClientRequest request, @NotNull ExchangeFunction next) {
+    public @NotNull reactor.core.publisher.Mono<ClientResponse> filter(@NotNull ClientRequest request, @NotNull ExchangeFunction next) {
         ClientRequest.Builder builder = ClientRequest.from(request);
 
         // Password and API Token are both Basic authentication (there is no Bearer authentication in Jenkins)
@@ -55,8 +56,11 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
                     jenkinsAuthentication.getAuthType().getAuthScheme() + " " + jenkinsAuthentication.getEncodedCred())
                 .exchangeToMono(clientResponse -> {
                     clientResponse.cookies()
-                        .forEach((s, responseCookies) -> crumbCookie =
-                            new HttpCookie(s, responseCookies.get(0).getValue()));
+                        .forEach((s, responseCookies) -> {
+                            if (responseCookies.get(0).getName().contains(JENKINS_COOKIES_JSESSIONID)) {
+                                crumbCookie = new HttpCookie(s, responseCookies.get(0).getValue());
+                            }
+                        });
                     return clientResponse.bodyToMono(Crumb.class);
                 }).block();
         }

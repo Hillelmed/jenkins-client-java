@@ -7,10 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 public class Error {
 
-    public String context;
+    private String context;
 
-    public String message;
+    private String message;
 
-    public String exceptionName;
+    private String exceptionName;
 
 }
