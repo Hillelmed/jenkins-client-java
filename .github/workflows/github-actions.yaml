@@ -1,0 +1,77 @@
+name: Jenkins REST CI Build
+run-name: ${{ github.actor }} is running Jenkins REST CI Build on GitHub Actions 🚀
+on: [push, pull_request_target]
+permissions:
+  checks: write
+jobs:
+  build:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - name: Build Jenkins LTS docker images
+        run: docker build -t jenkins-rest/jenkins src/main/docker
+
+      - name: Run Jenkins LTS docker images
+        run: docker run -d --rm -p 8080:8080 --name jenkins-rest jenkins-rest/jenkins
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Generate JaCoCo report
+        run: ./gradlew jacocoTestReport
+
+      - name: Upload JaCoCo report
+        uses: actions/upload-artifact@v2
+        with:
+          name: jacoco-report
+          path: ${{ github.workspace }}/build/reports/jacoco/test/html
+
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 80
+          fail_below_threshold: false
+          publish_only_summary: false
+
+
+      - name: Get the Coverage info
+        run: |
+          echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
+          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
+          echo "Coverage coveragePercentage ${{ steps.jacoco_reporter.outputs.coveragePercentage }}"
+          echo "Coverage coveragePercentageString ${{ steps.jacoco_reporter.outputs.coveragePercentageString }}"
+
+      # Publish Coverage Job Summary  # Optional
+      - name: Add Coverage Job Summary
+        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Stop docker
+        run: docker stop jenkins-rest
