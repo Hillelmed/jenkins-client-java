@@ -1,15 +1,11 @@
 plugins {
     id 'java'
     id 'jacoco'
-//    id 'maven-publish'
-//    id 'com.github.johnrengelman.shadow' version '7.1.1'
-//    id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
-//apply from: "$rootDir/gradle/additional-artifacts.gradle"
-//apply from: "$rootDir/gradle/dependencies.gradle"
 //apply from: "$rootDir/gradle/publishing.gradle"
-//apply from: "$rootDir/gradle/release.gradle"
 
 repositories {
     mavenCentral()
@@ -107,5 +103,45 @@ javadoc {
         links "https://docs.oracle.com/${javadocPath}javase/${compatibilityVersion.toString().replaceAll(/.*\./, "")}/docs/api"
         addStringOption('Xdoclint:none', '-quiet')
         addStringOption('source', compatibilityVersion.toString().replaceAll(/.*\./, ""))
+    }
+}
+
+group = 'io.github.hillelmed'
+version = '1.0.0'
+description = 'Java client for working with Jenkins REST API'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            group = 'io.github.hillelmed'
+            version = '1.0.0'
+            description = 'Java client for working with Jenkins REST API'
+
+            from components.java
+            pom {
+                name = 'Jenkins rest client in java'
+                description = 'Java client for working with Jenkins REST API'
+                url = 'https://github.com/Hillelmed/jenkins-client-java'
+                packaging 'jar'
+                licenses {
+                    license {
+                        name = 'The MIT License (MIT)'
+                        url = 'http://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'HillelMed'
+                        name = 'Hillel medioni'
+                        email = 'hillel95med@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:https://github.com/Hillelmed/jenkins-client-java.git'
+                    developerConnection = 'scm:git://github.com/Hillelmed/jenkins-client-java.git'
+                    url = 'https://github.com/Hillelmed/jenkins-client-java/'
+                }
+            }
+        }
     }
 }
