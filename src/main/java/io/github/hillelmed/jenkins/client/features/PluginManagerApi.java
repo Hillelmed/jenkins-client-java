@@ -13,11 +13,11 @@ import org.springframework.web.service.annotation.*;
 public interface PluginManagerApi {
 
     @GetExchange("/api/json")
-    Plugins plugins(@RequestParam("depth") Integer depth,
-                    @RequestParam("tree") String tree);
+    PluginsWrapper plugins(@RequestParam("depth") Integer depth,
+                           @RequestParam("tree") String tree);
 
     @GetExchange("/api/json")
-    Plugins plugins(@RequestParam("depth") Integer depth);
+    PluginsWrapper plugins(@RequestParam("depth") Integer depth);
 
     // @Named("pluginManager:install-necessary-plugins")
     @PostExchange(value = "/installNecessaryPlugins", contentType = MediaType.APPLICATION_XML_VALUE)

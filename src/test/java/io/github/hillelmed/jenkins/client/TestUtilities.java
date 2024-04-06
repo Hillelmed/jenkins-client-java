@@ -12,6 +12,7 @@ public class TestUtilities extends JenkinsUtils {
     public static final String TEST_API_TOKEN_ENVIRONMENT_VARIABLE = TEST_API_TOKEN_SYSTEM_PROPERTY.replaceAll("\\.", "_").toUpperCase();
 
     private TestUtilities() {
+        super();
         throw new UnsupportedOperationException("Purposefully not implemented");
     }
 

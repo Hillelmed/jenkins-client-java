@@ -14,10 +14,10 @@ public class PluginManagerApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test
     public void testGetPlugins() {
-        final Plugins plugins = api().plugins(3);
-        assertNotNull(plugins);
-        assertFalse(plugins.getPlugins().isEmpty());
-        assertNotNull(plugins.getPlugins().get(0).getShortName());
+        final PluginsWrapper pluginsWrapper = api().plugins(3);
+        assertNotNull(pluginsWrapper);
+        assertFalse(pluginsWrapper.getPlugins().isEmpty());
+        assertNotNull(pluginsWrapper.getPlugins().get(0).getShortName());
     }
 
     @Test

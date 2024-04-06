@@ -1,6 +1,7 @@
 package io.github.hillelmed.jenkins.client;
 
 import io.github.hillelmed.jenkins.client.domain.common.*;
+import lombok.*;
 import org.springframework.http.*;
 
 import java.text.*;
@@ -10,6 +11,7 @@ import java.util.regex.*;
 /**
  * Collection of static methods to be used globally.
  */
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JenkinsUtils {
 
 
@@ -22,24 +24,6 @@ public class JenkinsUtils {
 
 
     private static final Pattern pattern = Pattern.compile("^.*/queue/item/(\\d+)/$");
-
-    //    public static Object buildFormDataFormMap(Map<String, List<String>> properties) {
-//        Map<String, List<String>> props = (Map<String, List<String>>) properties;
-//
-//        for (Map.Entry<String, List<String>> prop : props.entrySet()) {
-//            if (prop.getKey() != null) {
-//                String potentialKey = prop.getKey().trim();
-//                if (potentialKey.length() > 0) {
-//                    if (prop.getValue() == null) {
-//                        prop.setValue(Lists.newArrayList(""));
-//                    }
-//
-//                    builder.addFormParam(potentialKey, prop.getValue().toArray(new String[prop.getValue().size()]));
-//                }
-//            }
-//        }
-//
-//    }
 
     public static String buildPluginXmlRequest(String pluginId) {
         return MessageFormat.format("<jenkins><install plugin=\"{0}\"/></jenkins>", pluginId);

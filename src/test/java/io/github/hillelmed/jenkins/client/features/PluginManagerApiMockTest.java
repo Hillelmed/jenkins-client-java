@@ -27,10 +27,10 @@ public class PluginManagerApiMockTest extends BaseJenkinsMockTest {
         final JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
             final PluginManagerApi api = jenkinsApi.pluginManagerApi();
-            final Plugins plugins = api.plugins(3);
-            assertNotNull(plugins);
-            assertFalse(plugins.getPlugins().isEmpty());
-            assertNotNull(plugins.getPlugins().get(0).getShortName());
+            final PluginsWrapper pluginsWrapper = api.plugins(3);
+            assertNotNull(pluginsWrapper);
+            assertFalse(pluginsWrapper.getPlugins().isEmpty());
+            assertNotNull(pluginsWrapper.getPlugins().get(0).getShortName());
             final Map<String, Object> queryParams = new HashMap<>();
             queryParams.put("depth", 3);
             assertSent(server, "GET", "/pluginManager/api/json", queryParams);

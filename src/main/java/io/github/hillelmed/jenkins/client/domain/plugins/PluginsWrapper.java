@@ -8,7 +8,7 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-public class Plugins {
+public class PluginsWrapper {
 
 
     @JsonProperty("_class")

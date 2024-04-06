@@ -45,11 +45,6 @@ public class JenkinsApiClientImpl implements JenkinsApi {
             .build();
     }
 
-
-    private synchronized <T> T getSingleton(Class<T> klass, Object o) {
-        return klass.cast(singletons.computeIfAbsent(klass, aClass -> o));
-    }
-
     private synchronized <T> T getSingleton(Class<T> klass) {
         return klass.cast(singletons.computeIfAbsent(klass, httpServiceProxyFactory::createClient));
     }

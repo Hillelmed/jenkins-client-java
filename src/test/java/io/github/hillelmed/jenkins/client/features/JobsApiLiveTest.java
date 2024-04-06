@@ -696,8 +696,8 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     private boolean isFolderPluginInstalled() {
         boolean installed = false;
-        Plugins plugins = api.pluginManagerApi().plugins(3);
-        for (Plugin plugin : plugins.getPlugins()) {
+        PluginsWrapper pluginsWrapper = api.pluginManagerApi().plugins(3);
+        for (Plugin plugin : pluginsWrapper.getPlugins()) {
             if (plugin.getShortName().equals(FOLDER_PLUGIN_NAME)) {
                 installed = true;
                 break;
