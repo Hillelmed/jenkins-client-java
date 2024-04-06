@@ -31,7 +31,16 @@ jobs:
         uses: gradle/gradle-build-action@v3
 
       - name: Execute Gradle build
-        run: ./gradlew clean build mockTest integTest jacocoTestReport --stacktrace
+        run: ./gradlew clean
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Run tests
+        run: ./gradlew test mockTest integTest
+
+      - name: Generate JaCoCo report
+        run: ./gradlew jacocoTestReport
 
       - name: Jacoco Report to PR
         id: jacoco
@@ -59,12 +68,6 @@ jobs:
           echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
           echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
           echo "Coverage coverage_percentage ${{ steps.jacoco.outputs.coverage_percentage }}"
-      - name: Upload Code Coverage Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-coverage-report-markdown
-          path: '*/coverage-results.md'
-          retention-days: 1
 
       - name: construct coverage job summary markdown
         run: |
