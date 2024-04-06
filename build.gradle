@@ -20,7 +20,7 @@ jacoco {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'org.jetbrains:annotations:24.1.0'
     ext.autoValueVersion = '2.0.0'
     ext.autoServiceVersion = '2.0.0'
 
