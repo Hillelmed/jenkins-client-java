@@ -43,6 +43,15 @@ ext.javadocPath = compatibilityVersion.isJava8() ? '' : 'en/java/'
 ext.sourceCompatibility = compatibilityVersion
 ext.targetCompatibility = compatibilityVersion
 
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.add("-parameters")
+    options.compilerArgs += ["-Xlint:-options"]
+}
+
 test {
     useTestNG()
     forkEvery = 1
