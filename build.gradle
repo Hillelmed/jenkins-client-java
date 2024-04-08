@@ -16,7 +16,6 @@ jacoco {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:24.1.0'
     ext.autoValueVersion = '2.0.0'
     ext.autoServiceVersion = '2.0.0'
 
@@ -61,15 +60,6 @@ jar {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add("-parameters")
-    options.compilerArgs += ["-Xlint:-options"]
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
 
 tasks.register('mockTest', Test) {
     group = "Verification"
