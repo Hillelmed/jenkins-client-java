@@ -6,7 +6,6 @@ import io.github.hillelmed.jenkins.client.config.*;
 import io.github.hillelmed.jenkins.client.domain.crumb.*;
 import io.github.hillelmed.jenkins.client.exception.*;
 import lombok.*;
-import org.jetbrains.annotations.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
 
@@ -20,7 +19,7 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
 
     // key = Crumb, value = true if exception is ResourceNotFoundException false otherwise
     @Override
-    public @NotNull reactor.core.publisher.Mono<ClientResponse> filter(@NotNull ClientRequest request, @NotNull ExchangeFunction next) {
+    public reactor.core.publisher.Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
         ClientRequest.Builder builder = ClientRequest.from(request);
 
         // Password and API Token are both Basic authentication (there is no Bearer authentication in Jenkins)

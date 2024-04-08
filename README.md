@@ -1,6 +1,6 @@
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.cdancy/jenkins-rest/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.github.cdancy/jenkins-rest)
-[![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jenkins&#8211;rest-4183C4.svg)](https://stackoverflow.com/questions/tagged/jenkins+rest)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java)
+[![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jenkins&#8211;rest-4183C4.svg)](https://stackoverflow.com/questions/tagged/jenkins+client+java)
 
 # jenkins-client-java
 
