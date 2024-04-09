@@ -4,7 +4,7 @@
 
 # jenkins-client-java
 
-Java client is built on the top of Http interface and webClient for working with Jenkins REST API.
+Java client is built on the top of Http interface and webClient for working with Jenkins REST API Support Java 17 and Java 21.
 
 ## Setup
 
