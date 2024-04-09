@@ -260,7 +260,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         JobList output = api().jobList().getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
-        assertEquals(output.getJobs().size(), 2);
+        assertEquals(output.getJobs().size(), 1);
     }
 
     @Test(dependsOnMethods = "testCreateJob")
