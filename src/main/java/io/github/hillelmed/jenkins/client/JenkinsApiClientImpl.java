@@ -20,7 +20,7 @@ public class JenkinsApiClientImpl implements JenkinsApi {
     private final Map<Class<?>, Object> singletons;
 
     public JenkinsApiClientImpl(JenkinsProperties jenkinsProperties, WebClient webClient) {
-        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, NONE);
+        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, VALUES_ONLY);
         this.singletons = Collections.synchronizedMap(new HashMap<>());
     }
 
@@ -30,8 +30,9 @@ public class JenkinsApiClientImpl implements JenkinsApi {
         ExchangeFilterFunction scrubNullFromPathFilter = new ScrubNullFolderParam();
         ExchangeFilterFunction jenkinsUserInjectionFilter = new JenkinsUserInjectionFilter(jenkinsProperties.getJenkinsAuthentication());
         if (webClient == null) {
-            DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(jenkinsProperties.getUrl());
-            factory.setEncodingMode(encodingMode);
+            JenkinsUriTemplateHandler factory = new JenkinsUriTemplateHandler(jenkinsProperties.getUrl());
+//            factory.setParsePath(false);
+//            factory.setEncodingMode(encodingMode);
 
             webClient = WebClient.builder()
                 .uriBuilderFactory(factory)

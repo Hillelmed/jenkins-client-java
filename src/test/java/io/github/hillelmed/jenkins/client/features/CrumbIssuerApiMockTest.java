@@ -1,9 +1,11 @@
 package io.github.hillelmed.jenkins.client.features;
 
 import io.github.hillelmed.jenkins.client.*;
+import io.github.hillelmed.jenkins.client.auth.*;
 import io.github.hillelmed.jenkins.client.domain.crumb.*;
 
 
+import io.github.hillelmed.jenkins.client.exception.*;
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
@@ -16,7 +18,7 @@ import static org.testng.Assert.*;
 @Test(groups = "unit")
 public class CrumbIssuerApiMockTest extends BaseJenkinsMockTest {
 
-    public void testGetSystemInfo() throws Exception {
+    public void testGetCrumbIssuer() throws Exception {
         MockWebServer server = mockWebServer(false);
 
         final String value = "eafb798e91a90591b7fb2b779b32dcef9311cfdee8de09158f23a16a11aafa22";
@@ -26,14 +28,29 @@ public class CrumbIssuerApiMockTest extends BaseJenkinsMockTest {
             setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
-        CrumbIssuerApi api = jenkinsApi.crumbIssuerApi();
-        try {
+        try (jenkinsApi) {
+            CrumbIssuerApi api = jenkinsApi.crumbIssuerApi();
             final Crumb instance = api.crumb().getBody();
             assertNotNull(instance);
             assertEquals(instance.getValue(), value);
             assertSentAccept(server, "GET", "/crumbIssuer/api/json", MediaType.APPLICATION_JSON_VALUE);
         } finally {
-            jenkinsApi.close();
+            server.shutdown();
+        }
+    }
+
+    public void testGetCrumbIssuerFail() throws Exception {
+        MockWebServer server = mockWebServer(false);
+
+        server.enqueue(new MockResponse()
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .setResponseCode(500));
+        try (JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort(), AuthenticationType.USERNAME_PASSWORD, usernamePassword)) {
+            jenkinsApi.jobsApi().enable("blala");
+        } catch (JenkinsAppException e) {
+            assertEquals(e.getClass(), CrumbMissing.class);
+            assertSentAccept(server, "GET", "/crumbIssuer/api/json", MediaType.ALL_VALUE);
+        } finally {
             server.shutdown();
         }
     }

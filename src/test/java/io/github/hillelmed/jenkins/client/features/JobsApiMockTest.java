@@ -31,7 +31,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
-            JobList output = api.jobList("Folder1/job/Folder%202").getBody();
+            JobList output = api.jobList("Folder1/job/Folder 2").getBody();
             assertNotNull(output);
             assertNotNull(output.getJobs());
             assertEquals(output.getJobs().size(), 1);
@@ -545,6 +545,77 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
             server.shutdown();
         }
     }
+
+    public void testGetJobListWithDepth() throws Exception {
+        MockWebServer server = mockWebServer(false);
+
+        String body = payloadFromResource("/getJobListByDepth.json");
+        server.enqueue(new MockResponse()
+            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setBody(body).setResponseCode(200));
+        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
+        try (jenkinsApi) {
+            JobsApi api = jenkinsApi.jobsApi();
+            JobListTree output = api.jobList( 0, null).getBody();
+            assertNotNull(output);
+            assertNotNull(output.getJobs());
+            assertEquals(output.getJobs().size(), 1);
+            assertEquals(output.getJobs().get(0), new JobListTree("hudson.model.FreeStyleProject", "DevTest", null, null, "notbuilt", "http://localhost:8080/job/DevTest/"));
+            assertSent(server, "GET", "/api/json", Map.of("depth", "0"));
+        } finally {
+            server.shutdown();
+        }
+    }
+
+    public void testGetJobListWithTreeByFullName() throws Exception {
+        MockWebServer server = mockWebServer(false);
+
+        String body = payloadFromResource("/jobsInJenkinsFolderByFullName.json");
+        server.enqueue(new MockResponse()
+            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setBody(body).setResponseCode(200));
+        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
+        Map<String, String> queryParams = Map.of("tree", "jobs[fullName]");
+        try (jenkinsApi) {
+            JobsApi api = jenkinsApi.jobsApi();
+            JobListTree output = api.jobList("Folder1/job/Folder 2", null, "jobs[fullName]").getBody();
+            assertNotNull(output);
+            assertNotNull(output.getJobs());
+            assertEquals(output.getJobs().size(), 1);
+            assertEquals(output.getJobs().get(0), new JobListTree("hudson.model.FreeStyleProject", null, "Test Project", null, null, null));
+            assertSent(server, "GET", "/job/Folder1/job/Folder%202/api/json", queryParams);
+        } finally {
+            server.shutdown();
+        }
+    }
+
+    public void testGetNestedJobList() throws Exception {
+        MockWebServer server = mockWebServer(false);
+
+        String body = payloadFromResource("/nestedJobList.json");
+        server.enqueue(new MockResponse()
+            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setBody(body).setResponseCode(200));
+        JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
+        Map<String, String> queryParams = Map.of("tree", "jobs[fullName,jobs[fullName]]");
+        try (jenkinsApi) {
+            JobsApi api = jenkinsApi.jobsApi();
+            JobListTree output = api.jobList("Folder1/job/Folder 2", null, "jobs[fullName,jobs[fullName]]").getBody();
+            assertNotNull(output);
+            assertNotNull(output.getJobs());
+            assertEquals(output.getJobs().size(), 2);
+            assertEquals(output.getJobs().get(0), new JobListTree("hudson.model.FreeStyleProject", null, "DevTest", null, null, null));
+            JobListTree actualFolder = output.getJobs().get(1);
+            assertEquals(actualFolder.getClazz(), "com.cloudbees.hudson.plugins.folder.Folder");
+            assertEquals(actualFolder.getFullName(), "test-folder");
+            assertEquals(actualFolder.getJobs().size(), 1);
+            assertEquals(actualFolder.getJobs().get(0).getFullName(), "test-folder/test-folder-1");
+            assertSent(server, "GET", "/job/Folder1/job/Folder%202/api/json", queryParams);
+        } finally {
+            server.shutdown();
+        }
+    }
+
 
     public void testBuildJobWithParamsNonExistentJob() throws Exception {
         MockWebServer server = mockWebServer(false);

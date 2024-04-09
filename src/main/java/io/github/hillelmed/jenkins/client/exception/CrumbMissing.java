@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class CrumbMissing extends JenkinsAppException {
 
-    public CrumbMissing(String responseBody, List<JenkinsError> errors, HttpStatusCode httpStatusCode) {
-        super(responseBody, errors, httpStatusCode);
+    public CrumbMissing(String responseBody, List<JenkinsError> errors, HttpStatusCode httpStatusCode, Throwable e) {
+        super(responseBody, errors, httpStatusCode, e);
     }
 }

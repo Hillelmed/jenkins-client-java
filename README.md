@@ -1,7 +1,6 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java)
 [![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jenkins&#8211;rest-4183C4.svg)](https://stackoverflow.com/questions/tagged/jenkins+client+java)
-
 # jenkins-client-java
 
 Java client is built on the top of Http interface and webClient for working with Jenkins REST API Support Java 17 and Java 21.
@@ -18,7 +17,23 @@ JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
 SystemInfo systemInfo = client.api().systemApi().systemInfo();
 assertTrue(systemInfo.getUrl().equals("http://localhost:8080/"));
 ```
-      
+
+If Disabling CSRF Protection in your jenkins
+
+``hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true``
+
+Config your properties like that:
+```
+JenkinsProperties jenkinsProperties = JenkinsProperties.builder().url("http://localhost:8080")
+    .jenkinsAuthentication(JenkinsAuthentication.builder().crumbEnabled(false).authType(AuthenticationType.USERNAME_PASSWORD)
+        .credentials("admin:password").build()).build();
+JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties);
+
+SystemInfo systemInfo = client.api().systemApi().systemInfo();
+assertTrue(systemInfo.getUrl().equals("http://localhost:8080/"));
+```
+
+
 ## Latest release
 
 Can be found in maven like so:
@@ -91,7 +106,7 @@ For more details, see
 ## Understanding Error objects
 
 When something pops server-side `Jenkins` will hand us back a list of [JenkinsError](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hillelmed/jenkins/client/exception/JenkinsError.java) objects. we're throwing an exception at runtime we attach this List of `Error` objects
-The throwing object is Jenkins [JenkinsAppException.java](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hillelmed/jenkins/client/exception/BitbucketAppException.java)
+The throwing object is Jenkins [JenkinsAppException.java](https://github.com/Hillelmed/jenkins-client-java/blob/main/src/main/java/io/github/hillelmed/jenkins/client/exception/JenkinsAppException.java)
 to most [domain](https://github.com/Hillelmed/jenkins-client-java/tree/main/src/main/java/io/github/hillelmed/jenkins/client/domain) objects. Thus, it is up to the user to check the handed back domain object to see if the attached List is empty, and if not, iterate over the `Error` objects to see if it's something
 truly warranting an exception. List of `Error` objects itself will always be non-null but in most cases empty (unless something has failed).
 

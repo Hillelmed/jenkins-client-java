@@ -8,6 +8,9 @@ import io.github.hillelmed.jenkins.client.exception.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.reactive.function.client.*;
+import reactor.core.publisher.*;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
@@ -30,7 +33,8 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
 
         //Anon and Password need the crumb and the cookie when POSTing
         //https://www.jenkins.io/doc/book/security/csrf-protection/#working-with-scripted-clients
-        if (request.method().equals(HttpMethod.POST) && (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD
+        if (jenkinsAuthentication.isCrumbEnabled() && request.method().equals(HttpMethod.POST)
+            && (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD
             || jenkinsAuthentication.getAuthType() == AuthenticationType.ANONYMOUS)) {
             try {
                 final Crumb localCrumb = getCrumb();
@@ -39,7 +43,7 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
                     builder.cookie(crumbCookie.getName(), crumbCookie.getValue());
                 }
             } catch (JenkinsAppException e) {
-                throw new CrumbMissing(e.getMessage(), e.errors(), e.code());
+                throw new CrumbMissing(e.getMessage(), e.errors(), e.code(), e);
             }
         }
         return next.exchange(builder.build());
@@ -52,13 +56,17 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
                 .header(HttpHeaders.AUTHORIZATION,
                     jenkinsAuthentication.getAuthType().getAuthScheme() + " " + jenkinsAuthentication.getEncodedCred())
                 .exchangeToMono(clientResponse -> {
-                    clientResponse.cookies()
-                        .forEach((s, responseCookies) -> {
-                            if (responseCookies.get(0).getName().contains(JenkinsConstants.JENKINS_COOKIES_JSESSIONID)) {
-                                crumbCookie = new HttpCookie(s, responseCookies.get(0).getValue());
-                            }
-                        });
-                    return clientResponse.bodyToMono(Crumb.class);
+                    if (clientResponse.statusCode().is2xxSuccessful()) {
+                        clientResponse.cookies()
+                            .forEach((s, responseCookies) -> {
+                                if (responseCookies.get(0).getName().contains(JenkinsConstants.JENKINS_COOKIES_JSESSIONID)) {
+                                    crumbCookie = new HttpCookie(s, responseCookies.get(0).getValue());
+                                }
+                            });
+                        return clientResponse.bodyToMono(Crumb.class);
+                    } else {
+                        return reactor.core.publisher.Mono.error(new JenkinsAppException("Failed to retrieve crumb", Collections.emptyList(), clientResponse.statusCode()));
+                    }
                 }).block();
         }
         return crumb;
