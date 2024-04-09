@@ -6,14 +6,12 @@ import io.github.hillelmed.jenkins.client.domain.job.*;
 import io.github.hillelmed.jenkins.client.domain.plugins.*;
 import io.github.hillelmed.jenkins.client.domain.queue.*;
 import io.github.hillelmed.jenkins.client.exception.*;
-
 import org.springframework.http.*;
 import org.testng.annotations.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.testng.Assert.*;
 
 @Test(groups = "live", singleThreaded = true)

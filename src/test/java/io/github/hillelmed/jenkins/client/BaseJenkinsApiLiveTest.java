@@ -5,6 +5,7 @@ import io.github.hillelmed.jenkins.client.config.*;
 import io.github.hillelmed.jenkins.client.domain.job.*;
 import io.github.hillelmed.jenkins.client.domain.queue.*;
 import org.testng.annotations.*;
+
 import java.io.*;
 import java.nio.charset.*;
 import java.util.*;

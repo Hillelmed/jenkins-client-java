@@ -75,19 +75,19 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
 
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder scheme( String scheme) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder scheme(String scheme) {
             this.uriComponentsBuilder.scheme(scheme);
             return this;
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder userInfo( String userInfo) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder userInfo(String userInfo) {
             this.uriComponentsBuilder.userInfo(userInfo);
             return this;
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder host( String host) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder host(String host) {
             this.uriComponentsBuilder.host(host);
             return this;
         }
@@ -99,7 +99,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder port( String port) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder port(String port) {
             this.uriComponentsBuilder.port(port);
             return this;
         }
@@ -111,7 +111,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replacePath( String path) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replacePath(String path) {
             this.uriComponentsBuilder.replacePath(path);
             return this;
         }
@@ -129,7 +129,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQuery( String query) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQuery(String query) {
             this.uriComponentsBuilder.replaceQuery(query);
             return this;
         }
@@ -141,7 +141,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder queryParam(String name,  Collection<?> values) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder queryParam(String name, Collection<?> values) {
             this.uriComponentsBuilder.queryParam(name, values);
             return this;
         }
@@ -165,7 +165,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQueryParam(String name,  Collection<?> values) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQueryParam(String name, Collection<?> values) {
             this.uriComponentsBuilder.replaceQueryParam(name, values);
             return this;
         }
@@ -177,7 +177,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder fragment( String fragment) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder fragment(String fragment) {
             this.uriComponentsBuilder.fragment(fragment);
             return this;
         }

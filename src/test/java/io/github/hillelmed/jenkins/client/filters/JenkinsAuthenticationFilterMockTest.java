@@ -4,9 +4,6 @@ package io.github.hillelmed.jenkins.client.filters;
 import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.auth.*;
 import io.github.hillelmed.jenkins.client.domain.crumb.*;
-
-
-
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;

@@ -1,7 +1,6 @@
 package io.github.hillelmed.jenkins.client;
 
 import io.github.hillelmed.jenkins.client.auth.*;
-
 import org.testng.*;
 import org.testng.annotations.*;
 

@@ -3,9 +3,6 @@ package io.github.hillelmed.jenkins.client.features;
 import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.domain.system.*;
 import io.github.hillelmed.jenkins.client.exception.*;
-
-
-
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;

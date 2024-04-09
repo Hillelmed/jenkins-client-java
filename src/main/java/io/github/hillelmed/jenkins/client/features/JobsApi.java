@@ -27,7 +27,7 @@ public interface JobsApi {
 
     @GetExchange(value = "api/json", accept = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<JobListTree> jobList(@RequestParam(value = "depth", required = false) Integer depth,
-                                        @RequestParam(value = "tree",required = false) String tree);
+                                        @RequestParam(value = "tree", required = false) String tree);
 
 
     @GetExchange(value = "/job/{folderPath}/api/json", accept = MediaType.APPLICATION_JSON_VALUE)

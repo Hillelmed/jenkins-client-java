@@ -5,10 +5,6 @@ import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.domain.common.*;
 import io.github.hillelmed.jenkins.client.domain.job.*;
 import io.github.hillelmed.jenkins.client.exception.*;
-
-
-
-
 import okhttp3.mockwebserver.*;
 import org.springframework.http.*;
 import org.testng.annotations.*;
@@ -551,12 +547,12 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/getJobListByDepth.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         try (jenkinsApi) {
             JobsApi api = jenkinsApi.jobsApi();
-            JobListTree output = api.jobList( 0, null).getBody();
+            JobListTree output = api.jobList(0, null).getBody();
             assertNotNull(output);
             assertNotNull(output.getJobs());
             assertEquals(output.getJobs().size(), 1);
@@ -572,7 +568,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/jobsInJenkinsFolderByFullName.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         Map<String, String> queryParams = Map.of("tree", "jobs[fullName]");
@@ -594,7 +590,7 @@ public class JobsApiMockTest extends BaseJenkinsMockTest {
 
         String body = payloadFromResource("/nestedJobList.json");
         server.enqueue(new MockResponse()
-            .setHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .setBody(body).setResponseCode(200));
         JenkinsApi jenkinsApi = api("http://localhost:" + server.getPort());
         Map<String, String> queryParams = Map.of("tree", "jobs[fullName,jobs[fullName]]");

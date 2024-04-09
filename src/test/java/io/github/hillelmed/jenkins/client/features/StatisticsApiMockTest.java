@@ -2,8 +2,6 @@ package io.github.hillelmed.jenkins.client.features;
 
 import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.domain.statistics.*;
-
-
 import okhttp3.mockwebserver.*;
 import org.testng.annotations.*;
 

@@ -54,5 +54,5 @@ public class JenkinsErrorHandler {
             return List.of(error);
         }
     }
-    
+
 }

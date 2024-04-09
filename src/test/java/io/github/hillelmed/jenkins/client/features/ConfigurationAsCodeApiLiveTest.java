@@ -2,8 +2,6 @@ package io.github.hillelmed.jenkins.client.features;
 
 import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.exception.*;
-
-
 import org.springframework.http.*;
 import org.testng.annotations.*;
 

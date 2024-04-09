@@ -4,10 +4,6 @@ import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.auth.*;
 import io.github.hillelmed.jenkins.client.domain.user.*;
 import io.github.hillelmed.jenkins.client.features.*;
-
-
-
-
 import org.springframework.http.*;
 import org.testng.annotations.*;
 

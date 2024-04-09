@@ -1,6 +1,6 @@
 name: Jenkins REST CI Build
 run-name: ${{ github.actor }} is running Jenkins REST CI Build on GitHub Actions 🚀
-on: [push, pull_request_target]
+on: [ push, pull_request_target ]
 permissions:
   checks: write
 jobs:

@@ -2,8 +2,6 @@ package io.github.hillelmed.jenkins.client.features;
 
 import io.github.hillelmed.jenkins.client.*;
 import io.github.hillelmed.jenkins.client.domain.crumb.*;
-
-
 import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
