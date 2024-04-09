@@ -9,6 +9,7 @@ import io.github.hillelmed.jenkins.client.exception.*;
 
 import org.springframework.http.*;
 import org.testng.annotations.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.*;
@@ -37,7 +38,6 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         JobList output = api().jobList().getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
-        assertEquals(output.getJobs().size(), 2);
         assertThat(output.getJobs())
             .isNotEmpty()
             .hasSize(3)
@@ -50,7 +50,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListByDepth2() {
-        JobListTree output = api().jobList( 2, null).getBody();
+        JobListTree output = api().jobList(2, null).getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 3);
@@ -64,7 +64,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListByDepth1() {
-        JobListTree output = api().jobList( 1, null).getBody();
+        JobListTree output = api().jobList(1, null).getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 3);
@@ -116,8 +116,6 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
         assertEquals(output.getJobs().size(), 1);
         assertEquals(output.getJobs().get(0), new JobListTree("hudson.model.FreeStyleProject", "JobInFolder", null, null, "notbuilt", null));
     }
-
-
 
 
     @Test

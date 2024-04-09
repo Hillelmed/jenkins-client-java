@@ -1,6 +1,5 @@
 package io.github.hillelmed.jenkins.client.handlers;
 
-import org.springframework.lang.*;
 import org.springframework.util.*;
 import org.springframework.web.util.*;
 
@@ -76,19 +75,19 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
 
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder scheme(@Nullable String scheme) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder scheme( String scheme) {
             this.uriComponentsBuilder.scheme(scheme);
             return this;
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder userInfo(@Nullable String userInfo) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder userInfo( String userInfo) {
             this.uriComponentsBuilder.userInfo(userInfo);
             return this;
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder host(@Nullable String host) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder host( String host) {
             this.uriComponentsBuilder.host(host);
             return this;
         }
@@ -100,7 +99,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder port(@Nullable String port) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder port( String port) {
             this.uriComponentsBuilder.port(port);
             return this;
         }
@@ -112,7 +111,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replacePath(@Nullable String path) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replacePath( String path) {
             this.uriComponentsBuilder.replacePath(path);
             return this;
         }
@@ -130,7 +129,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQuery(@Nullable String query) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQuery( String query) {
             this.uriComponentsBuilder.replaceQuery(query);
             return this;
         }
@@ -142,7 +141,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder queryParam(String name, @Nullable Collection<?> values) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder queryParam(String name,  Collection<?> values) {
             this.uriComponentsBuilder.queryParam(name, values);
             return this;
         }
@@ -166,7 +165,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQueryParam(String name, @Nullable Collection<?> values) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder replaceQueryParam(String name,  Collection<?> values) {
             this.uriComponentsBuilder.replaceQueryParam(name, values);
             return this;
         }
@@ -178,7 +177,7 @@ public class JenkinsUriTemplateHandler implements UriBuilderFactory {
         }
 
         @Override
-        public JenkinsUriTemplateHandler.JenkinsUriBuilder fragment(@Nullable String fragment) {
+        public JenkinsUriTemplateHandler.JenkinsUriBuilder fragment( String fragment) {
             this.uriComponentsBuilder.fragment(fragment);
             return this;
         }
