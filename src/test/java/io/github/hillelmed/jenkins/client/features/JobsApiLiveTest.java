@@ -34,7 +34,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = {"testBuildJob", "testCreateJobForEmptyAndNullParams", "testKillFreeStyleBuild", "testKillPipelineBuild", "testCreateFoldersInJenkins"})
     public void testGetJobListFromRootWithFolders() {
-        JobList output = api().jobList("").getBody();
+        JobList output = api().jobList().getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 2);
