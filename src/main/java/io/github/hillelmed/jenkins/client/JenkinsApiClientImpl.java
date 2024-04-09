@@ -7,12 +7,9 @@ import io.github.hillelmed.jenkins.client.handlers.*;
 import org.springframework.web.reactive.function.client.*;
 import org.springframework.web.reactive.function.client.support.*;
 import org.springframework.web.service.invoker.*;
-import org.springframework.web.util.*;
 
 import java.io.*;
 import java.util.*;
-
-import static org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode.*;
 
 public class JenkinsApiClientImpl implements JenkinsApi {
 
@@ -20,19 +17,16 @@ public class JenkinsApiClientImpl implements JenkinsApi {
     private final Map<Class<?>, Object> singletons;
 
     public JenkinsApiClientImpl(JenkinsProperties jenkinsProperties, WebClient webClient) {
-        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient, VALUES_ONLY);
+        this.httpServiceProxyFactory = buildHttpServiceProxyFactory(jenkinsProperties, webClient);
         this.singletons = Collections.synchronizedMap(new HashMap<>());
     }
 
-    private static HttpServiceProxyFactory buildHttpServiceProxyFactory(JenkinsProperties jenkinsProperties, WebClient webClient,
-                                                                        DefaultUriBuilderFactory.EncodingMode encodingMode) {
+    private static HttpServiceProxyFactory buildHttpServiceProxyFactory(JenkinsProperties jenkinsProperties, WebClient webClient) {
         ExchangeFilterFunction jenkinsAuthenticationFilter = new JenkinsAuthenticationFilter(jenkinsProperties, jenkinsProperties.getJenkinsAuthentication());
         ExchangeFilterFunction scrubNullFromPathFilter = new ScrubNullFolderParam();
         ExchangeFilterFunction jenkinsUserInjectionFilter = new JenkinsUserInjectionFilter(jenkinsProperties.getJenkinsAuthentication());
         if (webClient == null) {
             JenkinsUriTemplateHandler factory = new JenkinsUriTemplateHandler(jenkinsProperties.getUrl());
-//            factory.setParsePath(false);
-//            factory.setEncodingMode(encodingMode);
 
             webClient = WebClient.builder()
                 .uriBuilderFactory(factory)
