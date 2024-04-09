@@ -25,9 +25,15 @@ public interface JobsApi {
     @GetExchange("/api/json")
     ResponseEntity<JobList> jobList();
 
-    // @Named("jobs:job-info")
-    // @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-//    @Consumes(MediaType.APPLICATION_JSON)
+    @GetExchange(value = "api/json", accept = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<JobListTree> jobList(@RequestParam(value = "depth", required = false) Integer depth,
+                                        @RequestParam(value = "tree",required = false) String tree);
+
+
+    @GetExchange(value = "/job/{folderPath}/api/json", accept = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<JobListTree> jobList(@PathVariable String folderPath, @RequestParam(value = "depth", required = false) Integer depth,
+                                        @RequestParam(value = "tree", required = false) String tree);
+
     @GetExchange("/job/{optionalFolderPath}/job/{name}/api/json")
     ResponseEntity<JobInfo> jobInfo(@PathVariable("optionalFolderPath") String optionalFolderPath,
                                     @PathVariable("name") String jobName);

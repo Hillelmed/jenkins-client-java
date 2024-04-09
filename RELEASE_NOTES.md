@@ -1,5 +1,6 @@
 ### Version 1.0.1 start from beginning (April 9, 2024)
 * ADDED: options for work with jenkins without CRUMB CSRF protections
+* ADDED: JobList API to support Tree and Depth. - [Pull Request 311](https://github.com/cdancy/jenkins-rest/pull/311)
 
 ### Version 1.0.0 start from beginning (April 1, 2024) With hillelmed
 * Update to java 17 and change to use Http interface with webClient with Spring
