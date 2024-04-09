@@ -23,7 +23,7 @@ public class TestUtilities extends JenkinsUtils {
      */
     public static JenkinsAuthentication inferTestAuthentication() {
 
-        final JenkinsAuthentication inferAuth = JenkinsAuthentication.builder().build();
+        final JenkinsAuthentication inferAuth = JenkinsAuthentication.builder().crumbEnabled(false).build();
 
         // 1.) Check for API Token as this requires no crumb hence is faster
         String authValue = retrieveExternalValue(TEST_API_TOKEN_SYSTEM_PROPERTY,
