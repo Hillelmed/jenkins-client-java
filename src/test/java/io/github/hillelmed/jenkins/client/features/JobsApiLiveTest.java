@@ -77,7 +77,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListInSelectedFolderWithTreeOnlyGivingFullNameOnCurrentFolder() {
-        JobListTree output = api().jobList("test-folder/test-folder-1", null, "fullName").getBody();
+        JobListTree output = api().jobList("test-folder/job/test-folder-1", null, "fullName").getBody();
         assertNotNull(output);
         assertNull(output.getJobs());
         assertEquals(output, new JobListTree("com.cloudbees.hudson.plugins.folder.Folder", null, "test-folder/test-folder-1", null, null, null));
@@ -85,7 +85,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListFromRootWithTreeCanReturnNestedJob() {
-        JobListTree output = api().jobList("", null, "jobs[fullName,jobs[fullName,jobs[fullName]]]").getBody();
+        JobListTree output = api().jobList(null, "jobs[fullName,jobs[fullName,jobs[fullName]]]").getBody();
         assertNotNull(output);
         List<JobListTree> grandChildJob = List.of(new JobListTree("hudson.model.FreeStyleProject", null, "test-folder/test-folder-1/JobInFolder", null, null, null));
         JobListTree childJob = new JobListTree("com.cloudbees.hudson.plugins.folder.Folder", null, "test-folder/test-folder-1", grandChildJob, null, null);
@@ -101,7 +101,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListInFolderWithTreeReturnAll() {
-        JobListTree output = api().jobList("test-folder/test-folder-1", null, "jobs[*]").getBody();
+        JobListTree output = api().jobList("test-folder/job/test-folder-1", null, "jobs[*]").getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 1);
@@ -110,7 +110,7 @@ public class JobsApiLiveTest extends BaseJenkinsApiLiveTest {
 
     @Test(dependsOnMethods = "testCreateJobInFolder")
     public void testGetJobListInFolderWithTreeOnlyGivingNameAndColor() {
-        JobListTree output = api().jobList("test-folder/test-folder-1", null, "jobs[name,color]").getBody();
+        JobListTree output = api().jobList("test-folder/job/test-folder-1", null, "jobs[name,color]").getBody();
         assertNotNull(output);
         assertFalse(output.getJobs().isEmpty());
         assertEquals(output.getJobs().size(), 1);
