@@ -106,14 +106,14 @@ javadoc {
 }
 
 group = 'io.github.hillelmed'
-version = '1.0.0'
+version = '1.0.1'
 description = 'Java client for working with Jenkins REST API'
 
 publishing {
     publications {
         maven(MavenPublication) {
             group = 'io.github.hillelmed'
-            version = '1.0.0'
+            version = '1.0.1'
             description = 'Java client for working with Jenkins REST API'
 
             from components.java
@@ -141,6 +141,19 @@ publishing {
                     url = 'https://github.com/Hillelmed/jenkins-client-java/'
                 }
             }
+
         }
     }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/hillelmed/jenkins-client-java"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+
+    }
+
 }

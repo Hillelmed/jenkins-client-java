@@ -21,6 +21,7 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
     private final String identity;
     private final String credential;
     private final String encodedCred;
+    private final boolean crumbEnabled;
 
 
     public static class JenkinsAuthenticationBuilder {
@@ -29,6 +30,7 @@ public class JenkinsAuthentication extends ExchangeFilterFunctions {
         private String credential = identity + ":";
         private String encodedCred = Base64.getEncoder().encodeToString(credential.getBytes(StandardCharsets.UTF_8));
         private AuthenticationType authType = AuthenticationType.ANONYMOUS;
+        private boolean crumbEnabled = true;
 
         /**
          * Set 'UsernamePassword' credentials.

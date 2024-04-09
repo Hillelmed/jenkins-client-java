@@ -30,7 +30,8 @@ public class JenkinsAuthenticationFilter implements ExchangeFilterFunction {
 
         //Anon and Password need the crumb and the cookie when POSTing
         //https://www.jenkins.io/doc/book/security/csrf-protection/#working-with-scripted-clients
-        if (request.method().equals(HttpMethod.POST) && (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD
+        if (jenkinsAuthentication.isCrumbEnabled() && request.method().equals(HttpMethod.POST)
+            && (jenkinsAuthentication.getAuthType() == AuthenticationType.USERNAME_PASSWORD
             || jenkinsAuthentication.getAuthType() == AuthenticationType.ANONYMOUS)) {
             try {
                 final Crumb localCrumb = getCrumb();
