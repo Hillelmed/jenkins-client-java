@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'maven-publish'
-    id 'signing'
+//    id 'signing'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
@@ -178,6 +178,6 @@ publishing {
     }
 
 }
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
