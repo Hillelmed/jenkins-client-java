@@ -36,6 +36,30 @@ SystemInfo systemInfo = client.api().systemApi().systemInfo();
 assertTrue(systemInfo.getUrl().equals("http://localhost:8080/"));
 ```
 
+Example of override the webClient for bearerAuth (Add the JenkinsUriTemplateHandler from jar):
+```
+WebClient webClient = WebClient.builder().uriBuilderFactory(new JenkinsUriTemplateHandler("http://localhost:8080"))
+	.filter((request, next) -> {
+	    request.headers().setBearerAuth("token");
+	    return next.exchange(request);
+	}).build();
+JenkinsProperties jenkinsProperties = JenkinsProperties.builder().url("http://localhost:8080")
+	.jenkinsAuthentication(JenkinsAuthentication.builder().crumbEnabled(false).build()).build();
+JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties, webClient);
+```
+We can also add some filter from jar for example:
+```
+WebClient webClient = WebClient.builder().uriBuilderFactory(new JenkinsUriTemplateHandler("http://localhost:8080"))
+	.filter(new ScrubNullFolderParam())
+	.filter((request, next) -> {
+	    request.headers().setBearerAuth("token");
+	    return next.exchange(request);
+	}).build();
+JenkinsProperties jenkinsProperties = JenkinsProperties.builder().url("http://localhost:8080")
+	.jenkinsAuthentication(JenkinsAuthentication.builder().crumbEnabled(false).build()).build();
+JenkinsClient jenkinsClient = JenkinsClient.create(jenkinsProperties, webClient);
+```
+
 ## Latest release
 
 Can be found in maven like so:
