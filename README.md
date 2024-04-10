@@ -76,7 +76,7 @@ Can be found in maven like so:
 ## Documentation
 
 * javadocs can be found via [github pages here](http://hillelmed.github.io/jenkins-client-java/docs/javadoc/)
-* the [jenkins-rest wiki](https://github.com/Hillelmed/jenkins-client-java/wiki)
+* the [jenkins-client-java wiki](https://github.com/Hillelmed/jenkins-client-java/wiki)
 
 ## Property based setup
 
