@@ -1,4 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.github.hillelmed/jenkins-client-java)
+[![javadoc](https://javadoc.io/badge2/io.github.hillelmed/jenkins-client-java/javadoc.svg)](https://javadoc.io/doc/io.github.hillelmed/jenkins-client-java)
 [![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jenkins&#8211;rest-4183C4.svg)](https://stackoverflow.com/questions/tagged/jenkins+client+java)
 
 # jenkins-client-java
