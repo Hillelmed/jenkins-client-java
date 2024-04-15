@@ -34,7 +34,7 @@ dependencies {
     testImplementation('ch.qos.logback:logback-core:1.5.4')
     testImplementation('com.squareup.okhttp3:mockwebserver:4.12.0')
     testImplementation('org.testng:testng:7.10.1')
-    testImplementation('ch.qos.logback:logback-classic:1.5.4')
+    testImplementation('ch.qos.logback:logback-classic:1.5.5')
     testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.1'
 
 }
