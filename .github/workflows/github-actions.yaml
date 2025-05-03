@@ -5,13 +5,11 @@ permissions:
   checks: write
 jobs:
   build:
-    # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - run: echo "🔎 The name of your branch is ${{ github.head_ref || github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🎉 Triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 Running on ${{ runner.os }}!"
+      - run: echo "🔎 Branch is ${{ github.head_ref || github.ref }} in ${{ github.repository }}."
 
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -27,14 +25,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - name: Build Jenkins LTS docker images
+      - run: echo "💡 Sources cloned to $GITHUB_WORKSPACE."
+
+      - name: Build Jenkins LTS Docker image
         run: docker build -t jenkins-rest/jenkins src/main/docker
 
-      - name: Run Jenkins LTS docker images
+      - name: Run Jenkins LTS container
         run: docker run -d --rm -p 8080:8080 --name jenkins-rest jenkins-rest/jenkins
 
-      - name: Make gradlew executable
+      - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
@@ -46,8 +45,8 @@ jobs:
       - name: Generate JaCoCo report
         run: ./gradlew jacocoTestReport
 
-      - name: Upload JaCoCo report
-        uses: actions/upload-artifact@v2
+      - name: Upload JaCoCo HTML report
+        uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
           path: ${{ github.workspace }}/build/reports/jacoco/test/html
@@ -65,17 +64,15 @@ jobs:
           fail_below_threshold: false
           publish_only_summary: false
 
-
       - name: Get the Coverage info
         run: |
-          echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
-          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
-          echo "Coverage coveragePercentage ${{ steps.jacoco_reporter.outputs.coveragePercentage }}"
-          echo "Coverage coveragePercentageString ${{ steps.jacoco_reporter.outputs.coveragePercentageString }}"
+          echo "Total coverage: ${{ steps.jacoco_reporter.outputs.coverage-overall }}"
+          echo "Changed-files coverage: ${{ steps.jacoco_reporter.outputs.coverage-changed-files }}"
+          echo "Overall %: ${{ steps.jacoco_reporter.outputs.coveragePercentage }}"
+          echo "Percentage String: ${{ steps.jacoco_reporter.outputs.coveragePercentageString }}"
 
-      # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
         run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Stop docker
+      - name: Stop Jenkins container
         run: docker stop jenkins-rest
